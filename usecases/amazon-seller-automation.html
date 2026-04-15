@@ -20,6 +20,14 @@
             pointer-events: none;
         }
         .uc-hero-content { max-width: 800px; margin: 0 auto; position: relative; z-index: 1; }
+        .uc-hero-logo {
+            display: flex; justify-content: center; margin-bottom: 16px;
+        }
+        .uc-hero-logo img {
+            height: 48px; width: auto; object-fit: contain;
+            filter: drop-shadow(0 2px 12px rgba(255,153,0,0.4));
+            border-radius: 8px;
+        }
         .uc-badge {
             display: inline-flex; align-items: center; gap: 8px;
             background: rgba(255,153,0,0.15); border: 1px solid rgba(255,153,0,0.3);
@@ -85,6 +93,127 @@
             font-size: 15px; font-weight: 700; color: #c62828; margin-bottom: 6px;
         }
         .pain-card p { font-size: 13px; color: #666; line-height: 1.6; margin: 0; }
+
+        /* ══════════ INTERACTIVE GROWTH GRAPHS ══════════ */
+        .growth-section { margin-top: 40px; }
+        .growth-controls {
+            display: flex; justify-content: center; gap: 8px;
+            margin-bottom: 32px; flex-wrap: wrap;
+        }
+        .growth-btn {
+            padding: 10px 24px; border: 2px solid #e0e4e8; border-radius: 30px;
+            background: #fff; font-size: 13px; font-weight: 700;
+            font-family: 'Inter', sans-serif; color: #555;
+            cursor: pointer; transition: all 0.3s ease;
+        }
+        .growth-btn:hover { border-color: #ff9900; color: #ff9900; }
+        .growth-btn.active {
+            background: #ff9900; border-color: #ff9900; color: #fff;
+            box-shadow: 0 4px 16px rgba(255,153,0,0.3);
+        }
+        .charts-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+        }
+        .chart-card {
+            background: #fff; border-radius: 16px; padding: 28px 24px;
+            border: 1px solid #eaedf0; box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+        }
+        .chart-card h4 {
+            font-size: 14px; font-weight: 800; color: #1a1a1a;
+            margin-bottom: 4px;
+        }
+        .chart-card .chart-sub {
+            font-size: 11px; color: #999; margin-bottom: 16px;
+        }
+        .chart-bar-group { display: flex; flex-direction: column; gap: 10px; }
+        .chart-bar-row {
+            display: flex; align-items: center; gap: 10px;
+        }
+        .chart-bar-label {
+            width: 80px; font-size: 11px; font-weight: 700;
+            color: #555; text-align: right; flex-shrink: 0;
+        }
+        .chart-bar-track {
+            flex: 1; height: 28px; background: #f4f5f7;
+            border-radius: 6px; overflow: hidden; position: relative;
+        }
+        .chart-bar-fill {
+            height: 100%; border-radius: 6px;
+            transition: width 0.8s cubic-bezier(0.16,1,0.3,1);
+            display: flex; align-items: center; justify-content: flex-end;
+            padding-right: 10px; font-size: 11px; font-weight: 800;
+            color: #fff; min-width: 40px;
+        }
+        .cbf-manual { background: linear-gradient(90deg, #e53935, #c62828); }
+        .cbf-partial { background: linear-gradient(90deg, #ff9800, #e65100); }
+        .cbf-mid { background: linear-gradient(90deg, #42a5f5, #1565c0); }
+        .cbf-full { background: linear-gradient(90deg, #66bb6a, #2e7d32); }
+
+        /* Donut chart */
+        .donut-wrap {
+            display: flex; align-items: center; justify-content: center; gap: 24px;
+        }
+        .donut-svg { width: 120px; height: 120px; transform: rotate(-90deg); }
+        .donut-track { fill: none; stroke: #f0f0f0; stroke-width: 12; }
+        .donut-fill {
+            fill: none; stroke-width: 12; stroke-linecap: round;
+            transition: stroke-dashoffset 0.8s cubic-bezier(0.16,1,0.3,1), stroke 0.4s ease;
+        }
+        .donut-center {
+            position: absolute; font-size: 22px; font-weight: 800;
+            color: #1a1a1a;
+        }
+        .donut-legend { display: flex; flex-direction: column; gap: 6px; }
+        .donut-legend-item {
+            display: flex; align-items: center; gap: 6px;
+            font-size: 12px; color: #555;
+        }
+        .donut-legend-dot {
+            width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+        }
+        .donut-legend-val { font-weight: 800; margin-left: auto; }
+
+        /* Profit line chart placeholder using bars */
+        .profit-bars {
+            display: flex; align-items: flex-end; gap: 4px;
+            height: 120px; padding-top: 8px;
+        }
+        .profit-bar-col {
+            flex: 1; display: flex; flex-direction: column;
+            align-items: center; gap: 4px; height: 100%;
+            justify-content: flex-end;
+        }
+        .profit-bar {
+            width: 100%; border-radius: 4px 4px 0 0;
+            transition: height 0.8s cubic-bezier(0.16,1,0.3,1), background 0.4s ease;
+            min-height: 4px;
+        }
+        .profit-bar-label {
+            font-size: 9px; font-weight: 700; color: #999;
+            white-space: nowrap;
+        }
+        .profit-bar-val {
+            font-size: 10px; font-weight: 800; color: #1a1a1a;
+        }
+
+        /* Summary strip */
+        .growth-summary {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+            margin-top: 24px;
+        }
+        .growth-stat {
+            text-align: center; padding: 20px 12px;
+            background: linear-gradient(135deg, #0f1923, #1a2940);
+            border-radius: 14px; border: 1px solid rgba(255,153,0,0.15);
+        }
+        .growth-stat-val {
+            font-size: 28px; font-weight: 800;
+            transition: color 0.3s ease;
+        }
+        .growth-stat-label {
+            font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.5);
+            text-transform: uppercase; letter-spacing: 1px; margin-top: 4px;
+        }
 
         /* ══════════ BUSINESS MODELS ══════════ */
         .models-grid {
@@ -470,6 +599,13 @@
             .model-card h4 { font-size: 13px; }
             .model-card p { font-size: 11px; }
             .pain-grid { grid-template-columns: 1fr; }
+            .charts-grid { grid-template-columns: 1fr; }
+            .growth-summary { grid-template-columns: 1fr; gap: 10px; }
+            .growth-stat-val { font-size: 22px; }
+            .growth-controls { gap: 6px; }
+            .growth-btn { padding: 8px 16px; font-size: 12px; }
+            .donut-wrap { flex-direction: column; gap: 16px; }
+            .uc-hero-logo img { height: 36px; }
             .module-grid { grid-template-columns: 1fr; }
 
             /* Flow pipeline - vertical on mobile */
@@ -556,6 +692,9 @@
 <!-- Hero -->
 <section class="uc-hero">
     <div class="uc-hero-content">
+        <div class="uc-hero-logo">
+            <img src="../assets/img/Amazon.jpg" alt="Amazon" loading="eager">
+        </div>
         <div class="uc-badge">🤖 AI Automation Use Case</div>
         <h1>Amazon Seller <span>Full Automation</span></h1>
         <p class="uc-hero-sub">End-to-end AI-powered automation for Amazon sellers. From product listing to customer support, every manual task replaced with intelligent workflows.</p>
@@ -856,6 +995,131 @@
                 <p>No unified dashboard. Sales, margins, ad performance scattered across 10 different screens.</p>
             </div>
         </div>
+
+        <!-- Interactive Growth Graphs -->
+        <div class="growth-section">
+            <h2 style="text-align:center; margin-top:48px;">See Your Growth at Each Automation Level</h2>
+            <p style="text-align:center; max-width:600px; margin:0 auto 24px;">Click a level below to see how your business metrics change from manual to fully automated.</p>
+
+            <div class="growth-controls">
+                <button class="growth-btn active" onclick="setLevel('manual')">🔴 Manual</button>
+                <button class="growth-btn" onclick="setLevel('partial')">🟠 Partial</button>
+                <button class="growth-btn" onclick="setLevel('mid')">🔵 Mid-Level</button>
+                <button class="growth-btn" onclick="setLevel('full')">🟢 Full Automation</button>
+            </div>
+
+            <div class="charts-grid">
+                <!-- Chart 1: Time Spent (hours/day) -->
+                <div class="chart-card">
+                    <h4>⏱️ Daily Hours on Manual Tasks</h4>
+                    <div class="chart-sub">Hours your team spends on repetitive work per day</div>
+                    <div class="chart-bar-group" id="chartTime">
+                        <div class="chart-bar-row">
+                            <div class="chart-bar-label">Listing</div>
+                            <div class="chart-bar-track"><div class="chart-bar-fill cbf-manual" id="barListing" style="width:90%">4.5h</div></div>
+                        </div>
+                        <div class="chart-bar-row">
+                            <div class="chart-bar-label">Inventory</div>
+                            <div class="chart-bar-track"><div class="chart-bar-fill cbf-manual" id="barInventory" style="width:80%">4h</div></div>
+                        </div>
+                        <div class="chart-bar-row">
+                            <div class="chart-bar-label">Orders</div>
+                            <div class="chart-bar-track"><div class="chart-bar-fill cbf-manual" id="barOrders" style="width:70%">3.5h</div></div>
+                        </div>
+                        <div class="chart-bar-row">
+                            <div class="chart-bar-label">Pricing</div>
+                            <div class="chart-bar-track"><div class="chart-bar-fill cbf-manual" id="barPricing" style="width:40%">2h</div></div>
+                        </div>
+                        <div class="chart-bar-row">
+                            <div class="chart-bar-label">Support</div>
+                            <div class="chart-bar-track"><div class="chart-bar-fill cbf-manual" id="barSupport" style="width:60%">3h</div></div>
+                        </div>
+                        <div class="chart-bar-row">
+                            <div class="chart-bar-label">Analytics</div>
+                            <div class="chart-bar-track"><div class="chart-bar-fill cbf-manual" id="barAnalytics" style="width:30%">1.5h</div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chart 2: Time Allocation Donut -->
+                <div class="chart-card">
+                    <h4>📊 Time Allocation</h4>
+                    <div class="chart-sub">How your team's time is split</div>
+                    <div class="donut-wrap" style="position:relative;">
+                        <svg class="donut-svg" viewBox="0 0 42 42">
+                            <circle class="donut-track" cx="21" cy="21" r="15.915"/>
+                            <circle class="donut-fill" id="donutRepetitive" cx="21" cy="21" r="15.915"
+                                stroke="#e53935" stroke-dasharray="75 25" stroke-dashoffset="0"/>
+                            <circle class="donut-fill" id="donutGrowth" cx="21" cy="21" r="15.915"
+                                stroke="#66bb6a" stroke-dasharray="20 80" stroke-dashoffset="-75"/>
+                            <circle class="donut-fill" id="donutStrategy" cx="21" cy="21" r="15.915"
+                                stroke="#42a5f5" stroke-dasharray="5 95" stroke-dashoffset="-95"/>
+                        </svg>
+                        <div class="donut-legend">
+                            <div class="donut-legend-item">
+                                <div class="donut-legend-dot" style="background:#e53935;"></div>
+                                Repetitive Tasks <span class="donut-legend-val" id="legRepetitive">75%</span>
+                            </div>
+                            <div class="donut-legend-item">
+                                <div class="donut-legend-dot" style="background:#66bb6a;"></div>
+                                Growth & Sales <span class="donut-legend-val" id="legGrowth">20%</span>
+                            </div>
+                            <div class="donut-legend-item">
+                                <div class="donut-legend-dot" style="background:#42a5f5;"></div>
+                                Strategy & R&D <span class="donut-legend-val" id="legStrategy">5%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chart 3: Monthly Profit Growth -->
+                <div class="chart-card">
+                    <h4>💰 Monthly Profit Trend (12 Months)</h4>
+                    <div class="chart-sub">Projected monthly profit over a year</div>
+                    <div class="profit-bars" id="profitBars"></div>
+                </div>
+
+                <!-- Chart 4: Key Metrics -->
+                <div class="chart-card">
+                    <h4>📈 Efficiency Metrics</h4>
+                    <div class="chart-sub">Key performance indicators at this automation level</div>
+                    <div class="chart-bar-group">
+                        <div class="chart-bar-row">
+                            <div class="chart-bar-label">Buy Box %</div>
+                            <div class="chart-bar-track"><div class="chart-bar-fill" id="barBuyBox" style="width:25%">25%</div></div>
+                        </div>
+                        <div class="chart-bar-row">
+                            <div class="chart-bar-label">Order Accuracy</div>
+                            <div class="chart-bar-track"><div class="chart-bar-fill" id="barAccuracy" style="width:78%">78%</div></div>
+                        </div>
+                        <div class="chart-bar-row">
+                            <div class="chart-bar-label">Response Time</div>
+                            <div class="chart-bar-track"><div class="chart-bar-fill" id="barResponse" style="width:85%">4h</div></div>
+                        </div>
+                        <div class="chart-bar-row">
+                            <div class="chart-bar-label">SKU Capacity</div>
+                            <div class="chart-bar-track"><div class="chart-bar-fill" id="barSKU" style="width:15%">300</div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Summary Stats -->
+            <div class="growth-summary">
+                <div class="growth-stat">
+                    <div class="growth-stat-val" id="statProfit" style="color:#e53935;">$8K</div>
+                    <div class="growth-stat-label">Monthly Profit</div>
+                </div>
+                <div class="growth-stat">
+                    <div class="growth-stat-val" id="statHours" style="color:#e53935;">18.5h</div>
+                    <div class="growth-stat-label">Daily Manual Hours</div>
+                </div>
+                <div class="growth-stat">
+                    <div class="growth-stat-val" id="statTeam" style="color:#e53935;">5 people</div>
+                    <div class="growth-stat-label">Team Size Needed</div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Modules Detail -->
@@ -1126,12 +1390,132 @@ var cardObserver = new IntersectionObserver(function(entries) {
     });
 }, { threshold: 0.1 });
 
-document.querySelectorAll('.module-card, .pain-card, .compare-card, .kpi-card, .calc-wrapper, .model-card').forEach(function(el) {
+document.querySelectorAll('.module-card, .pain-card, .compare-card, .kpi-card, .calc-wrapper, .model-card, .chart-card').forEach(function(el) {
     el.style.opacity = '0';
     el.style.transform = 'translateY(20px)';
     el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
     cardObserver.observe(el);
 });
+
+/* ═══════ INTERACTIVE GROWTH GRAPHS ═══════ */
+var levelData = {
+    manual: {
+        bars: { listing: [90,'4.5h'], inventory: [80,'4h'], orders: [70,'3.5h'], pricing: [40,'2h'], support: [60,'3h'], analytics: [30,'1.5h'] },
+        barClass: 'cbf-manual',
+        donut: { repetitive: 75, growth: 20, strategy: 5 },
+        profit: [8,8.2,8.5,8.3,8.1,8.4,8.6,8.2,8,7.8,8.3,8.5],
+        profitColor: '#e53935',
+        metrics: { buyBox: [25,'25%'], accuracy: [78,'78%'], response: [85,'4h'], sku: [15,'300'] },
+        metricsClass: 'cbf-manual',
+        summary: { profit: '$8K', hours: '18.5h', team: '5 people', color: '#e53935' }
+    },
+    partial: {
+        bars: { listing: [55,'2.5h'], inventory: [50,'2.5h'], orders: [50,'2.5h'], pricing: [20,'1h'], support: [40,'2h'], analytics: [20,'1h'] },
+        barClass: 'cbf-partial',
+        donut: { repetitive: 48, growth: 35, strategy: 17 },
+        profit: [10,11,12,13,13.5,14,15,15.5,16,16.5,17,18],
+        profitColor: '#ff9800',
+        metrics: { buyBox: [50,'50%'], accuracy: [87,'87%'], response: [55,'1.5h'], sku: [35,'800'] },
+        metricsClass: 'cbf-partial',
+        summary: { profit: '$18K', hours: '11.5h', team: '3 people', color: '#ff9800' }
+    },
+    mid: {
+        bars: { listing: [25,'1h'], inventory: [20,'1h'], orders: [15,'0.5h'], pricing: [6,'15m'], support: [20,'1h'], analytics: [10,'0.5h'] },
+        barClass: 'cbf-mid',
+        donut: { repetitive: 22, growth: 48, strategy: 30 },
+        profit: [15,17,19,21,23,25,27,28,30,31,33,35],
+        profitColor: '#42a5f5',
+        metrics: { buyBox: [72,'72%'], accuracy: [93,'93%'], response: [25,'30m'], sku: [60,'1500'] },
+        metricsClass: 'cbf-mid',
+        summary: { profit: '$35K', hours: '4.3h', team: '2 people', color: '#42a5f5' }
+    },
+    full: {
+        bars: { listing: [6,'10m'], inventory: [4,'10m'], orders: [2,'0h'], pricing: [2,'0h'], support: [6,'18m'], analytics: [3,'5m'] },
+        barClass: 'cbf-full',
+        donut: { repetitive: 5, growth: 55, strategy: 40 },
+        profit: [20,24,28,32,37,42,46,50,55,58,62,68],
+        profitColor: '#66bb6a',
+        metrics: { buyBox: [92,'92%'], accuracy: [98,'98%'], response: [5,'30s'], sku: [95,'2500'] },
+        metricsClass: 'cbf-full',
+        summary: { profit: '$68K', hours: '0.7h', team: '1 person', color: '#66bb6a' }
+    }
+};
+
+var currentLevel = 'manual';
+
+function setLevel(level) {
+    currentLevel = level;
+    var d = levelData[level];
+
+    // Update buttons
+    document.querySelectorAll('.growth-btn').forEach(function(b) { b.classList.remove('active'); });
+    event.target.classList.add('active');
+
+    // Update time bars
+    var barMap = { listing: 'barListing', inventory: 'barInventory', orders: 'barOrders',
+                   pricing: 'barPricing', support: 'barSupport', analytics: 'barAnalytics' };
+    Object.keys(barMap).forEach(function(key) {
+        var el = document.getElementById(barMap[key]);
+        el.style.width = d.bars[key][0] + '%';
+        el.textContent = d.bars[key][1];
+        el.className = 'chart-bar-fill ' + d.barClass;
+    });
+
+    // Update donut
+    var circ = 2 * Math.PI * 15.915;
+    var rep = d.donut.repetitive, grw = d.donut.growth, str = d.donut.strategy;
+    document.getElementById('donutRepetitive').setAttribute('stroke-dasharray', rep + ' ' + (100 - rep));
+    document.getElementById('donutRepetitive').setAttribute('stroke-dashoffset', '0');
+    document.getElementById('donutGrowth').setAttribute('stroke-dasharray', grw + ' ' + (100 - grw));
+    document.getElementById('donutGrowth').setAttribute('stroke-dashoffset', -rep);
+    document.getElementById('donutStrategy').setAttribute('stroke-dasharray', str + ' ' + (100 - str));
+    document.getElementById('donutStrategy').setAttribute('stroke-dashoffset', -(rep + grw));
+
+    document.getElementById('legRepetitive').textContent = rep + '%';
+    document.getElementById('legGrowth').textContent = grw + '%';
+    document.getElementById('legStrategy').textContent = str + '%';
+
+    // Color donut segments based on level
+    var colors = { manual: ['#e53935','#66bb6a','#42a5f5'], partial: ['#ff9800','#66bb6a','#42a5f5'],
+                   mid: ['#42a5f5','#66bb6a','#7e57c2'], full: ['#bdbdbd','#66bb6a','#42a5f5'] };
+    document.getElementById('donutRepetitive').setAttribute('stroke', colors[level][0]);
+    document.getElementById('donutGrowth').setAttribute('stroke', colors[level][1]);
+    document.getElementById('donutStrategy').setAttribute('stroke', colors[level][2]);
+
+    // Update profit bars
+    var maxProfit = Math.max.apply(null, d.profit);
+    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var phtml = '';
+    d.profit.forEach(function(val, i) {
+        var h = Math.max(8, (val / maxProfit) * 100);
+        phtml += '<div class="profit-bar-col">';
+        phtml += '<div class="profit-bar-val">$' + val + 'K</div>';
+        phtml += '<div class="profit-bar" style="height:' + h + '%;background:' + d.profitColor + ';"></div>';
+        phtml += '<div class="profit-bar-label">' + months[i] + '</div>';
+        phtml += '</div>';
+    });
+    document.getElementById('profitBars').innerHTML = phtml;
+
+    // Update metrics bars
+    var metricMap = { buyBox: 'barBuyBox', accuracy: 'barAccuracy', response: 'barResponse', sku: 'barSKU' };
+    Object.keys(metricMap).forEach(function(key) {
+        var el = document.getElementById(metricMap[key]);
+        el.style.width = d.metrics[key][0] + '%';
+        el.textContent = d.metrics[key][1];
+        el.className = 'chart-bar-fill ' + d.metricsClass;
+    });
+
+    // Update summary
+    document.getElementById('statProfit').textContent = d.summary.profit;
+    document.getElementById('statProfit').style.color = d.summary.color;
+    document.getElementById('statHours').textContent = d.summary.hours;
+    document.getElementById('statHours').style.color = d.summary.color;
+    document.getElementById('statTeam').textContent = d.summary.team;
+    document.getElementById('statTeam').style.color = d.summary.color;
+}
+
+// Init graphs on load
+setLevel('manual');
 </script>
 
 </body>
