@@ -20,6 +20,13 @@
             pointer-events: none;
         }
         .uc-hero-content { max-width: 800px; margin: 0 auto; position: relative; z-index: 1; }
+        .uc-amazon-logo {
+            display: flex; justify-content: center; margin-bottom: 16px;
+        }
+        .uc-amazon-logo svg {
+            height: 40px; width: auto;
+            filter: drop-shadow(0 2px 8px rgba(255,153,0,0.3));
+        }
         .uc-badge {
             display: inline-flex; align-items: center; gap: 8px;
             background: rgba(255,153,0,0.15); border: 1px solid rgba(255,153,0,0.3);
@@ -85,6 +92,50 @@
             font-size: 15px; font-weight: 700; color: #c62828; margin-bottom: 6px;
         }
         .pain-card p { font-size: 13px; color: #666; line-height: 1.6; margin: 0; }
+
+        /* ══════════ BUSINESS MODELS ══════════ */
+        .models-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 14px;
+        }
+        .model-card {
+            background: linear-gradient(135deg, #0f1923, #162133);
+            border: 1px solid rgba(255,153,0,0.15);
+            border-radius: 14px; padding: 24px 16px;
+            text-align: center; color: #fff;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            cursor: default; position: relative; overflow: hidden;
+        }
+        .model-card::before {
+            content: ''; position: absolute; inset: 0;
+            background: radial-gradient(circle at 50% 0%, rgba(255,153,0,0.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .model-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 32px rgba(255,153,0,0.15);
+            border-color: rgba(255,153,0,0.4);
+        }
+        .model-card-icon {
+            font-size: 36px; margin-bottom: 10px; display: block;
+        }
+        .model-card h4 {
+            font-size: 15px; font-weight: 800; margin-bottom: 4px;
+            color: #ff9900;
+        }
+        .model-card p {
+            font-size: 12px; color: rgba(255,255,255,0.55);
+            line-height: 1.5; margin: 0;
+        }
+        .model-tag {
+            display: inline-block; font-size: 9px; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 1px;
+            padding: 3px 10px; border-radius: 10px;
+            margin-top: 10px;
+        }
+        .mt-popular { background: rgba(76,175,80,0.2); color: #81c784; }
+        .mt-growing { background: rgba(33,150,243,0.2); color: #64b5f6; }
+        .mt-advanced { background: rgba(156,39,176,0.2); color: #ce93d8; }
 
         /* ══════════ ANIMATED FLOW PIPELINE ══════════ */
         .flow-wrapper {
@@ -422,6 +473,10 @@
             .calc-wrapper { padding: 20px 16px; }
             .calc-table { font-size: 12px; }
             .calc-inputs { grid-template-columns: 1fr 1fr; }
+            .models-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .model-card { padding: 16px 12px; }
+            .model-card-icon { font-size: 28px; }
+            .uc-amazon-logo svg { height: 30px; }
         }
     </style>
 </head>
@@ -445,6 +500,13 @@
 <!-- Hero -->
 <section class="uc-hero">
     <div class="uc-hero-content">
+        <div class="uc-amazon-logo">
+            <svg viewBox="0 0 603 182" xmlns="http://www.w3.org/2000/svg">
+                <path fill="#FF9900" d="M374.1 142.3c-35.1 25.9-86 39.7-129.8 39.7-61.4 0-116.8-22.7-158.6-60.5-3.3-3-0.3-7 3.6-4.7 45.2 26.3 101 42.1 158.7 42.1 38.9 0 81.7-8.1 121.1-24.8 5.9-2.5 10.9 3.9 5 8.2z"/>
+                <path fill="#FF9900" d="M388.5 126.1c-4.5-5.7-29.5-2.7-40.8-1.4-3.4 0.4-3.9-2.6-0.9-4.7 20-14.1 52.7-10 56.6-5.3 3.8 4.8-1 37.8-19.7 53.6-2.9 2.4-5.6 1.1-4.3-2.1 4.2-10.5 13.6-34.3 9.1-40.1z"/>
+                <path fill="#ffffff" d="M348.5 22.3V7.1c0-2.3 1.7-3.9 3.8-3.9h67.5c2.2 0 3.8 1.6 3.8 3.9v13c0 2.2-1.9 5-5.2 9.5l-35 50c13-0.3 26.7 1.6 38.5 8.2 2.7 1.5 3.4 3.7 3.6 5.8v16.2c0 2.2-2.4 4.7-4.9 3.4-20.5-10.7-47.7-11.9-70.3 0.1-2.3 1.2-4.7-1.3-4.7-3.4V91.5c0-2.4 0-6.5 2.5-10.2l40.5-58.1h-35.3c-2.2 0-3.8-1.6-3.8-3.8v2.9zm-243 86.4h-20.5c-2-0.2-3.5-1.6-3.7-3.5V7.3c0-2.1 1.8-3.8 4-3.8h19.1c2 0.1 3.6 1.7 3.8 3.6v13h0.4C113.3 7.2 122.4 0.8 134.7 0.8c12.5 0 20.3 6.4 25.9 19.3 4.5-13 14.8-19.3 26.6-19.3 8.1 0 16.9 3.3 22.3 10.8 6.1 8.3 4.9 20.3 4.9 30.9v62.7c0 2.1-1.8 3.8-4 3.8h-20.5c-2.1-0.2-3.7-1.8-3.7-3.8V52.7c0-4.2 0.4-14.6-0.5-18.5-1.4-6.6-5.7-8.4-11.2-8.4-4.6 0-9.4 3.1-11.4 8-2 5-1.8 13.2-1.8 18.9v52.5c0 2.1-1.8 3.8-4 3.8h-20.5c-2.1-0.2-3.7-1.8-3.7-3.8l0-52.5c0-11 1.8-27.2-11.7-27.2-13.6 0-13.1 15.8-13.1 27.2v52.5c0 2.1-1.8 3.8-4 3.8zm362-87.9c-30.4 0-46.8 26.1-46.8 59.3 0 32 18.2 57.5 46.8 57.5 29 0 44.8-26.1 44.8-58.7 0-32.6-17.4-58.1-44.8-58.1zm0 21.4c14.7 0 15.6 20 15.6 32.5 0 12.5-0.2 39.2-15.4 39.2-15.4 0-16.1-21.5-16.1-34.7 0-8.7 0.4-19 2.5-27.3 1.8-7.2 5.5-9.7 13.4-9.7zM554.6 108.7h-20.4c-2.1-0.2-3.7-1.8-3.7-3.8V7.1c0.2-1.9 1.9-3.4 4-3.4h19c1.8 0.1 3.3 1.4 3.7 3.1v15.8h0.4c5.8-14.3 13.9-21 28.2-21 8.5 0 16.8 3.1 22.1 11.4 5 7.7 5 20.7 5 30.1v62.4c-0.3 1.8-2 3.3-4 3.3h-20.6c-1.9-0.2-3.4-1.6-3.7-3.3V51.6c0-10.6 1.2-26.1-11.9-26.1-4.6 0-8.8 3.1-10.9 7.8-2.6 5.9-3 11.8-3 18.3v53.3c0 2.1-1.8 3.8-4.2 3.8zm-216-46c0 7.5 0.2 13.7-3.6 20.4-3.1 5.4-8 8.7-13.4 8.7-7.5 0-11.8-5.7-11.8-14.1 0-16.6 14.9-19.6 28.8-19.6v4.6zm19.6 47.3c-1.3 1.1-3.1 1.2-4.6 0.4-6.4-5.3-7.6-7.8-11.1-12.9-10.6 10.8-18.1 14-31.9 14-16.3 0-28.9-10-28.9-30.1 0-15.7 8.5-26.3 20.6-31.5 10.5-4.6 25.1-5.4 36.3-6.7v-2.5c0-4.6 0.4-10-2.3-14-2.4-3.5-7-5-11.1-5-7.5 0-14.2 3.9-15.9 11.9-0.3 1.8-1.6 3.5-3.4 3.6l-20-2.2c-1.6-0.4-3.4-1.6-2.9-4 4.4-23.1 25.2-30.1 43.9-30.1 9.6 0 22.1 2.5 29.6 9.8 9.6 9 8.7 21 8.7 34v30.8c0 9.3 3.8 13.3 7.4 18.3 1.3 1.8 1.5 3.9-0.1 5.2-4 3.3-11.1 9.5-15 13z"/>
+            </svg>
+        </div>
         <div class="uc-badge">🤖 AI Automation Use Case</div>
         <h1>Amazon Seller <span>Full Automation</span></h1>
         <p class="uc-hero-sub">End-to-end AI-powered automation for Amazon sellers. From product listing to customer support, every manual task replaced with intelligent workflows.</p>
@@ -501,6 +563,52 @@
             <div class="pain-card">
                 <h4>📊 Blind Decisions</h4>
                 <p>No unified dashboard. Sales, margins, ad performance scattered across 10 different screens.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Business Models -->
+    <div class="uc-section">
+        <div class="uc-section-label">Supported Models</div>
+        <h2>Every Amazon Business Model, One Automation</h2>
+        <p>No matter how you sell on Amazon, the automation adapts. Select your model and the pipeline configures itself for your workflow.</p>
+
+        <div class="models-grid">
+            <div class="model-card">
+                <span class="model-card-icon">🏷️</span>
+                <h4>Private Label</h4>
+                <p>Your own brand on Amazon. AI handles listing optimization, A+ content, brand registry automation.</p>
+                <span class="model-tag mt-popular">Most Popular</span>
+            </div>
+            <div class="model-card">
+                <span class="model-card-icon">🏢</span>
+                <h4>B2B / Amazon Business</h4>
+                <p>Bulk pricing, business discounts, tax exemptions. Auto-tiered pricing for volume buyers.</p>
+                <span class="model-tag mt-growing">Growing Fast</span>
+            </div>
+            <div class="model-card">
+                <span class="model-card-icon">🚀</span>
+                <h4>Dropshipping</h4>
+                <p>Zero inventory model. Auto-sync supplier stock, auto-route orders to suppliers, margin protection.</p>
+                <span class="model-tag mt-growing">Low Risk</span>
+            </div>
+            <div class="model-card">
+                <span class="model-card-icon">📦</span>
+                <h4>FBA (Fulfilled by Amazon)</h4>
+                <p>Let Amazon handle shipping. Auto-manage FBA inbound shipments, labels, and restock alerts.</p>
+                <span class="model-tag mt-popular">Best Seller</span>
+            </div>
+            <div class="model-card">
+                <span class="model-card-icon">🏠</span>
+                <h4>FBM (Fulfilled by Merchant)</h4>
+                <p>Ship from your warehouse. Auto-generate labels, pick lists, carrier selection, tracking updates.</p>
+                <span class="model-tag mt-advanced">Full Control</span>
+            </div>
+            <div class="model-card">
+                <span class="model-card-icon">🔄</span>
+                <h4>Wholesale / Arbitrage</h4>
+                <p>Buy low, sell high. AI scans deals, calculates ROI, auto-lists profitable products at scale.</p>
+                <span class="model-tag mt-advanced">Advanced</span>
             </div>
         </div>
     </div>
@@ -969,7 +1077,7 @@ var cardObserver = new IntersectionObserver(function(entries) {
     });
 }, { threshold: 0.1 });
 
-document.querySelectorAll('.module-card, .pain-card, .compare-card, .kpi-card, .calc-wrapper').forEach(function(el) {
+document.querySelectorAll('.module-card, .pain-card, .compare-card, .kpi-card, .calc-wrapper, .model-card').forEach(function(el) {
     el.style.opacity = '0';
     el.style.transform = 'translateY(20px)';
     el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
