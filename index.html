@@ -86,7 +86,7 @@
             <p style="text-align: center; color: #666; font-size: 15px;">Whether you need a <strong>pipeline built</strong>, a <strong>workflow automated</strong>, or an <strong>ML model deployed</strong>   I ship reliable systems that work in production, not just in demos.</p>
 
             <div class="about-cta">
-                <a href="mailto:hamza.ghaffar@hotmail.com" class="cta-primary">✉ Hire Me / Let’s Talk</a>
+                <a href="booking.html" class="cta-primary">📅 Hire Me / Let's Talk</a>
                 <a href="assets/docs/Hamza_Ghaffar_SW_AI_Automation.pdf" target="_blank" rel="noopener noreferrer" class="cta-secondary">📄 Download Resume</a>
             </div>
         </div>
@@ -301,21 +301,50 @@
         <div class="section-header">
             <div class="section-label">Get in Touch</div>
             <h2>Let's Connect</h2>
-            <p>Open to discussions about automation, DevOps, AI systems, and data engineering. Open to relocation.</p>
+            <p>Open to discussions about automation, DevOps, AI systems, and data engineering.</p>
         </div>
 
-        <div class="contact-strip">
-            <a href="mailto:hamza.ghaffar@hotmail.com">✉ Email &rarr;</a>
-            <span class="sep"></span>
-            <a href="https://wa.me/436601192777" target="_blank" rel="noopener noreferrer">💬 WhatsApp &rarr;</a>
-            <span class="sep"></span>
-            <a href="https://github.com/hamza-ghaffar" target="_blank" rel="noopener noreferrer">GitHub &rarr;</a>
-            <span class="sep"></span>
-            <a href="https://linkedin.com/in/hamza-ghaffar" target="_blank" rel="noopener noreferrer">LinkedIn &rarr;</a>
-            <span class="sep"></span>
-            <a href="assets/docs/Hamza_Ghaffar_SW_AI_Automation.pdf" target="_blank" rel="noopener noreferrer">📄 Download Resume &rarr;</a>
+        <div class="contact-grid">
+            <div class="contact-card" onclick="openPopup('email')" role="button" tabindex="0">
+                <div class="contact-icon ci-email">✉️</div>
+                <div class="contact-card-label">Email</div>
+                <div class="contact-card-sub">Tap to reach out</div>
+            </div>
+            <div class="contact-card" onclick="openPopup('whatsapp')" role="button" tabindex="0">
+                <div class="contact-icon ci-whatsapp">💬</div>
+                <div class="contact-card-label">WhatsApp</div>
+                <div class="contact-card-sub">Tap to message</div>
+            </div>
+            <a href="https://github.com/hamza-ghaffar" target="_blank" rel="noopener noreferrer" class="contact-card">
+                <div class="contact-icon ci-github">🐙</div>
+                <div class="contact-card-label">GitHub</div>
+                <div class="contact-card-sub">hamza-ghaffar</div>
+            </a>
+            <div class="contact-card" onclick="openPopup('linkedin')" role="button" tabindex="0">
+                <div class="contact-icon ci-linkedin">🔗</div>
+                <div class="contact-card-label">LinkedIn</div>
+                <div class="contact-card-sub">Tap to connect</div>
+            </div>
         </div>
-        <p style="text-align: center; font-size: 14px; margin: 0;" class="blink-orange">📍 Villach, Austria &middot; +43 6601192777 &middot; Open to Relocate</p>
+
+        <!-- Contact Popup -->
+        <div class="popup-overlay" id="popupOverlay" onclick="closePopup(event)">
+            <div class="popup-card">
+                <button class="popup-close" onclick="closePopup(event, true)" aria-label="Close">&times;</button>
+                <div class="popup-icon" id="popupIcon"></div>
+                <div class="popup-title" id="popupTitle"></div>
+                <div class="popup-detail" id="popupDetail"></div>
+                <div class="popup-actions" id="popupActions"></div>
+            </div>
+        </div>
+
+        <div class="contact-location">
+            <span>📍 Villach, Austria</span>
+            <span class="loc-dot"></span>
+            <span>+43 6601192777</span>
+            <span class="loc-dot"></span>
+            <span>Open to Relocate</span>
+        </div>
     </section>
 </div>
 

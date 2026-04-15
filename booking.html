@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book a Meeting   Hamza Ghaffar</title>
+    <meta name="description" content="Schedule a meeting with Hamza Ghaffar. Pick a date and time, get a Jitsi Meet link, and send an invitation.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .booking-page {
+            max-width: 720px; margin: 0 auto; padding: 40px 20px 60px;
+            min-height: calc(100vh - 110px);
+        }
+        .booking-header {
+            text-align: center; margin-bottom: 40px;
+        }
+        .booking-header h1 {
+            font-size: 32px; font-weight: 800; color: #1a1a1a;
+            margin-bottom: 8px; letter-spacing: -0.5px;
+        }
+        .booking-header p {
+            font-size: 16px; color: #666;
+        }
+
+        /* Steps */
+        .booking-steps {
+            display: flex; justify-content: center; gap: 8px;
+            margin-bottom: 36px;
+        }
+        .step-dot {
+            width: 10px; height: 10px; border-radius: 50%;
+            background: #ddd; transition: background 0.3s ease, transform 0.3s ease;
+        }
+        .step-dot.active { background: var(--teal-100); transform: scale(1.3); }
+        .step-dot.done { background: #2e7d32; }
+
+        /* Calendar */
+        .cal-container {
+            background: #fff; border-radius: 16px; padding: 28px;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+            border: 1px solid #eaedf0; margin-bottom: 24px;
+        }
+        .cal-nav {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .cal-nav button {
+            background: #f4f6f8; border: 1px solid #e0e4e8; border-radius: 10px;
+            padding: 8px 16px; font-weight: 700; font-size: 14px;
+            cursor: pointer; transition: background 0.2s ease;
+        }
+        .cal-nav button:hover { background: #e8ebee; }
+        .cal-month {
+            font-size: 18px; font-weight: 800; color: #1a1a1a;
+        }
+        .cal-grid {
+            display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px;
+            text-align: center;
+        }
+        .cal-day-name {
+            font-size: 11px; font-weight: 700; color: #999;
+            text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 0;
+        }
+        .cal-day {
+            padding: 10px 4px; border-radius: 10px; font-size: 14px; font-weight: 600;
+            cursor: pointer; transition: all 0.2s ease; color: #333;
+            border: 2px solid transparent;
+        }
+        .cal-day:hover:not(.cal-disabled):not(.cal-empty) {
+            background: #e0f2f1; border-color: var(--teal-100);
+        }
+        .cal-day.cal-selected {
+            background: var(--teal-100); color: #fff; border-color: var(--teal-100);
+        }
+        .cal-day.cal-today {
+            border-color: var(--teal-100); color: var(--teal-100); font-weight: 800;
+        }
+        .cal-day.cal-today.cal-selected { color: #fff; }
+        .cal-day.cal-disabled {
+            color: #ccc; cursor: default; pointer-events: none;
+        }
+        .cal-day.cal-empty { pointer-events: none; }
+
+        /* Time Slots */
+        .time-section { display: none; }
+        .time-section.visible { display: block; }
+        .time-label {
+            font-size: 14px; font-weight: 700; color: #222;
+            margin-bottom: 12px; text-align: center;
+        }
+        .time-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 8px;
+        }
+        .time-slot {
+            padding: 10px; border-radius: 10px; text-align: center;
+            font-size: 14px; font-weight: 600; cursor: pointer;
+            background: #f4f6f8; border: 2px solid transparent;
+            transition: all 0.2s ease; color: #333;
+        }
+        .time-slot:hover { background: #e0f2f1; border-color: var(--teal-100); }
+        .time-slot.selected {
+            background: var(--teal-100); color: #fff; border-color: var(--teal-100);
+        }
+
+        /* Duration */
+        .duration-section { display: none; margin-top: 16px; }
+        .duration-section.visible { display: block; }
+        .duration-grid {
+            display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;
+        }
+        .dur-btn {
+            padding: 10px 24px; border-radius: 24px;
+            font-size: 14px; font-weight: 700; cursor: pointer;
+            background: #f4f6f8; border: 2px solid transparent;
+            transition: all 0.2s ease; color: #333;
+        }
+        .dur-btn:hover { background: #e0f2f1; border-color: var(--teal-100); }
+        .dur-btn.selected {
+            background: var(--teal-100); color: #fff; border-color: var(--teal-100);
+        }
+
+        /* Lead Form */
+        .lead-section {
+            display: none; background: #fff; border-radius: 16px; padding: 28px;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.06); border: 1px solid #eaedf0;
+            margin-top: 24px;
+        }
+        .lead-section.visible { display: block; }
+        .lead-section h3 {
+            font-size: 18px; font-weight: 800; margin-bottom: 20px; text-align: center;
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-group label {
+            display: block; font-size: 13px; font-weight: 700; color: #555;
+            margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%; padding: 12px 16px; border-radius: 10px;
+            border: 2px solid #e0e4e8; font-size: 15px; font-family: inherit;
+            transition: border-color 0.2s ease; background: #fafbfc;
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none; border-color: var(--teal-100); background: #fff;
+        }
+        .form-group textarea { resize: vertical; min-height: 80px; }
+        .btn-confirm {
+            display: block; width: 100%; padding: 16px; border: none;
+            border-radius: 12px; font-size: 16px; font-weight: 800;
+            background: linear-gradient(135deg, var(--teal-dark), var(--teal-100));
+            color: #fff; cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .btn-confirm:hover {
+            transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        /* Confirmation */
+        .confirm-section {
+            display: none; text-align: center; padding: 40px 20px;
+        }
+        .confirm-section.visible { display: block; }
+
+        /* Progress Timeline */
+        .progress-timeline {
+            max-width: 400px; margin: 0 auto 32px; text-align: left;
+        }
+        .prog-step {
+            display: flex; align-items: flex-start; gap: 14px;
+            padding: 14px 0; position: relative;
+            opacity: 0.3; transition: opacity 0.4s ease;
+        }
+        .prog-step.active { opacity: 1; }
+        .prog-step.done { opacity: 1; }
+        .prog-step::before {
+            content: ''; position: absolute; left: 17px; top: 42px;
+            width: 2px; height: calc(100% - 28px);
+            background: #e0e4e8; z-index: 0;
+        }
+        .prog-step:last-child::before { display: none; }
+        .prog-step.done::before { background: #2e7d32; }
+        .prog-dot {
+            width: 36px; height: 36px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px; flex-shrink: 0; position: relative; z-index: 1;
+            background: #f4f6f8; border: 2px solid #e0e4e8;
+            transition: all 0.4s ease;
+        }
+        .prog-step.active .prog-dot {
+            border-color: var(--teal-100); background: #e0f2f1;
+            animation: prog-pulse 1s infinite;
+        }
+        .prog-step.done .prog-dot {
+            background: #2e7d32; border-color: #2e7d32; color: #fff;
+        }
+        .prog-step.error .prog-dot {
+            background: #c62828; border-color: #c62828; color: #fff;
+        }
+        @keyframes prog-pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(10,130,118,0.3); }
+            50% { box-shadow: 0 0 0 8px rgba(10,130,118,0); }
+        }
+        .prog-text { padding-top: 6px; }
+        .prog-label {
+            font-size: 15px; font-weight: 700; color: #222;
+            margin-bottom: 2px;
+        }
+        .prog-sub {
+            font-size: 12px; color: #888;
+        }
+        .prog-step.done .prog-label { color: #1b5e20; }
+        .prog-step.error .prog-label { color: #c62828; }
+        .prog-step.error .prog-sub { color: #c62828; }
+
+        /* Success Card (hidden until timeline completes) */
+        .success-card {
+            display: none; opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        .success-card.visible {
+            display: block; opacity: 1;
+        }
+        .confirm-check {
+            width: 72px; height: 72px; border-radius: 50%;
+            background: #e8f5e9; display: flex; align-items: center;
+            justify-content: center; font-size: 36px; margin: 0 auto 20px;
+            animation: pop-in 0.5s ease;
+        }
+        @keyframes pop-in {
+            0% { transform: scale(0); }
+            70% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+        .confirm-section h2 {
+            font-size: 24px; font-weight: 800; margin-bottom: 8px;
+        }
+        .confirm-section p { color: #666; font-size: 15px; margin-bottom: 6px; }
+        .meeting-card {
+            background: #fff; border-radius: 14px; padding: 24px;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.06); border: 1px solid #eaedf0;
+            margin: 24px auto; max-width: 400px; text-align: left;
+        }
+        .meeting-card-row {
+            display: flex; gap: 10px; align-items: flex-start;
+            margin-bottom: 12px; font-size: 14px; color: #444;
+        }
+        .meeting-card-row:last-child { margin-bottom: 0; }
+        .meeting-card-icon { font-size: 18px; flex-shrink: 0; width: 24px; text-align: center; }
+        .meeting-card-text { line-height: 1.5; }
+        .meeting-card-text strong { color: #1a1a1a; }
+        .jitsi-link {
+            color: var(--teal-100); font-weight: 700; word-break: break-all;
+            text-decoration: none;
+        }
+        .jitsi-link:hover { text-decoration: underline; }
+        .confirm-actions {
+            display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;
+            margin-top: 24px;
+        }
+        .confirm-actions a, .confirm-actions button {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 12px 24px; border-radius: 12px;
+            font-size: 14px; font-weight: 700; text-decoration: none;
+            cursor: pointer; transition: transform 0.2s ease;
+            border: none;
+        }
+        .confirm-actions a:hover, .confirm-actions button:hover {
+            transform: translateY(-2px);
+        }
+        .btn-jitsi {
+            background: linear-gradient(135deg, #1565c0, #1976d2); color: #fff;
+        }
+        .btn-invite {
+            background: #e8f5e9; color: #1b5e20;
+        }
+        .btn-copy-link {
+            background: #fff3e0; color: #e65100;
+        }
+        .btn-back {
+            display: inline-flex; align-items: center; gap: 6px;
+            color: var(--teal-100); font-weight: 700; font-size: 14px;
+            text-decoration: none; margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .booking-header h1 { font-size: 26px; }
+            .cal-container { padding: 20px 14px; }
+            .cal-day { padding: 8px 2px; font-size: 13px; }
+            .time-grid { grid-template-columns: repeat(3, 1fr); }
+            .meeting-card { padding: 18px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="sticky-header">
+    <a href="index.html" class="header-brand">Hamza Ghaffar <span>| Portfolio</span></a>
+    <nav class="nav-links" id="navLinks">
+        <a href="index.html#about">About</a>
+        <a href="index.html#projects">Projects</a>
+        <a href="index.html#skills">Skills</a>
+        <a href="index.html#experience">Experience</a>
+        <a href="index.html#contact">Contact</a>
+    </nav>
+    <button class="menu-toggle" onclick="document.getElementById('navLinks').classList.toggle('active')" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+    </button>
+</header>
+
+<!-- Booking -->
+<div class="booking-page">
+    <div class="booking-header">
+        <h1>📅 Book a Meeting</h1>
+        <p>Pick a date, time, and duration. Get a Jitsi Meet link instantly.</p>
+    </div>
+
+    <div class="booking-steps">
+        <div class="step-dot active" id="step1"></div>
+        <div class="step-dot" id="step2"></div>
+        <div class="step-dot" id="step3"></div>
+        <div class="step-dot" id="step4"></div>
+    </div>
+
+    <!-- Step 1: Calendar -->
+    <div class="cal-container" id="calendarSection">
+        <div class="cal-nav">
+            <button onclick="changeMonth(-1)">&larr; Prev</button>
+            <div class="cal-month" id="calMonth"></div>
+            <button onclick="changeMonth(1)">Next &rarr;</button>
+        </div>
+        <div class="cal-grid" id="calGrid"></div>
+
+        <!-- Step 2: Time -->
+        <div class="time-section" id="timeSection">
+            <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;">
+            <div class="time-label" id="timeLabel">Select a time</div>
+            <div class="time-grid" id="timeGrid"></div>
+
+            <!-- Step 2b: Duration -->
+            <div class="duration-section" id="durationSection">
+                <div class="time-label">Meeting duration</div>
+                <div class="duration-grid">
+                    <div class="dur-btn" onclick="selectDuration(15)">15 min</div>
+                    <div class="dur-btn selected" onclick="selectDuration(30)">30 min</div>
+                    <div class="dur-btn" onclick="selectDuration(45)">45 min</div>
+                    <div class="dur-btn" onclick="selectDuration(60)">60 min</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 3: Lead Form -->
+    <div class="lead-section" id="leadSection">
+        <h3>Your Details</h3>
+        <div class="form-group">
+            <label for="guestName">Your Name *</label>
+            <input type="text" id="guestName" placeholder="e.g. Jane Smith" required>
+        </div>
+        <div class="form-group">
+            <label for="guestEmail">Your Email *</label>
+            <input type="email" id="guestEmail" placeholder="e.g. jane@company.com" required>
+        </div>
+        <div class="form-group">
+            <label for="guestTopic">Topic / Message</label>
+            <textarea id="guestTopic" placeholder="What would you like to discuss?"></textarea>
+        </div>
+        <button class="btn-confirm" onclick="confirmBooking()">Confirm &amp; Get Meeting Link</button>
+    </div>
+
+    <!-- Step 4: Sending + Confirmation -->
+    <div class="confirm-section" id="confirmSection">
+
+        <!-- Progress Timeline -->
+        <div class="progress-timeline" id="progressTimeline">
+            <div class="prog-step" id="prog1">
+                <div class="prog-dot">🔗</div>
+                <div class="prog-text">
+                    <div class="prog-label">Generating Jitsi room</div>
+                    <div class="prog-sub">Creating your private meeting link...</div>
+                </div>
+            </div>
+            <div class="prog-step" id="prog2">
+                <div class="prog-dot">📋</div>
+                <div class="prog-text">
+                    <div class="prog-label">Preparing invitation</div>
+                    <div class="prog-sub">Building meeting details...</div>
+                </div>
+            </div>
+            <div class="prog-step" id="prog3">
+                <div class="prog-dot">📧</div>
+                <div class="prog-text">
+                    <div class="prog-label">Sending to Hamza</div>
+                    <div class="prog-sub">Delivering to hamza.ghaffar@hotmail.com...</div>
+                </div>
+            </div>
+            <div class="prog-step" id="prog4">
+                <div class="prog-dot">✅</div>
+                <div class="prog-text">
+                    <div class="prog-label">Confirmed</div>
+                    <div class="prog-sub">Hamza has received your booking!</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success (shown after timeline completes) -->
+        <div class="success-card" id="successCard">
+            <div class="confirm-check">✅</div>
+            <h2>Meeting Confirmed!</h2>
+            <p>Hamza has received your booking at <strong>hamza.ghaffar@hotmail.com</strong></p>
+
+            <div class="meeting-card">
+                <div class="meeting-card-row">
+                    <span class="meeting-card-icon">📅</span>
+                    <div class="meeting-card-text"><strong id="confDate"></strong></div>
+                </div>
+                <div class="meeting-card-row">
+                    <span class="meeting-card-icon">🕐</span>
+                    <div class="meeting-card-text"><strong id="confTime"></strong></div>
+                </div>
+                <div class="meeting-card-row">
+                    <span class="meeting-card-icon">⏱️</span>
+                    <div class="meeting-card-text"><strong id="confDuration"></strong></div>
+                </div>
+                <div class="meeting-card-row">
+                    <span class="meeting-card-icon">👤</span>
+                    <div class="meeting-card-text" id="confGuest"></div>
+                </div>
+                <div class="meeting-card-row">
+                    <span class="meeting-card-icon">🔗</span>
+                    <div class="meeting-card-text">
+                        <a class="jitsi-link" id="confLink" href="#" target="_blank" rel="noopener noreferrer"></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="confirm-actions">
+                <a class="btn-jitsi" id="joinBtn" href="#" target="_blank" rel="noopener noreferrer">🎥 Join Jitsi Meet</a>
+                <button class="btn-copy-link" onclick="copyMeetLink()">📋 Copy Link</button>
+            </div>
+
+            <a href="index.html" class="btn-back">&larr; Back to Portfolio</a>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="footer-tagline">Hamza Ghaffar &middot; AI-assisted Automation &amp; DevOps Engineer</div>
+    <div class="footer-meta">&copy; 2026 &middot; Villach, Austria</div>
+</footer>
+
+<script>
+// State
+let currentYear, currentMonth, selectedDate = null, selectedTime = null, selectedDuration = 30;
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const TIMES = ['09:00','09:30','10:00','10:30','11:00','11:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30','17:00'];
+
+function init() {
+    const now = new Date();
+    currentYear = now.getFullYear();
+    currentMonth = now.getMonth();
+    renderCalendar();
+}
+
+function renderCalendar() {
+    document.getElementById('calMonth').textContent = MONTHS[currentMonth] + ' ' + currentYear;
+    const grid = document.getElementById('calGrid');
+    grid.innerHTML = '';
+    DAYS.forEach(function(d) {
+        const el = document.createElement('div');
+        el.className = 'cal-day-name';
+        el.textContent = d;
+        grid.appendChild(el);
+    });
+    const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+    const today = new Date(); today.setHours(0,0,0,0);
+    for (let i = 0; i < firstDay; i++) {
+        const el = document.createElement('div');
+        el.className = 'cal-day cal-empty';
+        grid.appendChild(el);
+    }
+    for (let d = 1; d <= daysInMonth; d++) {
+        const el = document.createElement('div');
+        el.className = 'cal-day';
+        el.textContent = d;
+        const date = new Date(currentYear, currentMonth, d);
+        const dayOfWeek = date.getDay();
+        if (date < today || dayOfWeek === 0 || dayOfWeek === 6) {
+            el.classList.add('cal-disabled');
+        } else {
+            if (date.getTime() === today.getTime()) el.classList.add('cal-today');
+            if (selectedDate && date.getTime() === selectedDate.getTime()) el.classList.add('cal-selected');
+            el.onclick = function() { selectDate(date); };
+        }
+        grid.appendChild(el);
+    }
+}
+
+function changeMonth(dir) {
+    currentMonth += dir;
+    if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+    if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+    renderCalendar();
+}
+
+function selectDate(date) {
+    selectedDate = date;
+    selectedTime = null;
+    renderCalendar();
+    renderTimeSlots();
+    updateSteps(2);
+}
+
+function renderTimeSlots() {
+    document.getElementById('timeSection').classList.add('visible');
+    document.getElementById('timeLabel').textContent = 'Select a time for ' + selectedDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+    const grid = document.getElementById('timeGrid');
+    grid.innerHTML = '';
+    const now = new Date();
+    const isToday = selectedDate.toDateString() === now.toDateString();
+    TIMES.forEach(function(t) {
+        const el = document.createElement('div');
+        el.className = 'time-slot';
+        el.textContent = t;
+        if (isToday) {
+            const parts = t.split(':');
+            const slotTime = new Date(now);
+            slotTime.setHours(parseInt(parts[0]), parseInt(parts[1]), 0, 0);
+            if (slotTime <= now) { el.style.opacity = '0.4'; el.style.pointerEvents = 'none'; }
+        }
+        if (selectedTime === t) el.classList.add('selected');
+        el.onclick = function() { selectTime(t); };
+        grid.appendChild(el);
+    });
+}
+
+function selectTime(time) {
+    selectedTime = time;
+    renderTimeSlots();
+    document.getElementById('durationSection').classList.add('visible');
+    document.getElementById('leadSection').classList.add('visible');
+    updateSteps(3);
+}
+
+function selectDuration(min) {
+    selectedDuration = min;
+    document.querySelectorAll('.dur-btn').forEach(function(b) {
+        b.classList.toggle('selected', parseInt(b.textContent) === min);
+    });
+}
+
+function updateSteps(step) {
+    for (let i = 1; i <= 4; i++) {
+        const dot = document.getElementById('step' + i);
+        dot.classList.remove('active', 'done');
+        if (i < step) dot.classList.add('done');
+        if (i === step) dot.classList.add('active');
+    }
+}
+
+function generateJitsiLink() {
+    var y = selectedDate.getFullYear();
+    var m = String(selectedDate.getMonth() + 1).padStart(2, '0');
+    var d = String(selectedDate.getDate()).padStart(2, '0');
+    var dateStr = y + m + d;
+    var timeStr = selectedTime.replace(':', '');
+    return 'https://meet.jit.si/HamzaGhaffar-' + dateStr + '-' + timeStr;
+}
+
+/* ── Progress Timeline Animation ── */
+function setProgStep(n, state, subText) {
+    var el = document.getElementById('prog' + n);
+    el.classList.remove('active', 'done', 'error');
+    el.classList.add(state);
+    if (subText) el.querySelector('.prog-sub').textContent = subText;
+}
+
+function runTimeline(booking) {
+    return new Promise(function(resolve) {
+        // Step 1: Generating Jitsi
+        setProgStep(1, 'active');
+        setTimeout(function() {
+            setProgStep(1, 'done', 'Room created: ' + booking.link.split('/').pop());
+
+            // Step 2: Preparing invitation
+            setProgStep(2, 'active');
+            setTimeout(function() {
+                setProgStep(2, 'done', 'Invitation ready for ' + booking.name);
+
+                // Step 3: Sending email
+                setProgStep(3, 'active');
+                sendEmailToHamza(booking).then(function(success) {
+                    if (success) {
+                        setProgStep(3, 'done', 'Delivered to hamza.ghaffar@hotmail.com ✓');
+                        // Step 4: Confirmed
+                        setTimeout(function() {
+                            setProgStep(4, 'done', 'Hamza has received your booking!');
+                            resolve(true);
+                        }, 600);
+                    } else {
+                        setProgStep(3, 'error', 'Delivery failed. Opening email client as backup...');
+                        setTimeout(function() {
+                            fallbackMailto(booking);
+                            setProgStep(4, 'done', 'Backup invite opened in your email client');
+                            resolve(true);
+                        }, 1500);
+                    }
+                });
+            }, 800);
+        }, 1000);
+    });
+}
+
+/* ── Auto-send email via formsubmit.co ── */
+function sendEmailToHamza(booking) {
+    var formData = new FormData();
+    formData.append('name', booking.name);
+    formData.append('email', booking.email);
+    formData.append('_subject', 'New Meeting Booking: ' + booking.date + ' at ' + booking.time);
+    formData.append('message',
+        'NEW MEETING BOOKING\n' +
+        '━━━━━━━━━━━━━━━━━━\n\n' +
+        'From: ' + booking.name + ' (' + booking.email + ')\n' +
+        'Date: ' + booking.date + '\n' +
+        'Time: ' + booking.time + ' - ' + booking.endTime + ' (CET)\n' +
+        'Duration: ' + booking.duration + ' minutes\n' +
+        'Topic: ' + (booking.topic || 'General Discussion') + '\n\n' +
+        'Jitsi Meet Link:\n' + booking.link + '\n\n' +
+        '━━━━━━━━━━━━━━━━━━\n' +
+        'Sent from your portfolio booking page'
+    );
+    formData.append('_captcha', 'false');
+    formData.append('_template', 'table');
+
+    return fetch('https://formsubmit.co/ajax/hamza.ghaffar@hotmail.com', {
+        method: 'POST',
+        body: formData
+    })
+    .then(function(res) { return res.ok; })
+    .catch(function() { return false; });
+}
+
+/* ── Fallback mailto if API fails ── */
+function fallbackMailto(b) {
+    var subject = encodeURIComponent('Meeting Booking: ' + b.date + ' at ' + b.time);
+    var body = encodeURIComponent(
+        'Hi Hamza,\n\nNew meeting booking from your portfolio:\n\n' +
+        'From: ' + b.name + ' (' + b.email + ')\n' +
+        'Date: ' + b.date + '\n' +
+        'Time: ' + b.time + ' - ' + b.endTime + ' (CET)\n' +
+        'Duration: ' + b.duration + ' min\n' +
+        'Topic: ' + (b.topic || 'General Discussion') + '\n\n' +
+        'Jitsi: ' + b.link
+    );
+    window.open('mailto:hamza.ghaffar@hotmail.com?subject=' + subject + '&body=' + body, '_self');
+}
+
+/* ── Confirm Booking ── */
+function confirmBooking() {
+    var name = document.getElementById('guestName').value.trim();
+    var email = document.getElementById('guestEmail').value.trim();
+    var topic = document.getElementById('guestTopic').value.trim();
+
+    if (!name || !email) { alert('Please fill in your name and email.'); return; }
+    if (!selectedDate || !selectedTime) { alert('Please select a date and time.'); return; }
+
+    // Basic email validation
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert('Please enter a valid email address.'); return; }
+
+    var jitsiLink = generateJitsiLink();
+    var dateFormatted = selectedDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+    var parts = selectedTime.split(':');
+    var endDate = new Date(selectedDate);
+    endDate.setHours(parseInt(parts[0]), parseInt(parts[1]) + selectedDuration, 0, 0);
+    var endTime = endDate.getHours().toString().padStart(2, '0') + ':' + endDate.getMinutes().toString().padStart(2, '0');
+
+    var booking = { name: name, email: email, topic: topic, date: dateFormatted, time: selectedTime, endTime: endTime, duration: selectedDuration, link: jitsiLink };
+    window._booking = booking;
+
+    // Hide form, show progress
+    document.getElementById('calendarSection').style.display = 'none';
+    document.getElementById('leadSection').style.display = 'none';
+    document.getElementById('confirmSection').classList.add('visible');
+    updateSteps(4);
+
+    // Disable confirm button to prevent double-submit
+    document.querySelector('.btn-confirm').disabled = true;
+
+    // Run animated timeline + auto-send
+    runTimeline(booking).then(function() {
+        // Populate success card
+        document.getElementById('confDate').textContent = dateFormatted;
+        document.getElementById('confTime').textContent = selectedTime + ' - ' + endTime + ' (CET)';
+        document.getElementById('confDuration').textContent = selectedDuration + ' minutes';
+        document.getElementById('confGuest').innerHTML = name + ' &middot; <span style="color:#888">' + email + '</span>';
+        document.getElementById('confLink').textContent = jitsiLink;
+        document.getElementById('confLink').href = jitsiLink;
+        document.getElementById('joinBtn').href = jitsiLink;
+
+        // Show success card with delay
+        setTimeout(function() {
+            document.getElementById('successCard').classList.add('visible');
+        }, 500);
+    });
+}
+
+function copyMeetLink() {
+    navigator.clipboard.writeText(window._booking.link).then(function() {
+        var btn = document.querySelector('.btn-copy-link');
+        btn.textContent = '✅ Copied!';
+        setTimeout(function() { btn.textContent = '📋 Copy Link'; }, 2000);
+    });
+}
+
+init();
+</script>
+
+</body>
+</html>
