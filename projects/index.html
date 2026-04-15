@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects   Hamza Ghaffar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --teal-100: #0a8276; --teal-80: #3b9b91; --teal-60: #6cb4ac;
+            --teal-40: #9dcdc7; --teal-dark: #004d47;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            background: #fafbfc; color: #333; line-height: 1.7; font-size: 17px;
+        }
+        .sticky-header {
+            position: sticky; top: 0; background: rgba(255,255,255,0.97);
+            backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.06);
+            z-index: 100; padding: 15px 40px; display: flex;
+            justify-content: space-between; align-items: center; height: 70px;
+        }
+        .header-brand {
+            font-size: 18px; font-weight: 700; color: var(--teal-100);
+            text-decoration: none; letter-spacing: -0.3px;
+        }
+        .header-brand span { color: #999; font-weight: 400; }
+        .nav-links { display: flex; gap: 28px; }
+        .nav-links a {
+            color: #555; text-decoration: none; font-weight: 600; font-size: 13px;
+            text-transform: uppercase; letter-spacing: 0.5px; padding: 6px 0;
+            position: relative; transition: color 0.3s;
+        }
+        .nav-links a:hover { color: var(--teal-100); }
+        .nav-links a::after {
+            content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+            height: 2px; background: var(--teal-100); transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+        .nav-links a:hover::after { transform: scaleX(1); }
+
+        .page-hero {
+            background: linear-gradient(135deg, var(--teal-dark) 0%, var(--teal-100) 100%);
+            color: #fff; padding: 80px 40px 60px; text-align: center;
+        }
+        .page-hero h1 { font-size: 42px; font-weight: 800; margin-bottom: 12px; }
+        .page-hero p { font-size: 18px; opacity: 0.85; max-width: 600px; margin: 0 auto; }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 60px 40px; }
+
+        .projects-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 32px;
+        }
+        .project-card {
+            background: #fff; border-radius: 16px; overflow: hidden;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-top: 5px solid var(--teal-100);
+            text-decoration: none; color: inherit;
+            display: flex; flex-direction: column;
+        }
+        .project-card:hover {
+            transform: translateY(-8px); box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        }
+        .project-card-body { padding: 32px; flex: 1; display: flex; flex-direction: column; }
+        .project-status {
+            display: inline-block; font-size: 11px; font-weight: 700;
+            padding: 4px 12px; border-radius: 20px; margin-bottom: 16px;
+            text-transform: uppercase; letter-spacing: 0.8px; align-self: flex-start;
+        }
+        .status-professional { background: linear-gradient(135deg, #e0f2f1, #b2dfdb); color: #004d47; }
+        .status-personal { background: linear-gradient(135deg, #fff3e0, #ffe0b2); color: #e65100; }
+        .status-thesis { background: linear-gradient(135deg, #e8eaf6, #c5cae9); color: #283593; }
+        .project-card h3 { font-size: 20px; font-weight: 800; color: #1a1a1a; margin-bottom: 12px; }
+        .project-card p { font-size: 15px; color: #555; line-height: 1.7; margin-bottom: 20px; flex: 1; }
+        .project-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+        .project-tag {
+            font-size: 12px; font-weight: 600; padding: 4px 10px;
+            border-radius: 6px; background: #f0f0f0; color: #555;
+        }
+        .project-link {
+            display: inline-flex; align-items: center; gap: 6px;
+            color: var(--teal-100); font-weight: 700; font-size: 14px;
+            text-decoration: none; transition: gap 0.3s;
+        }
+        .project-link:hover { gap: 10px; }
+
+        .footer {
+            text-align: center; padding: 40px; color: #fff; font-size: 14px;
+            background: linear-gradient(135deg, var(--teal-dark), #0a6b60);
+            position: relative;
+        }
+        .footer::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+            background: linear-gradient(to right, var(--teal-40), var(--teal-100), var(--teal-40));
+        }
+
+        @media (max-width: 768px) {
+            .sticky-header { padding: 10px 20px; }
+            .nav-links { display: none; }
+            .page-hero { padding: 60px 20px 40px; }
+            .page-hero h1 { font-size: 28px; }
+            .container { padding: 40px 20px; }
+            .projects-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="sticky-header">
+    <a href="../index.html" class="header-brand">Hamza Ghaffar <span>| Projects</span></a>
+    <nav class="nav-links">
+        <a href="../index.html">&larr; Home</a>
+        <a href="../index.html#about">About</a>
+        <a href="../index.html#skills">Skills</a>
+        <a href="../index.html#experience">Experience</a>
+    </nav>
+</header>
+
+<section class="page-hero">
+    <h1>All Projects</h1>
+    <p>Professional work, personal explorations, and academic research   everything I've built and learned from.</p>
+</section>
+
+<div class="container">
+    <div class="projects-grid">
+
+        <!-- Thesis -->
+        <a href="../thesis.html" class="project-card" style="border-top-color: #283593;">
+            <div class="project-card-body">
+                <span class="project-status status-thesis">Master's Thesis</span>
+                <h3>EDA Data Pipeline for CPB Co-Design</h3>
+                <p>17-stage Medallion data pipeline transforming fragmented EDA tool output into schema-governed, AI-ready data products at Infineon Technologies.</p>
+                <div class="project-tags">
+                    <span class="project-tag">Python</span>
+                    <span class="project-tag">Medallion Architecture</span>
+                    <span class="project-tag">Data Mesh</span>
+                    <span class="project-tag">Parquet</span>
+                </div>
+                <span class="project-link">View Project &rarr;</span>
+            </div>
+        </a>
+
+        <!-- Professional Journey -->
+        <a href="../vision.html" class="project-card" style="border-top-color: #0a8276;">
+            <div class="project-card-body">
+                <span class="project-status status-professional">Professional Journey</span>
+                <h3>From Network Engineering to AI-Assisted Automation</h3>
+                <p>My transformation from manual network ops at Huawei to building CI/CD pipelines, data infrastructure, and AI-powered systems at Infineon.</p>
+                <div class="project-tags">
+                    <span class="project-tag">CI/CD</span>
+                    <span class="project-tag">Jenkins</span>
+                    <span class="project-tag">SonarQube</span>
+                    <span class="project-tag">Docker</span>
+                </div>
+                <span class="project-link">View Story &rarr;</span>
+            </div>
+        </a>
+
+        <!-- Edge-to-Cloud -->
+        <a href="edge-to-cloud-pipeline.html" class="project-card" style="border-top-color: #ef6c00;">
+            <div class="project-card-body">
+                <span class="project-status status-personal">Personal Project</span>
+                <h3>Edge-to-Cloud Detection Pipeline</h3>
+                <p>Containerized pipeline ingesting camera detection events via FastAPI, with MariaDB storage and Chart.js dashboard for real-time visualization.</p>
+                <div class="project-tags">
+                    <span class="project-tag">FastAPI</span>
+                    <span class="project-tag">Docker</span>
+                    <span class="project-tag">MariaDB</span>
+                    <span class="project-tag">Chart.js</span>
+                </div>
+                <span class="project-link">View Project &rarr;</span>
+            </div>
+        </a>
+
+        <!-- Applied ML -->
+        <a href="applied-ml.html" class="project-card" style="border-top-color: #880e4f;">
+            <div class="project-card-body">
+                <span class="project-status status-personal">Personal Project</span>
+                <h3>Applied Machine Learning</h3>
+                <p>Anomaly detection, time-series forecasting, and classification models deployed via FastAPI endpoints and Dockerized ML services.</p>
+                <div class="project-tags">
+                    <span class="project-tag">PyTorch</span>
+                    <span class="project-tag">Scikit-Learn</span>
+                    <span class="project-tag">FastAPI</span>
+                    <span class="project-tag">Docker</span>
+                </div>
+                <span class="project-link">View Project &rarr;</span>
+            </div>
+        </a>
+
+        <!-- CI/CD & Quality Eng -->
+        <a href="cicd-quality-engineering.html" class="project-card" style="border-top-color: #1565c0;">
+            <div class="project-card-body">
+                <span class="project-status status-personal">Personal Project</span>
+                <h3>CI/CD &amp; Quality Engineering</h3>
+                <p>Build and validation workflows with quality gates, static analysis via SonarQube, and repeatable automation using Jenkins and Docker in Linux.</p>
+                <div class="project-tags">
+                    <span class="project-tag">Jenkins</span>
+                    <span class="project-tag">Docker</span>
+                    <span class="project-tag">SonarQube</span>
+                    <span class="project-tag">Linux</span>
+                </div>
+                <span class="project-link">View Project &rarr;</span>
+            </div>
+        </a>
+
+        <!-- Observability -->
+        <a href="observability.html" class="project-card" style="border-top-color: #f9a825;">
+            <div class="project-card-body">
+                <span class="project-status status-personal">Personal Project</span>
+                <h3>Observability &amp; Monitoring</h3>
+                <p>Monitoring and telemetry patterns using Prometheus and Grafana for feedback-driven systems and faster incident triage.</p>
+                <div class="project-tags">
+                    <span class="project-tag">Prometheus</span>
+                    <span class="project-tag">Grafana</span>
+                    <span class="project-tag">Telemetry</span>
+                </div>
+                <span class="project-link">View Project &rarr;</span>
+            </div>
+        </a>
+
+    </div>
+</div>
+
+<footer class="footer">
+    <div style="font-size: 16px; font-weight: 600; margin-bottom: 8px;">Hamza Ghaffar &middot; AI-assisted Automation &amp; DevOps Engineer</div>
+    <div style="opacity: 0.6; font-size: 13px;">&copy; 2026 &middot; Villach, Austria</div>
+</footer>
+
+</body>
+</html>

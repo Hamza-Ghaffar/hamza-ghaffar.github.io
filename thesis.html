@@ -1,0 +1,2079 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master's Thesis   EDA Data Pipeline for CPB Co-Design | Hamza Ghaffar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* ── Infineon Teal Palette ── */
+        :root {
+            --teal-100: #0a8276;
+            --teal-80: #3b9b91;
+            --teal-60: #6cb4ac;
+            --teal-40: #9dcdc7;
+            --teal-dark: #004d47;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', 'Source Sans 3', 'Segoe UI', system-ui, -apple-system, Arial, Helvetica, sans-serif;
+            background-color: #fafbfc;
+            color: #333333;
+            line-height: 1.7;
+            font-size: 17px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ── Animations ── */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(10,130,118,0.3); }
+            50% { box-shadow: 0 0 0 12px rgba(10,130,118,0); }
+        }
+
+        /* ── Sticky Header ── */
+        .sticky-header {
+            position: sticky;
+            top: 0;
+            background-color: rgba(255,255,255,0.97);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+            z-index: 100;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+            transition: box-shadow 0.3s ease;
+        }
+        .sticky-header:hover { box-shadow: 0 2px 20px rgba(0,0,0,0.06); }
+        .header-brand { font-size: 18px; font-weight: 700; color: #0a8276; letter-spacing: -0.3px; }
+        .header-brand span { color: #999; font-weight: 400; }
+        .nav-links { display: flex; gap: 28px; align-items: center; }
+        .nav-links a {
+            color: #555; text-decoration: none; font-weight: 600; font-size: 13px;
+            transition: color 0.3s ease; white-space: nowrap; text-transform: uppercase;
+            letter-spacing: 0.5px; padding: 6px 0; position: relative;
+        }
+        .nav-links a::after {
+            content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+            background: var(--teal-100); transform: scaleX(0); transition: transform 0.3s ease; border-radius: 1px;
+        }
+        .nav-links a:hover { color: #0a8276; }
+        .nav-links a:hover::after { transform: scaleX(1); }
+        .logo-right { height: 46px; }
+        .logo-right svg { height: 46px; width: auto; }
+
+        /* ── Hero ── */
+        .hero {
+            background: linear-gradient(135deg, var(--teal-dark) 0%, var(--teal-100) 50%, var(--teal-80) 100%);
+            color: #ffffff; padding: 100px 40px 70px; text-align: center;
+            position: relative; overflow: hidden;
+        }
+        .hero::before {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle at 20% 30%, rgba(255,255,255,0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 70%, rgba(255,255,255,0.05) 0%, transparent 50%),
+                        radial-gradient(circle at 50% 50%, rgba(0,0,0,0.05) 0%, transparent 70%);
+            pointer-events: none; animation: fadeIn 2s ease;
+        }
+        .hero::after {
+            content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 120px;
+            background: linear-gradient(to top, #fafbfc 0%, transparent 100%); pointer-events: none;
+        }
+        .hero-content { max-width: 960px; margin: 0 auto; position: relative; z-index: 1; }
+        .hero-eyebrow {
+            font-size: 14px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 2px; margin-bottom: 18px; opacity: 0.7;
+        }
+        .hero h1 {
+            font-size: 44px; font-weight: 800; margin-bottom: 20px;
+            letter-spacing: -1.5px; line-height: 1.15; animation: fadeInUp 1s ease;
+        }
+        .hero-tagline {
+            font-size: 20px; font-weight: 300; margin-bottom: 12px;
+            color: rgba(255,255,255,0.9); font-style: italic; animation: fadeInUp 1.2s ease;
+        }
+        .hero-meta {
+            font-size: 15px; margin-bottom: 40px; opacity: 0.8; animation: fadeInUp 1.3s ease;
+        }
+        .hero-meta strong { opacity: 1; }
+        .hero-description {
+            font-size: 17px; line-height: 1.9; max-width: 860px;
+            margin: 0 auto; opacity: 0.85; animation: fadeInUp 1.4s ease;
+        }
+        .hero-kpi-strip {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;
+            max-width: 900px; margin: 50px auto 0; animation: fadeInUp 1.6s ease;
+            position: relative; z-index: 1;
+        }
+        .hero-kpi {
+            text-align: center; padding: 24px 12px;
+            background: rgba(255,255,255,0.1); border-radius: 12px;
+            backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.15);
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+        .hero-kpi:hover { transform: translateY(-4px); background: rgba(255,255,255,0.18); }
+        .hero-kpi-value {
+            font-size: 42px; font-weight: 800; color: #fff;
+            line-height: 1; margin-bottom: 6px; letter-spacing: -1px;
+        }
+        .hero-kpi-label {
+            font-size: 12px; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 1.5px; color: rgba(255,255,255,0.7);
+        }
+        .hero-logo { margin-bottom: 30px; }
+        .hero-logo svg { height: 60px; width: auto; filter: brightness(0) invert(1); }
+
+        /* ── Container ── */
+        .container {
+            max-width: 1200px; margin: 0 auto; padding: 60px 40px;
+            background: #fff; box-shadow: 0 0 60px rgba(0,0,0,0.04);
+        }
+
+        /* ── Section ── */
+        .section { margin-bottom: 90px; animation: fadeIn 0.6s ease; }
+        .section-header {
+            background: linear-gradient(135deg, #f8f9fa 0%, #eef7f6 100%);
+            padding: 32px 44px; margin: 0 -40px 44px -40px;
+            border-left: 5px solid #0a8276; position: relative;
+        }
+        .section-header::after {
+            content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(to right, #0a8276, transparent);
+        }
+        .section-number {
+            color: #0a8276; font-size: 12px; font-weight: 800;
+            margin-bottom: 8px; text-transform: uppercase; letter-spacing: 2px;
+        }
+        h2 { font-size: 36px; font-weight: 800; color: #1a1a1a; margin-bottom: 12px; letter-spacing: -0.5px; }
+        .section-subtitle { font-size: 18px; color: #666; font-style: italic; }
+        h3 { font-size: 22px; font-weight: 700; color: var(--teal-100); margin: 36px 0 18px 0; letter-spacing: -0.2px; }
+        p { margin-bottom: 20px; color: #444; }
+
+        /* ── Story Block ── */
+        .story-block {
+            background: linear-gradient(135deg, #f8f9fa 0%, #f1f3f4 100%);
+            border-left: 4px solid var(--teal-60); padding: 36px 40px; margin: 30px 0;
+            font-size: 18px; line-height: 1.95; color: #444; font-style: italic;
+            border-radius: 0 12px 12px 0; position: relative;
+        }
+        .story-block::before {
+            content: '\201C'; position: absolute; top: 10px; left: 14px;
+            font-size: 60px; color: var(--teal-40); font-family: Georgia, serif; line-height: 1;
+        }
+
+        /* ── Cards ── */
+        .card-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px; margin: 40px 0;
+        }
+        .card {
+            background: #ffffff; border-radius: 12px; padding: 30px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-top: 4px solid #0a8276; position: relative; overflow: hidden;
+        }
+        .card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 100%;
+            background: linear-gradient(180deg, rgba(10,130,118,0.02) 0%, transparent 40%);
+            pointer-events: none;
+        }
+        .card:hover { transform: translateY(-6px); box-shadow: 0 8px 30px rgba(0,0,0,0.1); }
+        .card-icon { font-size: 36px; margin-bottom: 14px; }
+        .card h4 { font-size: 19px; font-weight: 600; color: #333; margin-bottom: 12px; }
+        .card p { font-size: 15px; color: #555; margin-bottom: 0; line-height: 1.65; }
+        .card-status {
+            display: inline-block; font-size: 11px; font-weight: 700; padding: 5px 14px;
+            border-radius: 20px; margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.8px;
+        }
+        .status-bronze { background: linear-gradient(135deg, #fff3e0, #ffe0b2); color: #e65100; }
+        .status-silver { background: linear-gradient(135deg, #eceff1, #cfd8dc); color: #37474f; }
+        .status-gold   { background: linear-gradient(135deg, #fff9c4, #fff176); color: #f57f17; }
+        .status-nectar { background: linear-gradient(135deg, #fce4ec, #f8bbd0); color: #880e4f; }
+        .status-planning { background: linear-gradient(135deg, #e8eaf6, #c5cae9); color: #283593; }
+
+        /* ── Vision Box ── */
+        .vision-box {
+            background: #0a8276; color: #ffffff; padding: 35px; margin: 35px 0;
+            border-radius: 3px; position: relative; overflow: hidden;
+        }
+        .vision-box::before {
+            content: '\201C'; position: absolute; top: -10px; left: 15px;
+            font-size: 140px; opacity: 0.08; font-family: Georgia, serif; line-height: 1;
+        }
+        .vision-label {
+            font-weight: 700; font-size: 13px; margin-bottom: 14px;
+            text-transform: uppercase; letter-spacing: 1.5px; opacity: 0.7;
+        }
+        .vision-box p { color: #ffffff; font-size: 19px; line-height: 1.8; position: relative; z-index: 1; margin: 0; }
+
+        /* ── Insight Box ── */
+        .insight-box {
+            background: linear-gradient(135deg, #f7faf9 0%, #e8f5f4 100%);
+            border-left: 4px solid #0a8276; padding: 28px 32px; margin: 30px 0;
+            border-radius: 0 12px 12px 0;
+        }
+        .insight-label {
+            font-weight: 700; color: #0a8276; font-size: 13px; margin-bottom: 10px;
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+        .insight-box p { margin: 0; color: #444; }
+
+        /* ── Status Table ── */
+        .status-table {
+            width: 100%; border-collapse: separate; border-spacing: 0;
+            margin: 30px 0; border-radius: 12px; overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        }
+        .status-table th {
+            background: linear-gradient(135deg, #f8f9fa, #eef7f6);
+            padding: 16px 22px; text-align: left; font-weight: 700; font-size: 13px;
+            text-transform: uppercase; letter-spacing: 0.8px; color: var(--teal-100);
+            border-bottom: 2px solid var(--teal-40);
+        }
+        .status-table td {
+            padding: 16px 20px; border-bottom: 1px solid #f0f0f0;
+            font-size: 15px; color: #444; vertical-align: top;
+        }
+        .status-table tr:hover { background: #fafafa; }
+        .status-dot {
+            display: inline-block; width: 12px; height: 12px; border-radius: 50%;
+            margin-right: 8px; vertical-align: middle; box-shadow: 0 0 0 3px rgba(0,0,0,0.05);
+        }
+        .dot-green  { background: var(--teal-100); }
+        .dot-yellow { background: #f9a825; }
+        .dot-red    { background: #c62828; }
+        .dot-blue   { background: #1565c0; }
+
+        /* ── Domains Bar ── */
+        .domains-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr);
+            gap: 16px; margin: 40px 0;
+        }
+        .domain-card {
+            padding: 24px 18px; text-align: center; border-radius: 12px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .domain-card:hover { transform: translateY(-4px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+        .domain-card h4 {
+            font-size: 16px; font-weight: 700; margin-bottom: 6px;
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .domain-card .domain-key {
+            font-size: 12px; font-weight: 700; padding: 3px 10px;
+            border-radius: 10px; display: inline-block; margin-bottom: 8px;
+        }
+        .domain-card p { font-size: 13px; margin: 0; line-height: 1.5; opacity: 0.85; }
+
+        .domain-pkg  { background: #eef7f6; color: #0a8276; }
+        .domain-pkg h4, .domain-pkg .domain-key { color: #0a8276; }
+        .domain-pkg .domain-key { background: rgba(10,130,118,0.1); }
+        .domain-sim  { background: #f3e5f5; color: #4a148c; }
+        .domain-sim h4, .domain-sim .domain-key { color: #4a148c; }
+        .domain-sim .domain-key { background: rgba(74,20,140,0.1); }
+        .domain-core { background: #e3f2fd; color: #0d47a1; }
+        .domain-core h4, .domain-core .domain-key { color: #0d47a1; }
+        .domain-core .domain-key { background: rgba(13,71,161,0.1); }
+        .domain-io   { background: #e0f2f1; color: #004d47; }
+        .domain-io h4, .domain-io .domain-key { color: #004d47; }
+        .domain-io .domain-key { background: rgba(0,77,71,0.1); }
+
+        /* ── Pipeline Flow ── */
+        .pipeline-flow {
+            display: flex; flex-direction: column; gap: 0;
+            margin: 40px 0; border-radius: 16px; overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        .pipeline-phase {
+            display: grid; grid-template-columns: 160px 1fr;
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+        }
+        .pipeline-phase:last-child { border-bottom: none; }
+        .phase-label {
+            padding: 20px 24px; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; text-align: center;
+        }
+        .phase-label h4 {
+            font-size: 14px; font-weight: 800; text-transform: uppercase;
+            letter-spacing: 1px; margin-bottom: 4px;
+        }
+        .phase-label .phase-stages {
+            font-size: 11px; font-weight: 600; opacity: 0.7;
+        }
+        .phase-steps {
+            display: flex; flex-wrap: wrap; gap: 10px; padding: 16px 20px;
+            align-items: center;
+        }
+        .phase-step {
+            background: #fff; padding: 10px 16px; border-radius: 8px;
+            font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.04);
+            transition: transform 0.2s ease;
+        }
+        .phase-step:hover { transform: translateY(-2px); }
+        .phase-step-num {
+            width: 24px; height: 24px; border-radius: 50%; display: flex;
+            align-items: center; justify-content: center; font-size: 10px;
+            font-weight: 800; color: #fff; flex-shrink: 0;
+        }
+        .phase-arrow { color: var(--teal-60); font-size: 16px; font-weight: 700; }
+
+        .phase-planning .phase-label { background: #e8eaf6; }
+        .phase-planning .phase-label h4 { color: #283593; }
+        .phase-planning .phase-step-num { background: #3f51b5; }
+
+        .phase-bronze .phase-label { background: #fff3e0; }
+        .phase-bronze .phase-label h4 { color: #e65100; }
+        .phase-bronze .phase-step-num { background: #ef6c00; }
+
+        .phase-silver .phase-label { background: #eceff1; }
+        .phase-silver .phase-label h4 { color: #37474f; }
+        .phase-silver .phase-step-num { background: #546e7a; }
+
+        .phase-gold .phase-label { background: #fff9c4; }
+        .phase-gold .phase-label h4 { color: #f57f17; }
+        .phase-gold .phase-step-num { background: #f9a825; }
+
+        .phase-nectar .phase-label { background: #fce4ec; }
+        .phase-nectar .phase-label h4 { color: #880e4f; }
+        .phase-nectar .phase-step-num { background: #ad1457; }
+
+        /* ── Medallion Layers Visual ── */
+        .medallion-layers {
+            display: grid; grid-template-columns: repeat(4, 1fr);
+            gap: 0; margin: 40px 0; border-radius: 16px; overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        .medallion-layer {
+            padding: 32px 24px; text-align: center;
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+        .medallion-layer::after {
+            content: '→'; position: absolute; right: -12px; top: 50%;
+            transform: translateY(-50%); font-size: 24px; font-weight: 700;
+            z-index: 2;
+        }
+        .medallion-layer:last-child::after { content: ''; }
+        .medallion-layer h4 {
+            font-size: 20px; font-weight: 800; margin-bottom: 8px;
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+        .medallion-layer .layer-desc {
+            font-size: 13px; line-height: 1.6; opacity: 0.85;
+        }
+        .medallion-layer .layer-icon { font-size: 32px; margin-bottom: 12px; }
+
+        .layer-bronze { background: linear-gradient(135deg, #fff3e0, #ffe0b2); color: #e65100; }
+        .layer-bronze::after { color: #e65100; }
+        .layer-silver { background: linear-gradient(135deg, #eceff1, #cfd8dc); color: #37474f; }
+        .layer-silver::after { color: #546e7a; }
+        .layer-gold { background: linear-gradient(135deg, #fff9c4, #fff176); color: #f57f17; }
+        .layer-gold::after { color: #f57f17; }
+        .layer-nectar { background: linear-gradient(135deg, #fce4ec, #f8bbd0); color: #880e4f; }
+
+        /* ── Capabilities List ── */
+        .capabilities-list {
+            background: #f7f7f7; padding: 28px 30px; margin: 30px 0; border-radius: 3px;
+        }
+        .capabilities-list h4 { font-size: 18px; font-weight: 600; color: #333; margin-bottom: 18px; }
+        .capabilities-list ul { list-style: none; padding: 0; }
+        .capabilities-list li {
+            padding: 12px 0; padding-left: 28px; position: relative;
+            color: #444; border-bottom: 1px solid #e5e5e5; font-size: 16px;
+        }
+        .capabilities-list li:last-child { border-bottom: none; }
+        .capabilities-list li::before {
+            content: '✓'; position: absolute; left: 0; color: #0a8276;
+            font-weight: 700; font-size: 17px;
+        }
+        .capabilities-list li strong { color: #0a8276; }
+
+        /* ── Data Mesh Principles ── */
+        .mesh-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr);
+            gap: 24px; margin: 40px 0;
+        }
+        .mesh-card {
+            background: #fff; border-radius: 14px; padding: 28px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            border-left: 4px solid var(--teal-100);
+            transition: transform 0.3s ease;
+        }
+        .mesh-card:hover { transform: translateY(-4px); }
+        .mesh-card .mesh-num {
+            display: inline-flex; width: 32px; height: 32px; border-radius: 50%;
+            background: var(--teal-100); color: #fff; align-items: center;
+            justify-content: center; font-weight: 800; font-size: 14px; margin-bottom: 12px;
+        }
+        .mesh-card h4 { font-size: 17px; font-weight: 700; color: #333; margin-bottom: 8px; }
+        .mesh-card p { font-size: 14px; color: #555; margin: 0; line-height: 1.6; }
+
+        /* ── Executive Summary ── */
+        .exec-summary {
+            max-width: 1200px; margin: -40px auto 0; padding: 48px 48px 40px;
+            background: #fff; border-radius: 20px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.08); position: relative; z-index: 2;
+        }
+        .exec-summary-title {
+            text-align: center; font-size: 13px; font-weight: 700;
+            color: var(--teal-100); text-transform: uppercase;
+            letter-spacing: 2px; margin-bottom: 32px;
+        }
+        .exec-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+        .exec-card {
+            padding: 28px; border-radius: 14px; position: relative;
+            overflow: hidden; transition: transform 0.3s ease;
+        }
+        .exec-card:hover { transform: translateY(-4px); }
+        .exec-card-icon { font-size: 28px; margin-bottom: 14px; }
+        .exec-card h4 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+        .exec-card p { font-size: 14px; line-height: 1.7; margin: 0; opacity: 0.85; }
+        .exec-problem  { background: linear-gradient(135deg, #fce4ec, #f8bbd0); color: #880e4f; }
+        .exec-problem h4 { color: #880e4f; }
+        .exec-solution { background: linear-gradient(135deg, #eef7f6, #d5edea); color: #0a8276; }
+        .exec-solution h4 { color: #0a8276; }
+        .exec-outcome  { background: linear-gradient(135deg, #e0f2f1, #b2dfdb); color: #004d47; }
+        .exec-outcome h4 { color: #004d47; }
+
+        /* ── Deliverables Grid ── */
+        .deliverables-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin: 40px 0;
+        }
+        .deliverables-column {
+            border-radius: 16px; overflow: hidden;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+        }
+        .deliverables-header {
+            padding: 20px 28px; font-size: 16px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 1px; text-align: center; color: #fff;
+        }
+        .deliverables-body { padding: 8px 0; }
+        .deliverable-item {
+            display: flex; align-items: flex-start; gap: 14px;
+            padding: 16px 24px; border-bottom: 1px solid #f0f0f0;
+        }
+        .deliverable-item:last-child { border-bottom: none; }
+        .deliverable-num {
+            width: 28px; height: 28px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px; font-weight: 800; color: #fff; flex-shrink: 0;
+        }
+        .deliverable-text h5 { font-size: 15px; font-weight: 700; color: #333; margin-bottom: 4px; }
+        .deliverable-text p { font-size: 13px; color: #666; margin: 0; line-height: 1.5; }
+
+        /* ── Scope Table ── */
+        .scope-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin: 40px 0;
+            border-radius: 12px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        }
+        .scope-column { padding: 0; }
+        .scope-header {
+            padding: 18px 24px; font-size: 14px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 1px; text-align: center; color: #fff;
+        }
+        .scope-in .scope-header { background: var(--teal-100); }
+        .scope-out .scope-header { background: #78909c; }
+        .scope-item {
+            padding: 14px 24px; border-bottom: 1px solid #f0f0f0;
+            font-size: 15px; display: flex; align-items: center; gap: 10px;
+        }
+        .scope-item:last-child { border-bottom: none; }
+        .scope-in .scope-item { background: #eef7f6; color: #004d47; }
+        .scope-out .scope-item { background: #f5f7f8; color: #546e7a; }
+
+        /* ── Before/After Flow Comparison ── */
+        .flow-comparison {
+            display: grid; grid-template-columns: 1fr 60px 1fr;
+            gap: 0; margin: 40px 0; align-items: stretch;
+        }
+        .flow-column { padding: 0; }
+        .flow-column-header {
+            padding: 20px 25px; font-size: 15px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 1.5px;
+            text-align: center; border-radius: 12px 12px 0 0;
+        }
+        .flow-before .flow-column-header { background: #78909c; color: #fff; }
+        .flow-after .flow-column-header { background: var(--teal-dark); color: #fff; }
+        .flow-arrow-column { display: flex; align-items: center; justify-content: center; }
+        .flow-arrow { font-size: 32px; color: #0a8276; font-weight: 700; }
+        .flow-step {
+            padding: 18px 24px; border-bottom: 1px solid rgba(0,0,0,0.06);
+            display: flex; align-items: flex-start; gap: 14px;
+        }
+        .flow-before .flow-step { background: #f5f7f8; border-left: 3px solid #b0bec5; }
+        .flow-after .flow-step { background: #eef7f6; border-left: 3px solid var(--teal-60); }
+        .flow-step-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+        .flow-step-content h5 { font-size: 15px; font-weight: 700; color: #333; margin-bottom: 4px; }
+        .flow-step-content p { font-size: 14px; color: #666; margin: 0; line-height: 1.55; }
+
+        /* ── Manager Note ── */
+        .manager-note {
+            background: linear-gradient(135deg, #fffdf5 0%, #fff9e6 100%);
+            border: 2px solid #ffd966; border-radius: 12px;
+            padding: 32px 36px; margin: 40px 0; position: relative;
+        }
+        .manager-note::before {
+            content: ''; position: absolute; top: -2px; left: -2px; right: -2px; height: 4px;
+            background: linear-gradient(to right, #f59e0b, #fbbf24);
+            border-radius: 12px 12px 0 0;
+        }
+        .manager-note h3 { color: #d97706; margin-top: 0; font-size: 20px; }
+        .manager-note p { color: #444; margin-bottom: 0; }
+
+        /* ── Vertical Milestone Timeline ── */
+        .v-timeline { position: relative; padding: 20px 0; margin: 40px 0 50px; }
+        .v-timeline::before {
+            content: ''; position: absolute; left: 50%; top: 0; bottom: 0;
+            width: 4px; background: linear-gradient(to bottom, #283593 0%, #3f51b5 15%, #ef6c00 30%, #546e7a 50%, #f9a825 70%, var(--teal-100) 85%, var(--teal-dark) 100%);
+            transform: translateX(-50%); border-radius: 2px;
+        }
+        .tl-item { position: relative; display: flex; align-items: flex-start; margin-bottom: 0; padding: 20px 0; }
+        .tl-item:last-child { margin-bottom: 0; }
+        .tl-item:nth-child(odd) { flex-direction: row-reverse; }
+        .tl-year {
+            position: absolute; left: 50%; transform: translateX(-50%);
+            width: 68px; height: 68px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 13px; color: #fff; z-index: 2;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.2); transition: transform 0.3s ease;
+        }
+        .tl-year:hover { transform: translateX(-50%) scale(1.1); }
+        .tl-year-planning { background: #3f51b5; }
+        .tl-year-bronze { background: #ef6c00; }
+        .tl-year-silver { background: #546e7a; }
+        .tl-year-gold { background: #f9a825; }
+        .tl-year-nectar { background: #ad1457; }
+        .tl-year-now {
+            background: linear-gradient(135deg, var(--teal-dark), var(--teal-100));
+            width: 76px; height: 76px; font-size: 14px;
+            box-shadow: 0 0 0 6px rgba(10,130,118,0.2), 0 4px 16px rgba(0,0,0,0.2);
+            animation: pulse 2s infinite;
+        }
+        .tl-content {
+            width: calc(50% - 56px); background: #fff; border-radius: 12px;
+            padding: 24px 28px; box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+            border: 1px solid #eee; position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .tl-content:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+        .tl-item:nth-child(odd) .tl-content { margin-right: auto; margin-left: 0; }
+        .tl-item:nth-child(even) .tl-content { margin-left: auto; margin-right: 0; }
+        .tl-content h4 { font-size: 16px; font-weight: 700; margin: 0 0 8px; color: #222; }
+        .tl-content ul { margin: 0; padding: 0 0 0 18px; list-style: none; }
+        .tl-content ul li { font-size: 14px; color: #555; line-height: 1.6; position: relative; padding-left: 4px; }
+        .tl-content ul li::before { content: '\25B8'; position: absolute; left: -16px; color: #0a8276; font-weight: 700; }
+        .tl-tag {
+            display: inline-block; font-size: 11px; font-weight: 700;
+            padding: 2px 8px; border-radius: 10px; margin-bottom: 8px;
+        }
+        .tag-planning { background: #e8eaf6; color: #283593; }
+        .tag-bronze { background: #fff3e0; color: #e65100; }
+        .tag-silver { background: #eceff1; color: #37474f; }
+        .tag-gold { background: #fff8e1; color: #f57f17; }
+        .tag-nectar { background: #fce4ec; color: #880e4f; }
+        .tag-now { background: #d5edea; color: #004d47; }
+        .tl-now-badge {
+            position: absolute; left: 50%; transform: translateX(-50%) translateY(-8px);
+            background: #0a8276; color: #fff; font-size: 11px; font-weight: 700;
+            padding: 3px 12px; border-radius: 10px; letter-spacing: 1px; z-index: 3; white-space: nowrap;
+        }
+
+        /* ── Process Evolution Timeline ── */
+        .evo-timeline {
+            display: grid; grid-template-columns: 1fr 60px 1fr 60px 1fr;
+            gap: 0; margin: 40px 0; align-items: stretch;
+        }
+        .evo-era { border-radius: 12px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+        .evo-era-header { padding: 20px 24px; text-align: center; font-weight: 700; font-size: 18px; color: #fff; }
+        .evo-era-body { padding: 20px; }
+        .evo-step { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.06); }
+        .evo-step:last-child { border-bottom: none; }
+        .evo-step-icon { font-size: 18px; flex-shrink: 0; }
+        .evo-step p { font-size: 14px; color: #444; margin: 0; line-height: 1.5; }
+        .evo-step p strong { display: block; font-size: 13px; color: #666; margin-bottom: 2px; }
+        .evo-arrow-col { display: flex; align-items: center; justify-content: center; }
+        .evo-arrow { font-size: 32px; color: #0a8276; }
+        .era-before .evo-era-header { background: #78909c; }
+        .era-before .evo-era-body { background: #f5f7f8; }
+        .era-during .evo-era-header { background: var(--teal-80); }
+        .era-during .evo-era-body { background: #eef7f6; }
+        .era-after .evo-era-header { background: var(--teal-dark); }
+        .era-after .evo-era-body { background: #e8f5f4; }
+        .evo-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 40px; }
+        .evo-summary-box { text-align: center; padding: 24px 16px; border-radius: 14px; transition: transform 0.3s ease; }
+        .evo-summary-box:hover { transform: translateY(-4px); }
+        .evo-summary-box h4 { font-size: 40px; margin-bottom: 6px; }
+        .evo-summary-box p { font-size: 15px; font-weight: 600; margin: 0; }
+
+        /* ── Convergence ── */
+        .convergence {
+            text-align: center; padding: 60px 40px;
+            background: linear-gradient(180deg, #f8faf9 0%, #e8f5f4 50%, #f8faf9 100%);
+            border-radius: 20px; margin: 40px 0;
+            border: 1px solid rgba(10,130,118,0.1);
+        }
+        .convergence-inputs { display: flex; justify-content: center; gap: 16px; margin-bottom: 30px; flex-wrap: wrap; }
+        .convergence-input { padding: 14px 20px; border-radius: 3px; font-weight: 600; font-size: 14px; }
+        .convergence-arrow { font-size: 36px; color: #0a8276; margin-bottom: 20px; }
+        .convergence-platform {
+            display: inline-block; background: linear-gradient(135deg, var(--teal-dark), var(--teal-100));
+            color: #fff; padding: 22px 56px; border-radius: 12px;
+            font-size: 22px; font-weight: 700; letter-spacing: -0.3px;
+            margin-bottom: 20px; box-shadow: 0 6px 20px rgba(10,130,118,0.25);
+        }
+        .convergence-flow {
+            display: flex; justify-content: center; gap: 8px;
+            align-items: center; margin-top: 24px; flex-wrap: wrap;
+        }
+        .convergence-step {
+            background: #fff; padding: 12px 20px; border-radius: 24px;
+            font-size: 14px; font-weight: 600; color: #0a8276;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border: 1px solid rgba(10,130,118,0.12);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .convergence-step:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(10,130,118,0.15); }
+        .convergence-step-arrow { color: #0a8276; font-size: 18px; }
+
+        /* ── Progress Dashboard ── */
+        .progress-dashboard {
+            display: grid; grid-template-columns: 200px 1fr; gap: 40px;
+            align-items: center; margin: 40px 0; padding: 36px 40px;
+            background: linear-gradient(135deg, #f8faf9, #eef7f6);
+            border-radius: 16px; border: 1px solid rgba(10,130,118,0.08);
+        }
+        .progress-ring-container { position: relative; width: 180px; height: 180px; }
+        .progress-ring { transform: rotate(-90deg); }
+        .progress-ring-bg { fill: none; stroke: #e8e8e8; stroke-width: 12; }
+        .progress-ring-fill {
+            fill: none; stroke: url(#progressGradient); stroke-width: 12;
+            stroke-linecap: round; stroke-dasharray: 440; stroke-dashoffset: 264;
+            transition: stroke-dashoffset 1.5s ease;
+        }
+        .progress-ring-text {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%); text-align: center;
+        }
+        .progress-ring-value { font-size: 42px; font-weight: 800; color: var(--teal-100); line-height: 1; }
+        .progress-ring-label { font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+        .progress-bars { display: flex; flex-direction: column; gap: 20px; }
+        .progress-bar-item { display: grid; grid-template-columns: 120px 1fr 50px; gap: 14px; align-items: center; }
+        .progress-bar-label { font-size: 14px; font-weight: 600; color: #444; }
+        .progress-bar-track { height: 12px; background: #e5e5e5; border-radius: 6px; overflow: hidden; }
+        .progress-bar-fill { height: 100%; border-radius: 6px; transition: width 1.5s ease; }
+        .bar-planning { background: linear-gradient(to right, #3f51b5, #5c6bc0); }
+        .bar-bronze { background: linear-gradient(to right, #ef6c00, #fb8c00); }
+        .bar-silver { background: linear-gradient(to right, #546e7a, #78909c); }
+        .bar-gold { background: linear-gradient(to right, #f9a825, #fbbf24); }
+        .bar-nectar { background: linear-gradient(to right, #ad1457, #d81b60); }
+        .progress-bar-count { font-size: 14px; font-weight: 700; color: #555; text-align: right; }
+
+        /* ── Flywheel ── */
+        .flywheel-container { margin: 50px auto; max-width: 600px; position: relative; }
+        .flywheel-svg { width: 100%; height: auto; display: block; margin: 0 auto; }
+        @keyframes spin-wheel {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .wheel-ring { transform-origin: 300px 300px; animation: spin-wheel 18s linear infinite; }
+        .flywheel-label-group { transition: opacity 0.3s ease; }
+
+        /* ── Section Divider ── */
+        .section-divider {
+            height: 4px;
+            background: linear-gradient(to right, transparent, var(--teal-40), transparent);
+            margin: 80px 0; border: none; border-radius: 2px;
+        }
+
+        /* ── Methodology Phases ── */
+        .methodology-flow {
+            display: grid; grid-template-columns: repeat(4, 1fr);
+            gap: 0; margin: 40px 0; border-radius: 12px; overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        .method-phase {
+            padding: 28px 20px; text-align: center;
+            position: relative; transition: transform 0.3s ease;
+        }
+        .method-phase::after {
+            content: '→'; position: absolute; right: -12px; top: 50%;
+            transform: translateY(-50%); font-size: 22px; font-weight: 700;
+            color: var(--teal-60); z-index: 2;
+        }
+        .method-phase:last-child::after { content: ''; }
+        .method-phase h4 { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+        .method-phase p { font-size: 12px; margin: 0; line-height: 1.5; opacity: 0.8; }
+        .method-phase .method-icon { font-size: 28px; margin-bottom: 10px; }
+
+        .method-1 { background: linear-gradient(135deg, #e8eaf6, #c5cae9); color: #283593; }
+        .method-2 { background: linear-gradient(135deg, #eef7f6, #d5edea); color: #0a8276; }
+        .method-3 { background: linear-gradient(135deg, #fff9c4, #fff176); color: #f57f17; }
+        .method-4 { background: linear-gradient(135deg, #e0f2f1, #b2dfdb); color: #004d47; }
+
+        /* ── Footer ── */
+        .footer {
+            text-align: center; padding: 50px 40px; color: #fff; font-size: 14px;
+            background: linear-gradient(135deg, var(--teal-dark) 0%, #0a6b60 100%);
+            margin-top: 0; position: relative;
+        }
+        .footer::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+            background: linear-gradient(to right, var(--teal-40), var(--teal-100), var(--teal-40));
+        }
+        .footer-tagline { font-size: 18px; font-weight: 600; margin-bottom: 8px; opacity: 0.95; }
+        .footer-meta { opacity: 0.6; font-size: 13px; }
+
+        /* ── Responsive ── */
+        @media (max-width: 900px) {
+            .exec-grid { grid-template-columns: 1fr; }
+            .exec-summary { margin: -20px 16px 0; padding: 30px 24px; }
+            .domains-grid { grid-template-columns: repeat(2, 1fr); }
+            .medallion-layers { grid-template-columns: 1fr; }
+            .medallion-layer::after { content: '\2193'; position: static; transform: none; display: block; text-align: center; font-size: 20px; }
+            .mesh-grid { grid-template-columns: 1fr; }
+            .deliverables-grid { grid-template-columns: 1fr; }
+            .scope-grid { grid-template-columns: 1fr; }
+            .methodology-flow { grid-template-columns: 1fr; }
+            .method-phase::after { content: '\2193'; position: static; transform: none; display: block; }
+            .pipeline-flow .pipeline-phase { grid-template-columns: 1fr; }
+            .flow-comparison { grid-template-columns: 1fr; gap: 20px; }
+            .flow-arrow-column { display: none; }
+            .evo-timeline { grid-template-columns: 1fr; gap: 20px; }
+            .evo-arrow-col { display: none; }
+            .evo-summary { grid-template-columns: 1fr; }
+            .convergence-inputs { flex-direction: column; align-items: center; }
+            .v-timeline::before { left: 24px; }
+            .tl-item, .tl-item:nth-child(odd) { flex-direction: row; padding-left: 60px; }
+            .tl-year { left: 24px; width: 48px; height: 48px; font-size: 12px; }
+            .tl-year-now { width: 54px; height: 54px; }
+            .tl-content, .tl-item:nth-child(odd) .tl-content, .tl-item:nth-child(even) .tl-content { width: 100%; margin: 0; }
+            .tl-now-badge { left: 24px; }
+        }
+        @media (max-width: 768px) {
+            .sticky-header { padding: 10px 20px; height: 70px; }
+            .nav-links { display: none; }
+            .hero h1 { font-size: 28px; }
+            h2 { font-size: 28px; }
+            .container { padding: 40px 20px; }
+            .hero-kpi-strip { grid-template-columns: repeat(2, 1fr); }
+            .domains-grid { grid-template-columns: 1fr; }
+            .section-header { margin: 0 -20px 30px -20px; padding: 20px; }
+            .progress-dashboard { grid-template-columns: 1fr; justify-items: center; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════ HEADER ════════════════════════════════════════ -->
+<header class="sticky-header">
+    <div class="header-brand">EDA Data Pipeline <span>| Master's Thesis</span></div>
+    <nav class="nav-links">
+        <a href="index.html" style="color:#0a8276;">&larr; Portfolio</a>
+        <a href="#problem">Problem</a>
+        <a href="#architecture">Architecture</a>
+        <a href="#pipeline">Pipeline</a>
+        <a href="#domains">Domains</a>
+        <a href="#timeline">Timeline</a>
+        <a href="#methodology">Methodology</a>
+        <a href="#deliverables">Deliverables</a>
+    </nav>
+    <div class="logo-right">
+        <svg enable-background="new 0 0 283.5 124" viewBox="0 0 283.5 124" xmlns="http://www.w3.org/2000/svg" aria-label="Infineon logo" role="img">
+            <path d="m211.2 83.5c10.6 0 13.9-11.2 13.9-21.5 0-13.8-5.8-21-13.9-21-10.2 0-13.8 11.2-13.7 21.2.1 9.9 2.9 21.3 13.7 21.3zm-5.2-21.6c0-4.1 0-13.7 5.2-13.7 5.6 0 5.4 9.5 5.4 13.9 0 4.2 0 14.4-5.2 14.4-5.6-.1-5.4-10.3-5.4-14.6zm-25.6 21.6c4.3 0 8-1.7 11.5-5.4l-3.1-5.8c-2.4 2.6-4.8 4-7.7 4-2.4 0-4.4-1.4-5.6-3.8-1-2.1-1.2-4.5-1.2-7.1v-.8h18v-1.8c0-8.9-1.1-13.8-3.9-17.5-2.1-2.8-5.2-4.3-9-4.3-4 0-7.3 1.8-9.7 5.3-2.6 3.8-3.7 8.9-3.7 15.9-.1 13.4 5.2 21.3 14.4 21.3zm-.9-35.9c2 0 3.2 1.1 4 2.9.6 1.6.9 4.3.9 7.5h-10.1c.1-7.1 1.6-10.4 5.2-10.4zm52.2 34.9h7.8v-30c1.9-2.3 4.1-3.6 5.7-3.6 1 0 2 .2 2.6 1 .6.9.9 2.2.9 5.3v27.3h7.8v-30.9c0-2.7-.3-5.4-1.9-7.4-1.4-1.8-3.6-2.9-6.4-2.9-3.6 0-7.3 2.1-9.3 4.5-.1-2.1-.8-4.1-1-4.8l-7.3 1.9c.4 2.2 1 4.9 1 9.8v29.8zm-90.6-36.7c-.1-2.1-.8-4.1-1-4.8l-7.3 1.9c.4 2.2 1 4.9 1 9.8v29.7h7.8v-30c1.9-2.3 4.1-3.6 5.7-3.6 1 0 2 .2 2.6 1 .6.9.9 2.2.9 5.3v27.3h7.8v-30.8c0-2.7-.3-5.4-1.9-7.4-1.4-1.8-3.6-2.9-6.4-2.9-3.5 0-7.2 2.1-9.2 4.5zm-95.4-17.5c4.6 0 8.3-3.7 8.3-8.3s-3.7-8.3-8.3-8.3-8.3 3.7-8.3 8.3 3.7 8.3 8.3 8.3zm38.3 54.2v-30.9c0-2.7-.3-5.4-1.9-7.4-1.4-1.8-3.6-2.9-6.4-2.9-3.6 0-7.3 2.1-9.3 4.5-.1-2.1-.8-4.1-1-4.8l-7.2 2c.4 2.2 1 4.9 1 9.8v29.7h7.8v-30c1.9-2.3 4.1-3.6 5.7-3.6 1 0 2 .2 2.6 1 .6.9.9 2.2.9 5.3v27.3zm35.9-56.4c-2.9 0-5.2 2.3-5.2 5.2s2.3 5.2 5.1 5.2c2.9 0 5.2-2.3 5.2-5.2s-2.3-5.2-5.1-5.2zm-77.9 56.4h7.8v-48.7l-7.8 1zm63.7-51.6c1.4 0 2.8.5 3.7 1.2l2.2-6.1c-2.1-1.5-4.4-2.2-7.3-2.2-2 0-4.1.5-6 2-1.9 1.6-3.9 4.8-3.9 10.8 0 2.6.1 5.3.1 5.3h-2.7v6.9h2.7v33.6h8v-33.5h5.9l1.5-6.9h-7.3v-6.2c0-3 1.2-4.9 3.1-4.9zm10.2 51.6h7.9v-41.2l-7.9 1z" fill="#005da9"></path>
+            <path d="m240.5 104.5c-26.4 7.8-58.5 11.2-89.9 11.2-79.7 0-131.1-23.4-134.7-54.3-1.3-11.6 7.8-22.9 23-32.5-2.7-2-4.4-5.2-4.5-8.8-22 11.6-34.4 26.8-34.4 42.2 0 34.1 60.9 62.9 151.4 61.7 31.5-.4 57.8-4.9 81.6-12.7 28.3-9.2 46.1-22.4 50.4-28.2-5.1 4.6-17.2 13.8-42.9 21.4zm-167.9-90.8c5.3-1.8 12.8-4.1 12.8-4.1 21.1-5.8 44.4-9.2 66.1-9-25-1.5-47.8 0-67.7 3.6 0 0-6.6 1.1-13.7 2.9 0 0-3.4.9-5.5 1.5s-5 1.4-5 1.4c-2 .6-4 1.3-6 2 2 2 3.2 4.6 3.3 7.6 3.5-1.6 10.2-4 15.7-5.9z" fill="#e30034"></path>
+        </svg>
+    </div>
+</header>
+
+<!-- ════════════════════════════════════════ HERO ════════════════════════════════════════ -->
+<section class="hero">
+    <div class="hero-content">
+        <div class="hero-logo">
+            <svg enable-background="new 0 0 283.5 124" viewBox="0 0 283.5 124" xmlns="http://www.w3.org/2000/svg" aria-label="Infineon logo" role="img">
+                <path d="m211.2 83.5c10.6 0 13.9-11.2 13.9-21.5 0-13.8-5.8-21-13.9-21-10.2 0-13.8 11.2-13.7 21.2.1 9.9 2.9 21.3 13.7 21.3zm-5.2-21.6c0-4.1 0-13.7 5.2-13.7 5.6 0 5.4 9.5 5.4 13.9 0 4.2 0 14.4-5.2 14.4-5.6-.1-5.4-10.3-5.4-14.6zm-25.6 21.6c4.3 0 8-1.7 11.5-5.4l-3.1-5.8c-2.4 2.6-4.8 4-7.7 4-2.4 0-4.4-1.4-5.6-3.8-1-2.1-1.2-4.5-1.2-7.1v-.8h18v-1.8c0-8.9-1.1-13.8-3.9-17.5-2.1-2.8-5.2-4.3-9-4.3-4 0-7.3 1.8-9.7 5.3-2.6 3.8-3.7 8.9-3.7 15.9-.1 13.4 5.2 21.3 14.4 21.3zm-.9-35.9c2 0 3.2 1.1 4 2.9.6 1.6.9 4.3.9 7.5h-10.1c.1-7.1 1.6-10.4 5.2-10.4zm52.2 34.9h7.8v-30c1.9-2.3 4.1-3.6 5.7-3.6 1 0 2 .2 2.6 1 .6.9.9 2.2.9 5.3v27.3h7.8v-30.9c0-2.7-.3-5.4-1.9-7.4-1.4-1.8-3.6-2.9-6.4-2.9-3.6 0-7.3 2.1-9.3 4.5-.1-2.1-.8-4.1-1-4.8l-7.3 1.9c.4 2.2 1 4.9 1 9.8v29.8zm-90.6-36.7c-.1-2.1-.8-4.1-1-4.8l-7.3 1.9c.4 2.2 1 4.9 1 9.8v29.7h7.8v-30c1.9-2.3 4.1-3.6 5.7-3.6 1 0 2 .2 2.6 1 .6.9.9 2.2.9 5.3v27.3h7.8v-30.8c0-2.7-.3-5.4-1.9-7.4-1.4-1.8-3.6-2.9-6.4-2.9-3.5 0-7.2 2.1-9.2 4.5zm-95.4-17.5c4.6 0 8.3-3.7 8.3-8.3s-3.7-8.3-8.3-8.3-8.3 3.7-8.3 8.3 3.7 8.3 8.3 8.3zm38.3 54.2v-30.9c0-2.7-.3-5.4-1.9-7.4-1.4-1.8-3.6-2.9-6.4-2.9-3.6 0-7.3 2.1-9.3 4.5-.1-2.1-.8-4.1-1-4.8l-7.2 2c.4 2.2 1 4.9 1 9.8v29.7h7.8v-30c1.9-2.3 4.1-3.6 5.7-3.6 1 0 2 .2 2.6 1 .6.9.9 2.2.9 5.3v27.3zm35.9-56.4c-2.9 0-5.2 2.3-5.2 5.2s2.3 5.2 5.1 5.2c2.9 0 5.2-2.3 5.2-5.2s-2.3-5.2-5.1-5.2zm-77.9 56.4h7.8v-48.7l-7.8 1zm63.7-51.6c1.4 0 2.8.5 3.7 1.2l2.2-6.1c-2.1-1.5-4.4-2.2-7.3-2.2-2 0-4.1.5-6 2-1.9 1.6-3.9 4.8-3.9 10.8 0 2.6.1 5.3.1 5.3h-2.7v6.9h2.7v33.6h8v-33.5h5.9l1.5-6.9h-7.3v-6.2c0-3 1.2-4.9 3.1-4.9zm10.2 51.6h7.9v-41.2l-7.9 1z" fill="#ffffff"></path>
+                <path d="m240.5 104.5c-26.4 7.8-58.5 11.2-89.9 11.2-79.7 0-131.1-23.4-134.7-54.3-1.3-11.6 7.8-22.9 23-32.5-2.7-2-4.4-5.2-4.5-8.8-22 11.6-34.4 26.8-34.4 42.2 0 34.1 60.9 62.9 151.4 61.7 31.5-.4 57.8-4.9 81.6-12.7 28.3-9.2 46.1-22.4 50.4-28.2-5.1 4.6-17.2 13.8-42.9 21.4zm-167.9-90.8c5.3-1.8 12.8-4.1 12.8-4.1 21.1-5.8 44.4-9.2 66.1-9-25-1.5-47.8 0-67.7 3.6 0 0-6.6 1.1-13.7 2.9 0 0-3.4.9-5.5 1.5s-5 1.4-5 1.4c-2 .6-4 1.3-6 2 2 2 3.2 4.6 3.3 7.6 3.5-1.6 10.2-4 15.7-5.9z" fill="rgba(255,255,255,0.5)"></path>
+            </svg>
+        </div>
+        <div class="hero-eyebrow">Master's Thesis &middot; Communication Engineering</div>
+        <h1>Transforming EDA Data into Actionable Insights for Chip-Package-Board Co-Design</h1>
+        <div class="hero-tagline">Building the data infrastructure that makes AI possible</div>
+        <div class="hero-meta">
+            <strong>Hamza Ghaffar</strong> &middot; FH Kärnten, Villach &middot; Infineon Technologies Austria AG &middot; 2026
+        </div>
+        <div class="hero-description">
+            A 17-stage data pipeline that takes raw, fragmented output from 8 EDA Codesign tools and transforms it into clean, structured, AI-ready data products through a Medallion architecture with a Nectar AI serving layer.
+        </div>
+        <div class="hero-kpi-strip">
+            <div class="hero-kpi">
+                <div class="hero-kpi-value">17</div>
+                <div class="hero-kpi-label">Pipeline Stages</div>
+            </div>
+            <div class="hero-kpi">
+                <div class="hero-kpi-value">8</div>
+                <div class="hero-kpi-label">EDA Tool Domains</div>
+            </div>
+            <div class="hero-kpi">
+                <div class="hero-kpi-value">4</div>
+                <div class="hero-kpi-label">Medallion Layers</div>
+            </div>
+            <div class="hero-kpi">
+                <div class="hero-kpi-value">6</div>
+                <div class="hero-kpi-label">Pipeline Phases</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ════════════════════════════════════════ EXECUTIVE SUMMARY ════════════════════════════════════════ -->
+<div class="exec-summary">
+    <div class="exec-summary-title">Executive Summary</div>
+    <div class="exec-grid">
+        <div class="exec-card exec-problem">
+            <div class="exec-card-icon">⚠️</div>
+            <h4>The Problem</h4>
+            <p>8 EDA Codesign tools generate vast data across simulation, testing, and design cycles. Storage locations unknown. Formats undocumented. No central catalog. Data is fragmented, uncataloged, and completely inaccessible to AI systems.</p>
+        </div>
+        <div class="exec-card exec-solution">
+            <div class="exec-card-icon">🔧</div>
+            <h4>The Solution</h4>
+            <p>A 17-stage data pipeline processing raw tool output through Bronze, Silver, Gold, and Nectar layers. Data Mesh architecture gives each tool domain ownership of its data while maintaining quality through federated governance.</p>
+        </div>
+        <div class="exec-card exec-outcome">
+            <div class="exec-card-icon">🎯</div>
+            <h4>The Outcome</h4>
+            <p>Clean, schema-governed, AI-ready data products. Automated quality gates. Documented lineage. Versioned data. From hours of manual data prep to structured, queryable datasets that ML systems consume directly.</p>
+        </div>
+    </div>
+</div>
+
+<!-- ════════════════════════════════════════ MAIN ════════════════════════════════════════ -->
+<div class="container">
+
+    <!-- ═══════════════════════ CHAPTER 01: THE PROBLEM ═══════════════════════ -->
+    <section id="problem" class="section">
+        <div class="section-header">
+            <div class="section-number">Chapter 01</div>
+            <h2>The Data Fragmentation Problem</h2>
+            <div class="section-subtitle">Before any AI or analytics work can begin, we need to understand what data exists and where it lives.</div>
+        </div>
+
+        <div class="story-block">
+            Infineon's chip-package-board co-design process uses 8 specialized software tools to design and test semiconductor products. Each tool produces output data during design work: simulation results, test measurements, configuration files. This data exists somewhere in Infineon's infrastructure (network drives, file servers, internal cloud storage), but nobody has a complete map. Nobody knows all the formats. Nobody knows if the data is complete or accurate. And AI systems cannot use any of it in its current state.
+        </div>
+
+        <div class="card-grid">
+            <div class="card" style="border-top-color: #c62828;">
+                <div class="card-icon">❓</div>
+                <h4>Unknown Data Locations</h4>
+                <p>No knowledge of where data is stored across systems. No centralized catalog exists. Data scattered in network shares, databases, and files. Investigation required before any pipeline work can begin.</p>
+            </div>
+            <div class="card" style="border-top-color: #c62828;">
+                <div class="card-icon">📋</div>
+                <h4>Unidentified Data Types</h4>
+                <p>Unknown number of data formats per tool. XML, JSON, CSV, binary, text logs all mixed together. No schema profiling done. Data types undocumented.</p>
+            </div>
+            <div class="card" style="border-top-color: #c62828;">
+                <div class="card-icon">🏝️</div>
+                <h4>Siloed Ownership</h4>
+                <p>Each of the 8 tools stores data differently. No cross-tool data integration. No shared identifiers. Engineers cannot combine data from different tools for analysis.</p>
+            </div>
+            <div class="card" style="border-top-color: #c62828;">
+                <div class="card-icon">🚫</div>
+                <h4>No Quality Framework</h4>
+                <p>No automated validation. No data quality metrics. No checks for completeness, accuracy, or consistency. Unknown percentage of usable data.</p>
+            </div>
+            <div class="card" style="border-top-color: #c62828;">
+                <div class="card-icon">🤖</div>
+                <h4>AI Systems Blocked</h4>
+                <p>Machine learning models cannot consume fragmented, unstructured, unvalidated data. Engineers spend time searching for data instead of using it. Valuable insights remain hidden.</p>
+            </div>
+            <div class="card" style="border-top-color: #c62828;">
+                <div class="card-icon">📊</div>
+                <h4>No Governance</h4>
+                <p>No data lineage tracking. No schema versioning. No access patterns documented. No data products with SLAs. No discoverability for downstream consumers.</p>
+            </div>
+        </div>
+
+        <div class="vision-box">
+            <div class="vision-label">Scientific Gap</div>
+            <p>Current EDA data management research focuses on individual tool optimization or narrow ML applications. No existing work addresses an end-to-end data pipeline architecture that spans the full CPB co-design tool ecosystem. This thesis fills that gap by designing a 17-stage pipeline with four data layers, validated through a concrete use case that can scale to additional tools over time.</p>
+        </div>
+
+        <div class="insight-box">
+            <div class="insight-label">The Goal</div>
+            <p>Build a data pipeline that transforms raw tool output into clean, structured, AI-ready data. This is not about building AI models. This is about preparing the data so AI systems can consume it effectively. Think of it as building the infrastructure that makes data usable.</p>
+        </div>
+
+        <!-- Before / After Flow -->
+        <h3>Before vs. After: How Data Handling Changes</h3>
+        <div class="flow-comparison">
+            <div class="flow-column flow-before">
+                <div class="flow-column-header">Before Pipeline</div>
+                <div class="flow-step">
+                    <div class="flow-step-icon">❓</div>
+                    <div class="flow-step-content">
+                        <h5>Unknown Locations</h5>
+                        <p>Engineers search manually through network drives, file servers, and databases to find tool output.</p>
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-step-icon">📋</div>
+                    <div class="flow-step-content">
+                        <h5>Mixed Formats</h5>
+                        <p>XML, JSON, CSV, binary files all scattered. No schema documentation. No format catalog.</p>
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-step-icon">🔍</div>
+                    <div class="flow-step-content">
+                        <h5>Manual Quality Checks</h5>
+                        <p>No automated validation. Engineers eyeball data for completeness. Bad records pass undetected.</p>
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-step-icon">🏝️</div>
+                    <div class="flow-step-content">
+                        <h5>Siloed and Disconnected</h5>
+                        <p>Each tool stores data independently. No cross-tool identifiers. No way to combine datasets.</p>
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-step-icon">🚫</div>
+                    <div class="flow-step-content">
+                        <h5>AI Inaccessible</h5>
+                        <p>ML models cannot consume fragmented, unstructured data. Hours wasted on manual preparation.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="flow-arrow-column">
+                <div class="flow-arrow">&rarr;</div>
+            </div>
+            <div class="flow-column flow-after">
+                <div class="flow-column-header">After Pipeline</div>
+                <div class="flow-step">
+                    <div class="flow-step-icon">📂</div>
+                    <div class="flow-step-content">
+                        <h5>Cataloged and Documented</h5>
+                        <p>Every data source mapped, documented, and cataloged. Storage paths standardized and versioned.</p>
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-step-icon">📦</div>
+                    <div class="flow-step-content">
+                        <h5>Unified Parquet Format</h5>
+                        <p>All data normalized into columnar Parquet with Delta Lake. Schema-registered and typed.</p>
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-step-icon">✅</div>
+                    <div class="flow-step-content">
+                        <h5>Automated Quality Gates</h5>
+                        <p>Stage 07 validates every record against schemas. Invalid records rejected with documented reasons.</p>
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-step-icon">🔗</div>
+                    <div class="flow-step-content">
+                        <h5>Mesh-Connected Domains</h5>
+                        <p>8 domains with consistent primary keys, federated governance, and cross-domain queryability.</p>
+                    </div>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-step-icon">🤖</div>
+                    <div class="flow-step-content">
+                        <h5>AI-Ready Products</h5>
+                        <p>Nectar layer delivers feature-engineered, scaled, and split datasets ready for ML consumption.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Evolution Timeline: Before → During → After -->
+        <h3>The Transformation in Three Stages</h3>
+        <div class="evo-timeline">
+            <div class="evo-era era-before">
+                <div class="evo-era-header">Before: Fragmented</div>
+                <div class="evo-era-body">
+                    <div class="evo-step">
+                        <div class="evo-step-icon">📋</div>
+                        <p><strong>Data Discovery</strong>Nobody knows where tool data lives or what format it uses</p>
+                    </div>
+                    <div class="evo-step">
+                        <div class="evo-step-icon">💻</div>
+                        <p><strong>Data Access</strong>Manual search through network shares, databases, and file servers</p>
+                    </div>
+                    <div class="evo-step">
+                        <div class="evo-step-icon">🔍</div>
+                        <p><strong>Quality</strong>No validation, no schema checks, no consistency across tools</p>
+                    </div>
+                    <div class="evo-step">
+                        <div class="evo-step-icon">📦</div>
+                        <p><strong>Integration</strong>Each tool is its own silo with no shared identifiers</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="evo-arrow-col"><div class="evo-arrow">&rarr;</div></div>
+
+            <div class="evo-era era-during">
+                <div class="evo-era-header">During: Pipeline Processing</div>
+                <div class="evo-era-body">
+                    <div class="evo-step">
+                        <div class="evo-step-icon">🗺️</div>
+                        <p><strong>Bronze: Ingest</strong>Connect to all 6 source types, extract raw data, preserve original structure</p>
+                    </div>
+                    <div class="evo-step">
+                        <div class="evo-step-icon">🧹</div>
+                        <p><strong>Silver: Validate</strong>Schema checks, dedup, normalize units, detect anomalies, assign keys</p>
+                    </div>
+                    <div class="evo-step">
+                        <div class="evo-step-icon">⚙️</div>
+                        <p><strong>Gold: Transform</strong>Domain-specific business logic, aggregations, derived fields</p>
+                    </div>
+                    <div class="evo-step">
+                        <div class="evo-step-icon">🍯</div>
+                        <p><strong>Nectar: Serve</strong>Feature engineering, encoding, scaling, train/val/test splits</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="evo-arrow-col"><div class="evo-arrow">&rarr;</div></div>
+
+            <div class="evo-era era-after">
+                <div class="evo-era-header">After: AI-Ready</div>
+                <div class="evo-era-body">
+                    <div class="evo-step">
+                        <div class="evo-step-icon">📊</div>
+                        <p><strong>Data Products</strong>Schema-governed, quality-verified, discoverable datasets with SLAs</p>
+                    </div>
+                    <div class="evo-step">
+                        <div class="evo-step-icon">🤖</div>
+                        <p><strong>ML-Consumable</strong>Feature vectors in Parquet, JSONL for LLMs, data cards for reproducibility</p>
+                    </div>
+                    <div class="evo-step">
+                        <div class="evo-step-icon">📈</div>
+                        <p><strong>Cross-Domain Insights</strong>Combined datasets from all 8 tools enable previously impossible analysis</p>
+                    </div>
+                    <div class="evo-step">
+                        <div class="evo-step-icon">🔄</div>
+                        <p><strong>Continuous</strong>Pipeline runs independently per domain. New data flows automatically.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="evo-summary">
+            <div class="evo-summary-box" style="background: #f5f7f8;">
+                <h4 style="color: #78909c;">Before</h4>
+                <p style="color: #546e7a;">Fragmented &amp; Manual<br><span style="font-size:13px; color:#999;">Unknown data landscape</span></p>
+            </div>
+            <div class="evo-summary-box" style="background: #eef7f6;">
+                <h4 style="color: var(--teal-80);">During</h4>
+                <p style="color: #0a8276;">17-Stage Pipeline<br><span style="font-size:13px; color:#999;">Medallion processing</span></p>
+            </div>
+            <div class="evo-summary-box" style="background: #e0f2f1;">
+                <h4 style="color: var(--teal-dark);">After</h4>
+                <p style="color: #004d47;">AI-Ready Products<br><span style="font-size:13px; color:#999;">Governed &amp; discoverable</span></p>
+            </div>
+        </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ═══════════════════════ CHAPTER 02: THE ARCHITECTURE ═══════════════════════ -->
+    <section id="architecture" class="section">
+        <div class="section-header">
+            <div class="section-number">Chapter 02</div>
+            <h2>The Architecture</h2>
+            <div class="section-subtitle">Medallion layers for progressive data refinement. Data Mesh for distributed domain ownership. Data as a Product for governance.</div>
+        </div>
+
+        <h3>Medallion Architecture: Four Layers of Refinement</h3>
+        <p>Data enters raw and exits AI-ready. Each layer increases quality and reduces noise. Data flows one direction: Bronze to Silver to Gold to Nectar.</p>
+
+        <div class="medallion-layers">
+            <div class="medallion-layer layer-bronze">
+                <div class="layer-icon">🥉</div>
+                <h4>Bronze</h4>
+                <div class="layer-desc">Raw ingestion and first cleanup. Data lands as-is from sources with basic deduplication and irrelevant field removal. No transformation or normalization.</div>
+            </div>
+            <div class="medallion-layer layer-silver">
+                <div class="layer-icon">🥈</div>
+                <h4>Silver</h4>
+                <div class="layer-desc">Quality checkpoint. Consistency, schema validation, accuracy, normalization, anomaly detection, key assignment, and partitioning.</div>
+            </div>
+            <div class="medallion-layer layer-gold">
+                <div class="layer-icon">🥇</div>
+                <h4>Gold</h4>
+                <div class="layer-desc">Business value. Domain-specific transformations, derived fields, and aggregations. Summarized counts, averages, distributions, and percentiles.</div>
+            </div>
+            <div class="medallion-layer layer-nectar">
+                <div class="layer-icon">🍯</div>
+                <h4>Nectar</h4>
+                <div class="layer-desc">AI-ready. Feature engineering, encoding, scaling, train/val/test split. Also produces LLM-consumable JSONL, automation-ready Parquet, and data cards.</div>
+            </div>
+        </div>
+
+        <h3>Data Mesh: 4 Core Principles</h3>
+        <p>Data Mesh distributes data ownership across the tool domains while maintaining consistency through federated governance. Each of the 8 EDA tools becomes one data domain.</p>
+
+        <div class="mesh-grid">
+            <div class="mesh-card">
+                <div class="mesh-num">1</div>
+                <h4>Domain-Oriented Ownership</h4>
+                <p>Each of the 8 EDA Codesign tools is a separate data domain. The team that produces the data also owns and manages it. No central data team collects everything.</p>
+            </div>
+            <div class="mesh-card">
+                <div class="mesh-num">2</div>
+                <h4>Data as a Product</h4>
+                <p>Every dataset is schema-registered, quality-verified, documented, versioned, and discoverable. Outputs have SLAs, ownership, and quality guarantees. Not raw data dumps.</p>
+            </div>
+            <div class="mesh-card">
+                <div class="mesh-num">3</div>
+                <h4>Self-Serve Data Infrastructure</h4>
+                <p>Shared tooling available to all 8 domains. Each team uses the pipeline independently, accessing their own partition without dependency on a central team.</p>
+            </div>
+            <div class="mesh-card">
+                <div class="mesh-num">4</div>
+                <h4>Federated Computational Governance</h4>
+                <p>Global standards enforced uniformly (naming, key formats, quality gates), but each domain team implements them for their specific tools. Centralized rules, distributed execution.</p>
+            </div>
+        </div>
+
+        <h3>Data Partition Path Pattern</h3>
+        <div class="insight-box">
+            <div class="insight-label">Storage Convention</div>
+            <p>All data follows the pattern: <code style="background:#e8f5f4; padding:2px 8px; border-radius:4px; font-family:monospace;">/{layer}/{domain}/{run_id}/*.parquet</code></p>
+            <p style="margin-top:12px; margin-bottom:0; font-size:14px; color:#666;">
+                <code style="font-family:monospace;">/bronze/bdg/run_2026_04_08/data.parquet</code><br>
+                <code style="font-family:monospace;">/silver/sigrity/run_2026_04_08/stage_07/validated.parquet</code><br>
+                <code style="font-family:monospace;">/gold/ansysem/run_2026_04_08/transformed.parquet</code><br>
+                <code style="font-family:monospace;">/nectar/bdg/train/features.parquet</code>
+            </p>
+        </div>
+
+        <h3>Technology Stack</h3>
+        <div class="card-grid">
+            <div class="card">
+                <div class="card-icon">🐍</div>
+                <h4>Python 3.9+</h4>
+                <p>Primary language for all pipeline stages. Pandas, PyArrow, Delta Lake, Great Expectations, SQLAlchemy, lxml, fsspec.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">📦</div>
+                <h4>Parquet + Delta Lake</h4>
+                <p>Columnar analytics-optimized storage with ACID transactions, time travel, and schema enforcement. UTF-8 text, ISO 8601 timestamps.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">🔗</div>
+                <h4>Data Connectors</h4>
+                <p>SQLAlchemy for MySQL. lxml/xmltodict for XML. fsspec for unified file access (local, network, cloud). DVC Python API for versioning.</p>
+            </div>
+        </div>
+
+        <!-- Convergence: 8 Tools → Pipeline → AI-Ready -->
+        <h3>Convergence: 8 Tools into One Pipeline</h3>
+        <div class="convergence">
+            <div class="convergence-inputs">
+                <div class="convergence-input" style="background:#eef7f6; color:#0a8276;">bdg</div>
+                <div class="convergence-input" style="background:#eef7f6; color:#0a8276;">dfe</div>
+                <div class="convergence-input" style="background:#f3e5f5; color:#4a148c;">sigrity</div>
+                <div class="convergence-input" style="background:#f3e5f5; color:#4a148c;">ansysem</div>
+                <div class="convergence-input" style="background:#e3f2fd; color:#0d47a1;">cdcore</div>
+                <div class="convergence-input" style="background:#e3f2fd; color:#0d47a1;">cdilplugins</div>
+                <div class="convergence-input" style="background:#e0f2f1; color:#004d47;">iop</div>
+                <div class="convergence-input" style="background:#e0f2f1; color:#004d47;">pkgImpl</div>
+            </div>
+            <div class="convergence-arrow">&darr;</div>
+            <div class="convergence-platform">17-Stage Medallion Pipeline</div>
+            <div class="convergence-flow">
+                <span class="convergence-step">Bronze Ingest</span>
+                <span class="convergence-step-arrow">&rarr;</span>
+                <span class="convergence-step">Silver Validate</span>
+                <span class="convergence-step-arrow">&rarr;</span>
+                <span class="convergence-step">Gold Transform</span>
+                <span class="convergence-step-arrow">&rarr;</span>
+                <span class="convergence-step">Nectar Serve</span>
+                <span class="convergence-step-arrow">&rarr;</span>
+                <span class="convergence-step">AI-Ready Data Products</span>
+            </div>
+        </div>
+
+        <!-- Flywheel: Data Quality Cycle -->
+        <h3>The Data Quality Flywheel</h3>
+        <p style="text-align:center; color:#666; margin-bottom:10px;">Each cycle through the pipeline improves downstream quality. Better input schemas lead to tighter validation, which produces cleaner data, which enables better feature engineering.</p>
+        <div class="flywheel-container">
+          <svg class="flywheel-svg" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg" aria-label="Flywheel diagram showing Discover, Ingest, Validate, Transform, Serve cycle">
+            <defs>
+              <linearGradient id="fw-grad-hub" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#004d47"/>
+                <stop offset="100%" stop-color="#0a8276"/>
+              </linearGradient>
+              <filter id="fw-shadow" x="-20%" y="-20%" width="140%" height="140%">
+                <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="rgba(0,77,71,0.25)"/>
+              </filter>
+              <filter id="fw-shadow-sm" x="-30%" y="-30%" width="160%" height="160%">
+                <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="rgba(0,0,0,0.15)"/>
+              </filter>
+              <marker id="fw-arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                <path d="M0,0 L0,6 L8,3 z" fill="#0a8276"/>
+              </marker>
+            </defs>
+
+            <!-- Outer toothed ring (spinning) -->
+            <g class="wheel-ring">
+              <circle cx="300" cy="300" r="230" fill="none" stroke="#9dcdc7" stroke-width="3" stroke-dasharray="6 6" opacity="0.6"/>
+              <circle cx="300" cy="300" r="240" fill="none" stroke="#3b9b91" stroke-width="6" opacity="0.35"/>
+              <circle cx="300" cy="300" r="220" fill="none" stroke="#3b9b91" stroke-width="2" opacity="0.2"/>
+              <!-- Gear teeth -->
+              <g opacity="0.5">
+                <rect x="296" y="54" width="8" height="16" rx="3" fill="#0a8276" transform="rotate(0 300 300)"/>
+                <rect x="296" y="54" width="8" height="16" rx="3" fill="#0a8276" transform="rotate(30 300 300)"/>
+                <rect x="296" y="54" width="8" height="16" rx="3" fill="#0a8276" transform="rotate(60 300 300)"/>
+                <rect x="296" y="54" width="8" height="16" rx="3" fill="#0a8276" transform="rotate(90 300 300)"/>
+                <rect x="296" y="54" width="8" height="16" rx="3" fill="#0a8276" transform="rotate(120 300 300)"/>
+                <rect x="296" y="54" width="8" height="16" rx="3" fill="#0a8276" transform="rotate(150 300 300)"/>
+                <rect x="296" y="54" width="8" height="16" rx="3" fill="#0a8276" transform="rotate(180 300 300)"/>
+                <rect x="296" y="54" width="8" height="16" rx="3" fill="#0a8276" transform="rotate(210 300 300)"/>
+                <rect x="296" y="54" width="8" height="16" rx="3" fill="#0a8276" transform="rotate(240 300 300)"/>
+                <rect x="296" y="54" width="8" height="16" rx="3" fill="#0a8276" transform="rotate(270 300 300)"/>
+                <rect x="296" y="54" width="8" height="16" rx="3" fill="#0a8276" transform="rotate(300 300 300)"/>
+                <rect x="296" y="54" width="8" height="16" rx="3" fill="#0a8276" transform="rotate(330 300 300)"/>
+              </g>
+              <!-- Curved motion arrows -->
+              <path d="M 480 175 A 210 210 0 0 1 525 300" fill="none" stroke="#0a8276" stroke-width="5" stroke-linecap="round" marker-end="url(#fw-arrow)"/>
+              <path d="M 475 430 A 210 210 0 0 1 300 524" fill="none" stroke="#0a8276" stroke-width="5" stroke-linecap="round" marker-end="url(#fw-arrow)"/>
+              <path d="M 120 430 A 210 210 0 0 1 77 300" fill="none" stroke="#0a8276" stroke-width="5" stroke-linecap="round" marker-end="url(#fw-arrow)"/>
+            </g>
+
+            <!-- Three segment arcs -->
+            <path d="M 300 300 L 300 80 A 220 220 0 0 1 490 410 Z" fill="#eef7f6" stroke="#fff" stroke-width="4"/>
+            <path d="M 300 300 L 490 410 A 220 220 0 0 1 110 410 Z" fill="#e0f2f1" stroke="#fff" stroke-width="4"/>
+            <path d="M 300 300 L 110 410 A 220 220 0 0 1 300 80 Z" fill="#d5edea" stroke="#fff" stroke-width="4"/>
+
+            <!-- Inner hub -->
+            <circle cx="300" cy="300" r="110" fill="#ffffff" filter="url(#fw-shadow)"/>
+            <circle cx="300" cy="300" r="108" fill="url(#fw-grad-hub)"/>
+            <text x="300" y="289" text-anchor="middle" fill="#ffffff" font-family="Inter,sans-serif" font-size="13" font-weight="700" letter-spacing="1">DATA PIPELINE</text>
+            <text x="300" y="308" text-anchor="middle" fill="rgba(255,255,255,0.85)" font-family="Inter,sans-serif" font-size="11" font-weight="400">Quality Flywheel</text>
+            <text x="300" y="328" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-family="Inter,sans-serif" font-size="10">&#x21BB; continuous improvement</text>
+
+            <!-- Segment labels -->
+            <g class="flywheel-label-group" filter="url(#fw-shadow-sm)">
+              <rect x="222" y="108" width="156" height="70" rx="10" fill="#0a8276"/>
+              <text x="300" y="132" text-anchor="middle" fill="#ffffff" font-family="Inter,sans-serif" font-size="15" font-weight="800">INGEST</text>
+              <text x="300" y="152" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-family="Inter,sans-serif" font-size="11">Bronze acquires raw</text>
+              <text x="300" y="168" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-family="Inter,sans-serif" font-size="11">data from 6 sources</text>
+            </g>
+            <g class="flywheel-label-group" filter="url(#fw-shadow-sm)">
+              <rect x="386" y="390" width="140" height="70" rx="10" fill="#006b5e"/>
+              <text x="456" y="414" text-anchor="middle" fill="#ffffff" font-family="Inter,sans-serif" font-size="15" font-weight="800">VALIDATE</text>
+              <text x="456" y="434" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-family="Inter,sans-serif" font-size="11">Silver checks quality</text>
+              <text x="456" y="450" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-family="Inter,sans-serif" font-size="11">&amp; rejects bad records</text>
+            </g>
+            <g class="flywheel-label-group" filter="url(#fw-shadow-sm)">
+              <rect x="74" y="390" width="140" height="70" rx="10" fill="#004d47"/>
+              <text x="144" y="414" text-anchor="middle" fill="#ffffff" font-family="Inter,sans-serif" font-size="15" font-weight="800">SERVE</text>
+              <text x="144" y="434" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-family="Inter,sans-serif" font-size="11">Nectar delivers</text>
+              <text x="144" y="450" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-family="Inter,sans-serif" font-size="11">AI-ready features</text>
+            </g>
+          </svg>
+        </div>
+        <p style="text-align:center; color:#777; font-size:14px; margin-top:0; margin-bottom:10px;">Each layer feeds quality back to the layer before it. Rejected records inform better schemas. Better schemas catch more errors. <strong style="color:#0a8276;">The flywheel accelerates with every pipeline run.</strong></p>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ═══════════════════════ CHAPTER 03: THE PIPELINE ═══════════════════════ -->
+    <section id="pipeline" class="section">
+        <div class="section-header">
+            <div class="section-number">Chapter 03</div>
+            <h2>The 17-Stage Pipeline</h2>
+            <div class="section-subtitle">Six phases, seventeen stages. Each stage has a specific job. No stage can be skipped because later stages depend on earlier ones.</div>
+        </div>
+
+        <div class="pipeline-flow">
+            <!-- Phase 1: Discovery & Planning -->
+            <div class="pipeline-phase phase-planning">
+                <div class="phase-label">
+                    <h4>Phase 1</h4>
+                    <div class="phase-stages">Discovery &amp; Planning</div>
+                </div>
+                <div class="phase-steps">
+                    <div class="phase-step"><span class="phase-step-num">00</span>Tool Data Mapping</div>
+                    <span class="phase-arrow">→</span>
+                    <div class="phase-step"><span class="phase-step-num">01</span>Data Sources</div>
+                    <span class="phase-arrow">→</span>
+                    <div class="phase-step"><span class="phase-step-num">02</span>Big Data 5Vs</div>
+                    <span class="phase-arrow">→</span>
+                    <div class="phase-step"><span class="phase-step-num">03</span>Version Control</div>
+                </div>
+            </div>
+            <!-- Phase 2: Bronze Ingestion -->
+            <div class="pipeline-phase phase-bronze">
+                <div class="phase-label">
+                    <h4>Phase 2</h4>
+                    <div class="phase-stages">Bronze Layer</div>
+                </div>
+                <div class="phase-steps">
+                    <div class="phase-step"><span class="phase-step-num">04</span>Data Acquisition</div>
+                    <span class="phase-arrow">→</span>
+                    <div class="phase-step"><span class="phase-step-num">05</span>Data Cleaning</div>
+                </div>
+            </div>
+            <!-- Phase 3: Validation -->
+            <div class="pipeline-phase phase-silver">
+                <div class="phase-label">
+                    <h4>Phase 3</h4>
+                    <div class="phase-stages">Validation</div>
+                </div>
+                <div class="phase-steps">
+                    <div class="phase-step"><span class="phase-step-num">06</span>Consistency</div>
+                    <span class="phase-arrow">→</span>
+                    <div class="phase-step"><span class="phase-step-num">07</span>Quality Gate</div>
+                    <span class="phase-arrow">→</span>
+                    <div class="phase-step"><span class="phase-step-num">08</span>Accuracy</div>
+                    <span class="phase-arrow">→</span>
+                    <div class="phase-step"><span class="phase-step-num">09</span>Normalization</div>
+                    <span class="phase-arrow">→</span>
+                    <div class="phase-step"><span class="phase-step-num">10</span>Anomaly Detection</div>
+                </div>
+            </div>
+            <!-- Phase 4: Silver Staging -->
+            <div class="pipeline-phase phase-silver">
+                <div class="phase-label">
+                    <h4>Phase 4</h4>
+                    <div class="phase-stages">Silver Staging</div>
+                </div>
+                <div class="phase-steps">
+                    <div class="phase-step"><span class="phase-step-num">11</span>Data Staging</div>
+                    <span class="phase-arrow">→</span>
+                    <div class="phase-step"><span class="phase-step-num">12</span>Primary Key / Index</div>
+                    <span class="phase-arrow">→</span>
+                    <div class="phase-step"><span class="phase-step-num">13</span>Data Partitioning</div>
+                </div>
+            </div>
+            <!-- Phase 5: Gold -->
+            <div class="pipeline-phase phase-gold">
+                <div class="phase-label">
+                    <h4>Phase 5</h4>
+                    <div class="phase-stages">Gold Layer</div>
+                </div>
+                <div class="phase-steps">
+                    <div class="phase-step"><span class="phase-step-num">14</span>ETL Transformation</div>
+                    <span class="phase-arrow">→</span>
+                    <div class="phase-step"><span class="phase-step-num">15</span>Data Aggregation</div>
+                </div>
+            </div>
+            <!-- Phase 6: Nectar -->
+            <div class="pipeline-phase phase-nectar">
+                <div class="phase-label">
+                    <h4>Phase 6</h4>
+                    <div class="phase-stages">Nectar AI Serving</div>
+                </div>
+                <div class="phase-steps">
+                    <div class="phase-step"><span class="phase-step-num">16</span>Feature Engineering &amp; AI Serving</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Full stage table -->
+        <h3>Complete Stage Registry</h3>
+        <table class="status-table">
+            <thead>
+                <tr>
+                    <th>Stage</th>
+                    <th>Name</th>
+                    <th>Layer</th>
+                    <th>What It Does</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>00</strong></td>
+                    <td>Tool Data Mapping</td>
+                    <td><span class="status-dot dot-blue"></span>Planning</td>
+                    <td>Map each tool's inputs, outputs, storage locations, and file formats</td>
+                </tr>
+                <tr>
+                    <td><strong>01</strong></td>
+                    <td>Data Sources</td>
+                    <td><span class="status-dot dot-blue"></span>Planning</td>
+                    <td>Catalog all data sources and identify access methods (MySQL, XML, network shares, HCIP, DVC)</td>
+                </tr>
+                <tr>
+                    <td><strong>02</strong></td>
+                    <td>Big Data 5Vs</td>
+                    <td><span class="status-dot dot-blue"></span>Planning</td>
+                    <td>Measure Volume, Velocity, Variety, Veracity, Value per domain</td>
+                </tr>
+                <tr>
+                    <td><strong>03</strong></td>
+                    <td>Version Control</td>
+                    <td><span class="status-dot dot-blue"></span>Planning</td>
+                    <td>Set up DVC, HCIP storage, credential management, and versioning infrastructure</td>
+                </tr>
+                <tr>
+                    <td><strong>04</strong></td>
+                    <td>Data Acquisition</td>
+                    <td><span style="display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:8px;vertical-align:middle;background:#ef6c00;"></span>Bronze</td>
+                    <td>Connect to sources, extract raw data as-is, preserve original format</td>
+                </tr>
+                <tr>
+                    <td><strong>05</strong></td>
+                    <td>Data Cleaning</td>
+                    <td><span style="display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:8px;vertical-align:middle;background:#ef6c00;"></span>Bronze</td>
+                    <td>Remove duplicates, drop empty fields, handle nulls, strip irrelevant metadata</td>
+                </tr>
+                <tr>
+                    <td><strong>06</strong></td>
+                    <td>Data Consistency</td>
+                    <td><span class="status-dot dot-green"></span>Silver</td>
+                    <td>Verify same identifiers mean same entities across all 8 domains</td>
+                </tr>
+                <tr>
+                    <td><strong>07</strong></td>
+                    <td>Data Quality</td>
+                    <td><span class="status-dot dot-green"></span>Silver</td>
+                    <td>Schema validation quality gate. Reject invalid records. Never pass unstructured data downstream.</td>
+                </tr>
+                <tr>
+                    <td><strong>08</strong></td>
+                    <td>Data Accuracy</td>
+                    <td><span class="status-dot dot-green"></span>Silver</td>
+                    <td>Verify values within valid ranges, timestamps current, precision appropriate</td>
+                </tr>
+                <tr>
+                    <td><strong>09</strong></td>
+                    <td>Data Normalization</td>
+                    <td><span class="status-dot dot-green"></span>Silver</td>
+                    <td>Standardize units (mm, seconds), naming conventions, encoding across all domains</td>
+                </tr>
+                <tr>
+                    <td><strong>10</strong></td>
+                    <td>Anomaly Detection</td>
+                    <td><span class="status-dot dot-green"></span>Silver</td>
+                    <td>Flag statistical outliers, volume spikes, pattern breaks for investigation</td>
+                </tr>
+                <tr>
+                    <td><strong>11</strong></td>
+                    <td>Data Staging</td>
+                    <td><span class="status-dot dot-green"></span>Silver</td>
+                    <td>Checkpoint validated data in queryable, versioned, protected staging area</td>
+                </tr>
+                <tr>
+                    <td><strong>12</strong></td>
+                    <td>Primary Key / Index</td>
+                    <td><span class="status-dot dot-green"></span>Silver</td>
+                    <td>Assign unique identifiers per record using {domain}-{id} pattern (e.g. bdg-001)</td>
+                </tr>
+                <tr>
+                    <td><strong>13</strong></td>
+                    <td>Data Partitioning</td>
+                    <td><span class="status-dot dot-green"></span>Silver</td>
+                    <td>Divide data into domain partitions, enable partition pruning by tool</td>
+                </tr>
+                <tr>
+                    <td><strong>14</strong></td>
+                    <td>ETL</td>
+                    <td><span class="status-dot dot-yellow"></span>Gold</td>
+                    <td>Extract from Silver, apply domain-specific business logic, load to Gold</td>
+                </tr>
+                <tr>
+                    <td><strong>15</strong></td>
+                    <td>Data Aggregation</td>
+                    <td><span class="status-dot dot-yellow"></span>Gold</td>
+                    <td>Summarize with counts, averages, distributions, and percentiles</td>
+                </tr>
+                <tr>
+                    <td><strong>16</strong></td>
+                    <td>Nectar AI Serving</td>
+                    <td><span style="display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:8px;vertical-align:middle;background:#ad1457;"></span>Nectar</td>
+                    <td>Feature engineering, categorical encoding, numeric scaling, train/val/test split (70/15/15)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="insight-box">
+            <div class="insight-label">Quality Gate Rule</div>
+            <p>Schema validation is mandatory at Stage 07. Records that fail validation are rejected and stored separately with rejection reasons. They are never propagated downstream. The rule is simple: <strong>never give unstructured data to AI.</strong></p>
+        </div>
+
+        <!-- Progress Dashboard -->
+        <h3>Pipeline Implementation Progress</h3>
+        <div class="progress-dashboard">
+            <div class="progress-ring-container">
+                <svg class="progress-ring" width="180" height="180" viewBox="0 0 180 180">
+                    <defs>
+                        <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:var(--teal-100)"/>
+                            <stop offset="100%" style="stop-color:var(--teal-60)"/>
+                        </linearGradient>
+                    </defs>
+                    <circle class="progress-ring-bg" cx="90" cy="90" r="70"/>
+                    <circle class="progress-ring-fill" cx="90" cy="90" r="70"/>
+                </svg>
+                <div class="progress-ring-text">
+                    <div class="progress-ring-value">17</div>
+                    <div class="progress-ring-label">Stages</div>
+                </div>
+            </div>
+            <div class="progress-bars">
+                <div class="progress-bar-item">
+                    <span class="progress-bar-label">Planning</span>
+                    <div class="progress-bar-track">
+                        <div class="progress-bar-fill bar-planning" style="width: 23%;"></div>
+                    </div>
+                    <span class="progress-bar-count">4</span>
+                </div>
+                <div class="progress-bar-item">
+                    <span class="progress-bar-label">Bronze</span>
+                    <div class="progress-bar-track">
+                        <div class="progress-bar-fill bar-bronze" style="width: 12%;"></div>
+                    </div>
+                    <span class="progress-bar-count">2</span>
+                </div>
+                <div class="progress-bar-item">
+                    <span class="progress-bar-label">Silver</span>
+                    <div class="progress-bar-track">
+                        <div class="progress-bar-fill bar-silver" style="width: 47%;"></div>
+                    </div>
+                    <span class="progress-bar-count">8</span>
+                </div>
+                <div class="progress-bar-item">
+                    <span class="progress-bar-label">Gold</span>
+                    <div class="progress-bar-track">
+                        <div class="progress-bar-fill bar-gold" style="width: 12%;"></div>
+                    </div>
+                    <span class="progress-bar-count">2</span>
+                </div>
+                <div class="progress-bar-item">
+                    <span class="progress-bar-label">Nectar</span>
+                    <div class="progress-bar-track">
+                        <div class="progress-bar-fill bar-nectar" style="width: 6%;"></div>
+                    </div>
+                    <span class="progress-bar-count">1</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ═══════════════════════ CHAPTER 04: THE DOMAINS ═══════════════════════ -->
+    <section id="domains" class="section">
+        <div class="section-header">
+            <div class="section-number">Chapter 04</div>
+            <h2>The 8 Data Domains</h2>
+            <div class="section-subtitle">Each EDA Codesign tool is a separate partition in the Data Mesh. Domains own their data independently.</div>
+        </div>
+
+        <div class="domains-grid">
+            <div class="domain-card domain-pkg">
+                <span class="domain-key">bdg-</span>
+                <h4>Board Design</h4>
+                <p>Board-level design and layout. First domain fully automated through AutoBDG / ProDiGI.</p>
+            </div>
+            <div class="domain-card domain-pkg">
+                <span class="domain-key">dfe-</span>
+                <h4>Design for Excellence</h4>
+                <p>Design optimization and manufacturability checks across the design flow.</p>
+            </div>
+            <div class="domain-card domain-sim">
+                <span class="domain-key">sigrity-</span>
+                <h4>Signal Integrity</h4>
+                <p>Signal integrity analysis and simulation for high-speed interconnects.</p>
+            </div>
+            <div class="domain-card domain-sim">
+                <span class="domain-key">ansysem-</span>
+                <h4>Electromagnetic Analysis</h4>
+                <p>Electromagnetic field analysis for package and board-level structures.</p>
+            </div>
+            <div class="domain-card domain-core">
+                <span class="domain-key">cdcore-</span>
+                <h4>Core Design</h4>
+                <p>Core codesign functionality shared across the CPB co-design flow.</p>
+            </div>
+            <div class="domain-card domain-core">
+                <span class="domain-key">cdilplugins-</span>
+                <h4>Plugin Interface</h4>
+                <p>Plugin integration layer connecting tools within the codesign ecosystem.</p>
+            </div>
+            <div class="domain-card domain-io">
+                <span class="domain-key">iop-</span>
+                <h4>I/O Planning</h4>
+                <p>Input/Output planning and optimization for chip-package interfaces.</p>
+            </div>
+            <div class="domain-card domain-io">
+                <span class="domain-key">pkgImpl-</span>
+                <h4>Package Implementation</h4>
+                <p>Package design and implementation for semiconductor packaging.</p>
+            </div>
+        </div>
+
+        <h3>Infrastructure Context</h3>
+        <p>These 8 tools live inside <strong>codesigndeploy</strong>, a subflow within Infineon's CAMINO production design flow. They exist as symbolic links pointing to actual tool implementations. Data outputs generated by these tools have historically unknown storage locations and unknown formats, which is why Stage 00 (Tool Data Mapping) must complete before any pipeline work begins.</p>
+
+        <div class="insight-box">
+            <div class="insight-label">Data Source Types</div>
+            <p>The pipeline connects to six source types: <strong>MySQL / Relational Databases</strong>, <strong>XML Files</strong>, <strong>Network Shared Folders</strong>, <strong>Internal File Server</strong>, <strong>HCIP (Infineon Internal Cloud)</strong>, and <strong>DVC (Data Version Control)</strong>. The exact source-to-tool mapping is confirmed during the Phase 1 Discovery stage.</p>
+        </div>
+
+        <h3>Primary Key Convention</h3>
+        <table class="status-table">
+            <thead>
+                <tr><th>Domain</th><th>Key Prefix</th><th>Example Record ID</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Board Design</td><td><code>bdg-</code></td><td>bdg-00142</td></tr>
+                <tr><td>Design for Excellence</td><td><code>dfe-</code></td><td>dfe-00089</td></tr>
+                <tr><td>Signal Integrity</td><td><code>sigrity-</code></td><td>sigrity-00231</td></tr>
+                <tr><td>Electromagnetic Analysis</td><td><code>ansysem-</code></td><td>ansysem-00056</td></tr>
+                <tr><td>Core Design</td><td><code>cdcore-</code></td><td>cdcore-00178</td></tr>
+                <tr><td>Plugin Interface</td><td><code>cdilplugins-</code></td><td>cdilplugins-00034</td></tr>
+                <tr><td>I/O Planning</td><td><code>iop-</code></td><td>iop-00092</td></tr>
+                <tr><td>Package Implementation</td><td><code>pkgImpl-</code></td><td>pkgImpl-00115</td></tr>
+            </tbody>
+        </table>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ═══════════════════════ CHAPTER 05: METHODOLOGY ═══════════════════════ -->
+    <section id="methodology" class="section">
+        <div class="section-header">
+            <div class="section-number">Chapter 05</div>
+            <h2>Research Methodology</h2>
+            <div class="section-subtitle">Four phases of work. Technical discovery combined with qualitative research and iterative stakeholder validation.</div>
+        </div>
+
+        <div class="methodology-flow">
+            <div class="method-phase method-1">
+                <div class="method-icon">🔍</div>
+                <h4>Phase 1: Discovery</h4>
+                <p>Investigate the data landscape. Map storage locations, catalog formats, profile schemas, assess data volumes, interview R&D engineers.</p>
+            </div>
+            <div class="method-phase method-2">
+                <div class="method-icon">🔧</div>
+                <h4>Phase 2: Pipeline Build</h4>
+                <p>Implement the 17-stage pipeline. Bronze ingestion, Silver validation, quality gates, normalization, staging, partitioning.</p>
+            </div>
+            <div class="method-phase method-3">
+                <div class="method-icon">🏗️</div>
+                <h4>Phase 3: Platform</h4>
+                <p>Data serving layer for AI consumption. APIs, batch access, feature store. Data catalog, lineage, schema registry, access control.</p>
+            </div>
+            <div class="method-phase method-4">
+                <div class="method-icon">📏</div>
+                <h4>Phase 4: Validation</h4>
+                <p>Measure pipeline performance. Data quality scores, ingestion throughput, processing latency, schema stability, coverage percentage.</p>
+            </div>
+        </div>
+
+        <h3>Investigation Methods</h3>
+        <div class="card-grid">
+            <div class="card">
+                <div class="card-icon">🖥️</div>
+                <h4>Technical Discovery</h4>
+                <p>Directory structure analysis (recursive file scanning), schema profiling (automated tooling), data lineage tracing (source to storage), volume assessment (storage audits).</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">🗣️</div>
+                <h4>Qualitative Research</h4>
+                <p>Semi-structured interviews with R&D engineers, surveys of current practices, direct observation of design workflows (shadowing), stakeholder workshops.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">📚</div>
+                <h4>Literature &amp; Industry Analysis</h4>
+                <p>Industry reports on EDA data management, existing design datasets, literature review of current tools, competitive analysis of similar solutions.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">🤝</div>
+                <h4>Stakeholder Engagement</h4>
+                <p>Weekly meetings with Manuel Lexer (Team Lead), technical reviews with Salem Mohamed (Technical Contact), presentations to engineering teams, continuous feedback loops.</p>
+            </div>
+        </div>
+
+        <h3>Validation Metrics</h3>
+        <table class="status-table">
+            <thead>
+                <tr><th>Category</th><th>Metric</th><th>What It Measures</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Pipeline Performance</strong></td>
+                    <td>Ingestion Rate</td>
+                    <td>Records per second processed through the pipeline</td>
+                </tr>
+                <tr>
+                    <td><strong>Pipeline Performance</strong></td>
+                    <td>Pipeline Latency</td>
+                    <td>Time from data creation to availability in Silver/Gold/Nectar</td>
+                </tr>
+                <tr>
+                    <td><strong>Data Quality</strong></td>
+                    <td>Quality Score</td>
+                    <td>Percentage of data passing all validation gates (Stages 06-08)</td>
+                </tr>
+                <tr>
+                    <td><strong>Data Quality</strong></td>
+                    <td>Schema Stability</td>
+                    <td>Backward compatibility maintained across schema versions</td>
+                </tr>
+                <tr>
+                    <td><strong>AI Readiness</strong></td>
+                    <td>Coverage</td>
+                    <td>Percentage of EDA tools integrated into the pipeline</td>
+                </tr>
+                <tr>
+                    <td><strong>AI Readiness</strong></td>
+                    <td>Data Freshness</td>
+                    <td>Age of data available to downstream AI systems</td>
+                </tr>
+                <tr>
+                    <td><strong>Business Impact</strong></td>
+                    <td>Time to Access</td>
+                    <td>Before/after comparison: hours of manual data prep to minutes</td>
+                </tr>
+                <tr>
+                    <td><strong>Business Impact</strong></td>
+                    <td>Developer Productivity</td>
+                    <td>Time saved on data preparation by AI/ML teams</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="manager-note">
+            <h3>&#9888; Current Phase: Concept Study</h3>
+            <p>This thesis is in the <strong>Concept Study phase</strong> (February to June 2026). The data landscape is being discovered for the first time. The pipeline architecture is designed, the Medallion layers are defined, and the Data Mesh framework is in place. The next step is implementing the concept with a concrete use case, starting with one domain (ansysem) and expanding the pattern to all 8 tools. Stages 00 through 03 (Discovery and Planning) must complete before any pipeline code runs.</p>
+        </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ═══════════════════════ CHAPTER 06: THESIS TIMELINE ═══════════════════════ -->
+    <section id="timeline" class="section">
+        <div class="section-header">
+            <div class="section-number">Chapter 06</div>
+            <h2>Thesis Project Timeline</h2>
+            <div class="section-subtitle">From discovery to validation. Six phases, four months of concept study, one pipeline architecture delivering dual value.</div>
+        </div>
+
+        <h3>Project Milestones</h3>
+        <div class="v-timeline">
+
+            <!-- Phase 1: Discovery & Planning -->
+            <div class="tl-item">
+                <div class="tl-year tl-year-planning">Phase 1</div>
+                <div class="tl-content">
+                    <span class="tl-tag tag-planning">Discovery &amp; Planning</span>
+                    <h4>&#128269; Stages 00-03: Data Landscape Mapping</h4>
+                    <ul>
+                        <li>Stage 00: Catalog each tool's inputs, outputs, storage locations, file formats</li>
+                        <li>Stage 01: Identify all data sources and access methods (MySQL, XML, HCIP, DVC)</li>
+                        <li>Stage 02: Measure Volume, Velocity, Variety, Veracity, Value per domain</li>
+                        <li>Stage 03: Set up DVC, credential management, version control infrastructure</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Phase 2: Bronze -->
+            <div class="tl-item">
+                <div class="tl-year tl-year-bronze">Phase 2</div>
+                <div class="tl-content">
+                    <span class="tl-tag tag-bronze">Bronze Layer</span>
+                    <h4>&#128230; Stages 04-05: Raw Ingestion &amp; First Cleanup</h4>
+                    <ul>
+                        <li>Stage 04: Connect to 6 source types, extract raw data preserving original format</li>
+                        <li>Stage 05: Remove duplicates, drop empty fields, strip irrelevant metadata</li>
+                        <li>Data lands as-is from sources with basic deduplication</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Phase 3: Silver -->
+            <div class="tl-item">
+                <div class="tl-year tl-year-silver">Phase 3</div>
+                <div class="tl-content">
+                    <span class="tl-tag tag-silver">Silver Layer</span>
+                    <h4>&#128737;&#65039; Stages 06-13: Quality Checkpoint</h4>
+                    <ul>
+                        <li>Stage 06: Cross-domain consistency verification</li>
+                        <li>Stage 07: Schema validation quality gate (reject invalid records)</li>
+                        <li>Stage 08: Value range and accuracy verification</li>
+                        <li>Stage 09: Normalize units, naming conventions, encoding</li>
+                        <li>Stage 10: Statistical outlier and anomaly detection</li>
+                        <li>Stages 11-13: Staging, primary key assignment, partitioning</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Current Phase -->
+            <div class="tl-item">
+                <div class="tl-now-badge">&#9679; CONCEPT STUDY</div>
+                <div class="tl-year tl-year-now">NOW</div>
+                <div class="tl-content" style="border-color: #0a8276; border-width: 2px; box-shadow: 0 2px 12px rgba(10,130,118,0.15);">
+                    <span class="tl-tag tag-now">Feb - Jun 2026</span>
+                    <h4>Step 2: Concept Study Phase</h4>
+                    <ul>
+                        <li>Architecture design complete: Medallion + Data Mesh + Nectar</li>
+                        <li>17-stage pipeline framework defined with schema contracts</li>
+                        <li>Data discovery in progress across all 8 EDA tool domains</li>
+                        <li>First use case (ansysem) selected for concrete validation</li>
+                        <li>Platform evaluation against each pipeline stage ongoing</li>
+                        <li>Research methodology: mixed-methods with 4 phases</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Phase 4: Gold -->
+            <div class="tl-item">
+                <div class="tl-year tl-year-gold">Phase 4</div>
+                <div class="tl-content" style="border-style: dashed;">
+                    <span class="tl-tag tag-gold">Gold Layer</span>
+                    <h4>&#9881;&#65039; Stages 14-15: Business Value</h4>
+                    <ul>
+                        <li>Stage 14: ETL with domain-specific business logic transformations</li>
+                        <li>Stage 15: Aggregations: counts, averages, distributions, percentiles</li>
+                        <li>Derived fields and cross-domain derived metrics</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Phase 5: Nectar -->
+            <div class="tl-item">
+                <div class="tl-year tl-year-nectar">Phase 5</div>
+                <div class="tl-content" style="border-style: dashed;">
+                    <span class="tl-tag tag-nectar">Nectar Layer</span>
+                    <h4>&#127855; Stage 16: AI Serving</h4>
+                    <ul>
+                        <li>Feature engineering and categorical encoding</li>
+                        <li>Numeric scaling and train/val/test split (70/15/15)</li>
+                        <li>LLM-consumable JSONL, automation-ready Parquet, data cards</li>
+                        <li>AI-ready data products with full lineage documentation</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Validation -->
+            <div class="tl-item">
+                <div class="tl-year tl-year-planning" style="background: var(--teal-dark);">Final</div>
+                <div class="tl-content" style="border: 2px solid var(--teal-dark); background: #eef7f6;">
+                    <span class="tl-tag tag-now">Validation</span>
+                    <h4>Measured Results &amp; Thesis Delivery</h4>
+                    <ul>
+                        <li>Data quality scores: percentage passing validation gates</li>
+                        <li>Pipeline performance: ingestion rate, latency, throughput</li>
+                        <li>Coverage: percentage of EDA tools integrated</li>
+                        <li>Before/after comparison: manual hours vs. automated minutes</li>
+                        <li>5 university deliverables + 5 company deliverables</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ═══════════════════════ CHAPTER 07: DELIVERABLES ═══════════════════════ -->
+    <section id="deliverables" class="section">
+        <div class="section-header">
+            <div class="section-number">Chapter 07</div>
+            <h2>Deliverables &amp; Scope</h2>
+            <div class="section-subtitle">5 academic deliverables for the university. 5 practical deliverables for Infineon. Both come from the same work.</div>
+        </div>
+
+        <div class="deliverables-grid">
+            <!-- Academic -->
+            <div class="deliverables-column">
+                <div class="deliverables-header" style="background: linear-gradient(135deg, var(--teal-dark), var(--teal-100));">🎓 University Deliverables</div>
+                <div class="deliverables-body">
+                    <div class="deliverable-item">
+                        <div class="deliverable-num" style="background: var(--teal-100);">1</div>
+                        <div class="deliverable-text">
+                            <h5>End-to-End EDA Data Pipeline Architecture</h5>
+                            <p>Novel 17-stage pipeline with four data layers, filling the gap in EDA data management research.</p>
+                        </div>
+                    </div>
+                    <div class="deliverable-item">
+                        <div class="deliverable-num" style="background: var(--teal-100);">2</div>
+                        <div class="deliverable-text">
+                            <h5>Data-as-a-Product Framework for EDA</h5>
+                            <p>First application of Data Mesh and Data-as-a-Product concepts to the semiconductor EDA context.</p>
+                        </div>
+                    </div>
+                    <div class="deliverable-item">
+                        <div class="deliverable-num" style="background: var(--teal-100);">3</div>
+                        <div class="deliverable-text">
+                            <h5>Internal Platform Evaluation</h5>
+                            <p>Fact-based assessment of existing platforms mapped against each pipeline stage.</p>
+                        </div>
+                    </div>
+                    <div class="deliverable-item">
+                        <div class="deliverable-num" style="background: var(--teal-100);">4</div>
+                        <div class="deliverable-text">
+                            <h5>Mixed-Methods Research Methodology</h5>
+                            <p>Technical discovery combined with qualitative research and iterative validation, documented for reuse.</p>
+                        </div>
+                    </div>
+                    <div class="deliverable-item">
+                        <div class="deliverable-num" style="background: var(--teal-100);">5</div>
+                        <div class="deliverable-text">
+                            <h5>Measured Validation</h5>
+                            <p>Quantitative metrics: data quality scores, throughput, latency, schema stability. Before/after comparisons.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Company -->
+            <div class="deliverables-column">
+                <div class="deliverables-header" style="background: linear-gradient(135deg, #1565c0, #1976d2);">🏢 Infineon Deliverables</div>
+                <div class="deliverables-body">
+                    <div class="deliverable-item">
+                        <div class="deliverable-num" style="background: #1565c0;">1</div>
+                        <div class="deliverable-text">
+                            <h5>Data Discovery &amp; Cataloging</h5>
+                            <p>Documented inventory of where EDA tools store data, what formats exist, and how outputs are accessed.</p>
+                        </div>
+                    </div>
+                    <div class="deliverable-item">
+                        <div class="deliverable-num" style="background: #1565c0;">2</div>
+                        <div class="deliverable-text">
+                            <h5>Standardized Pipeline with Quality Gates</h5>
+                            <p>Working pipeline: ingestion, cleaning, validation, quality checks. Proven on one use case, ready to scale.</p>
+                        </div>
+                    </div>
+                    <div class="deliverable-item">
+                        <div class="deliverable-num" style="background: #1565c0;">3</div>
+                        <div class="deliverable-text">
+                            <h5>Governed Data Products</h5>
+                            <p>Schema-governed, partitioned data products with quality standards. Template for additional tools.</p>
+                        </div>
+                    </div>
+                    <div class="deliverable-item">
+                        <div class="deliverable-num" style="background: #1565c0;">4</div>
+                        <div class="deliverable-text">
+                            <h5>Platform Integration</h5>
+                            <p>Pipeline plugs into existing infrastructure. Custom code only fills genuine gaps.</p>
+                        </div>
+                    </div>
+                    <div class="deliverable-item">
+                        <div class="deliverable-num" style="background: #1565c0;">5</div>
+                        <div class="deliverable-text">
+                            <h5>Documentation &amp; Team Handoff</h5>
+                            <p>Architecture docs, deployment procedures, operational guides. Team maintains it independently after thesis ends.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h3>Scope Boundary</h3>
+        <div class="scope-grid">
+            <div class="scope-column scope-in">
+                <div class="scope-header">✅ In Scope</div>
+                <div class="scope-item">✓ Data engineering, pipeline architecture, implementation</div>
+                <div class="scope-item">✓ Data discovery, profiling, and cataloging</div>
+                <div class="scope-item">✓ Data quality framework with automated validation</div>
+                <div class="scope-item">✓ Data Mesh and Data-as-a-Product architecture</div>
+                <div class="scope-item">✓ Nectar layer design for AI-ready data serving</div>
+                <div class="scope-item">✓ Data governance: lineage, catalogs, access patterns</div>
+            </div>
+            <div class="scope-column scope-out">
+                <div class="scope-header">✗ Out of Scope</div>
+                <div class="scope-item">✗ AI/ML model development</div>
+                <div class="scope-item">✗ Dashboard or analytics platform creation</div>
+                <div class="scope-item">✗ Modifying existing internal platforms</div>
+                <div class="scope-item">✗ Full-scale production rollout across all teams</div>
+                <div class="scope-item">✗ Training or deploying ML models on served data</div>
+                <div class="scope-item">✗ Building visualizations or BI tools</div>
+            </div>
+        </div>
+
+        <div class="vision-box">
+            <div class="vision-label">The Bottom Line</div>
+            <p>The university gets a novel architecture, an applied framework, a platform evaluation, and measured results from a real use case. The company gets a working pipeline, discovered data, quality gates, and a standardized design that scales beyond the thesis. Both outcomes come from the same work, and both parties can point to concrete results when the project wraps up.</p>
+        </div>
+
+        <div class="insight-box">
+            <div class="insight-label">Thesis Information</div>
+            <p>
+                <strong>Student:</strong> Hamza Ghaffar &middot;
+                <strong>Program:</strong> MSc Communication Engineering, FH Kärnten, Villach &middot;
+                <strong>Company:</strong> Infineon Technologies Austria AG &middot;
+                <strong>Role:</strong> Software Automation Intern (Full-Time)<br>
+                <strong>Supervisor 1:</strong> Manuel Lexer (Team Lead) &middot;
+                <strong>Supervisor 2:</strong> Salem Mohamed (Technical Contact) &middot;
+                <strong>Phase:</strong> Step 2 - Concept Study (Feb-Jun 2026)
+            </p>
+        </div>
+    </section>
+
+</div>
+
+<!-- ════════════════════════════════════════ FOOTER ════════════════════════════════════════ -->
+<footer class="footer">
+    <div style="margin-bottom: 14px;">
+        <svg enable-background="new 0 0 283.5 124" viewBox="0 0 283.5 124" xmlns="http://www.w3.org/2000/svg" style="height: 34px; width: auto; opacity: 0.5;">
+            <path d="m211.2 83.5c10.6 0 13.9-11.2 13.9-21.5 0-13.8-5.8-21-13.9-21-10.2 0-13.8 11.2-13.7 21.2.1 9.9 2.9 21.3 13.7 21.3zm-5.2-21.6c0-4.1 0-13.7 5.2-13.7 5.6 0 5.4 9.5 5.4 13.9 0 4.2 0 14.4-5.2 14.4-5.6-.1-5.4-10.3-5.4-14.6zm-25.6 21.6c4.3 0 8-1.7 11.5-5.4l-3.1-5.8c-2.4 2.6-4.8 4-7.7 4-2.4 0-4.4-1.4-5.6-3.8-1-2.1-1.2-4.5-1.2-7.1v-.8h18v-1.8c0-8.9-1.1-13.8-3.9-17.5-2.1-2.8-5.2-4.3-9-4.3-4 0-7.3 1.8-9.7 5.3-2.6 3.8-3.7 8.9-3.7 15.9-.1 13.4 5.2 21.3 14.4 21.3zm-.9-35.9c2 0 3.2 1.1 4 2.9.6 1.6.9 4.3.9 7.5h-10.1c.1-7.1 1.6-10.4 5.2-10.4zm52.2 34.9h7.8v-30c1.9-2.3 4.1-3.6 5.7-3.6 1 0 2 .2 2.6 1 .6.9.9 2.2.9 5.3v27.3h7.8v-30.9c0-2.7-.3-5.4-1.9-7.4-1.4-1.8-3.6-2.9-6.4-2.9-3.6 0-7.3 2.1-9.3 4.5-.1-2.1-.8-4.1-1-4.8l-7.3 1.9c.4 2.2 1 4.9 1 9.8v29.8zm-90.6-36.7c-.1-2.1-.8-4.1-1-4.8l-7.3 1.9c.4 2.2 1 4.9 1 9.8v29.7h7.8v-30c1.9-2.3 4.1-3.6 5.7-3.6 1 0 2 .2 2.6 1 .6.9.9 2.2.9 5.3v27.3h7.8v-30.8c0-2.7-.3-5.4-1.9-7.4-1.4-1.8-3.6-2.9-6.4-2.9-3.5 0-7.2 2.1-9.2 4.5zm-95.4-17.5c4.6 0 8.3-3.7 8.3-8.3s-3.7-8.3-8.3-8.3-8.3 3.7-8.3 8.3 3.7 8.3 8.3 8.3zm38.3 54.2v-30.9c0-2.7-.3-5.4-1.9-7.4-1.4-1.8-3.6-2.9-6.4-2.9-3.6 0-7.3 2.1-9.3 4.5-.1-2.1-.8-4.1-1-4.8l-7.2 2c.4 2.2 1 4.9 1 9.8v29.7h7.8v-30c1.9-2.3 4.1-3.6 5.7-3.6 1 0 2 .2 2.6 1 .6.9.9 2.2.9 5.3v27.3zm35.9-56.4c-2.9 0-5.2 2.3-5.2 5.2s2.3 5.2 5.1 5.2c2.9 0 5.2-2.3 5.2-5.2s-2.3-5.2-5.1-5.2zm-77.9 56.4h7.8v-48.7l-7.8 1zm63.7-51.6c1.4 0 2.8.5 3.7 1.2l2.2-6.1c-2.1-1.5-4.4-2.2-7.3-2.2-2 0-4.1.5-6 2-1.9 1.6-3.9 4.8-3.9 10.8 0 2.6.1 5.3.1 5.3h-2.7v6.9h2.7v33.6h8v-33.5h5.9l1.5-6.9h-7.3v-6.2c0-3 1.2-4.9 3.1-4.9zm10.2 51.6h7.9v-41.2l-7.9 1z" fill="#ffffff"></path>
+            <path d="m240.5 104.5c-26.4 7.8-58.5 11.2-89.9 11.2-79.7 0-131.1-23.4-134.7-54.3-1.3-11.6 7.8-22.9 23-32.5-2.7-2-4.4-5.2-4.5-8.8-22 11.6-34.4 26.8-34.4 42.2 0 34.1 60.9 62.9 151.4 61.7 31.5-.4 57.8-4.9 81.6-12.7 28.3-9.2 46.1-22.4 50.4-28.2-5.1 4.6-17.2 13.8-42.9 21.4zm-167.9-90.8c5.3-1.8 12.8-4.1 12.8-4.1 21.1-5.8 44.4-9.2 66.1-9-25-1.5-47.8 0-67.7 3.6 0 0-6.6 1.1-13.7 2.9 0 0-3.4.9-5.5 1.5s-5 1.4-5 1.4c-2 .6-4 1.3-6 2 2 2 3.2 4.6 3.3 7.6 3.5-1.6 10.2-4 15.7-5.9z" fill="rgba(255,255,255,0.3)"></path>
+        </svg>
+    </div>
+    <div class="footer-tagline">EDA Data Pipeline &middot; From fragmented to AI-ready &middot; Bronze → Silver → Gold → Nectar</div>
+    <div class="footer-meta">Hamza Ghaffar &middot; MSc Communication Engineering &middot; FH Kärnten &middot; Infineon Technologies Austria AG &middot; 2026</div>
+</footer>
+
+<!-- ═══════════════════ SCROLL ANIMATIONS ═══════════════════ -->
+<script>
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+
+    document.querySelectorAll('.card, .domain-card, .mesh-card, .medallion-layer, .method-phase, .pipeline-phase, .deliverables-column, .vision-box, .insight-box, .flow-column, .evo-era, .tl-content, .convergence, .manager-note, .progress-dashboard, .flywheel-container').forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(el);
+    });
+
+    const sections = document.querySelectorAll('.section');
+    const navLinks = document.querySelectorAll('.nav-links a');
+
+    const navObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const id = entry.target.getAttribute('id');
+                navLinks.forEach(link => {
+                    link.style.color = link.getAttribute('href') === '#' + id ? '#0a8276' : '#555';
+                });
+            }
+        });
+    }, { threshold: 0.3 });
+
+    sections.forEach(section => navObserver.observe(section));
+</script>
+
+</body>
+</html>
