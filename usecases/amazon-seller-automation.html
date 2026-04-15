@@ -86,97 +86,158 @@
         }
         .pain-card p { font-size: 13px; color: #666; line-height: 1.6; margin: 0; }
 
-        /* ══════════ FLOW DIAGRAM ══════════ */
+        /* ══════════ ANIMATED FLOW PIPELINE ══════════ */
         .flow-wrapper {
-            background: #f8fafb; border-radius: 20px; padding: 40px 24px;
-            border: 1px solid #e8ecf0; overflow-x: auto;
+            background: linear-gradient(135deg, #0a1628 0%, #0f1f35 50%, #0a1222 100%);
+            border-radius: 20px; padding: 48px 32px;
+            border: 1px solid rgba(255,153,0,0.12);
+            overflow-x: auto; position: relative;
+        }
+        .flow-wrapper::before {
+            content: ''; position: absolute; inset: 0;
+            background: radial-gradient(ellipse at 50% 0%, rgba(255,153,0,0.06) 0%, transparent 60%);
+            pointer-events: none; border-radius: 20px;
         }
         .flow-title {
             text-align: center; font-size: 20px; font-weight: 800;
-            color: #1a1a1a; margin-bottom: 32px;
+            color: #fff; margin-bottom: 12px; position: relative;
         }
         .flow-title span { color: #ff9900; }
+        .flow-subtitle {
+            text-align: center; font-size: 12px; color: rgba(255,255,255,0.4);
+            margin-bottom: 40px; letter-spacing: 1px;
+        }
+        .flow-stage-label {
+            text-align: center; font-size: 10px; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 2px;
+            color: rgba(255,153,0,0.5); margin-bottom: 12px;
+        }
 
         /* Flow Rows */
         .flow-row {
             display: flex; align-items: center; justify-content: center;
-            gap: 0; margin-bottom: 12px; flex-wrap: nowrap;
-            min-width: fit-content;
+            gap: 0; margin-bottom: 8px; flex-wrap: nowrap;
+            min-width: fit-content; position: relative;
         }
         .flow-row:last-child { margin-bottom: 0; }
 
-        /* Nodes */
+        /* Nodes - Dark glassmorphism */
         .flow-node {
             display: flex; flex-direction: column; align-items: center;
             justify-content: center; gap: 6px;
-            min-width: 130px; max-width: 150px; padding: 16px 12px;
-            border-radius: 12px; text-align: center;
+            min-width: 130px; max-width: 150px; padding: 18px 14px;
+            border-radius: 14px; text-align: center;
             border: 2px solid transparent;
-            opacity: 0; transform: scale(0.8);
-            transition: opacity 0.5s ease, transform 0.5s ease, box-shadow 0.3s ease;
-            position: relative;
+            opacity: 0; transform: translateX(-30px) scale(0.9);
+            transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1),
+                        transform 0.7s cubic-bezier(0.16,1,0.3,1),
+                        box-shadow 0.3s ease;
+            position: relative; cursor: default;
+            backdrop-filter: blur(8px);
         }
         .flow-node.visible {
-            opacity: 1; transform: scale(1);
+            opacity: 1; transform: translateX(0) scale(1);
+        }
+        .flow-node.glow {
+            box-shadow: 0 0 24px rgba(255,153,0,0.25), 0 0 48px rgba(255,153,0,0.08);
         }
         .flow-node:hover {
-            transform: scale(1.05); box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            transform: scale(1.08) !important;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3), 0 0 20px rgba(255,153,0,0.15);
             z-index: 2;
         }
         .flow-node-icon { font-size: 28px; line-height: 1; }
-        .flow-node-label {
-            font-size: 12px; font-weight: 700; line-height: 1.3;
-        }
+        .flow-node-label { font-size: 12px; font-weight: 700; line-height: 1.3; }
         .flow-node-time {
             font-size: 10px; font-weight: 600; padding: 2px 8px;
             border-radius: 10px; margin-top: 2px;
         }
 
-        /* Node Colors */
+        /* Node Colors - dark theme */
         .fn-input {
-            background: #e3f2fd; border-color: #90caf9; color: #0d47a1;
+            background: rgba(33,150,243,0.12); border-color: rgba(33,150,243,0.4); color: #64b5f6;
         }
-        .fn-input .flow-node-time { background: #bbdefb; color: #0d47a1; }
+        .fn-input .flow-node-time { background: rgba(33,150,243,0.2); color: #90caf9; }
         .fn-process {
-            background: #fff3e0; border-color: #ffcc80; color: #e65100;
+            background: rgba(255,153,0,0.12); border-color: rgba(255,153,0,0.4); color: #ffb74d;
         }
-        .fn-process .flow-node-time { background: #ffe0b2; color: #e65100; }
+        .fn-process .flow-node-time { background: rgba(255,153,0,0.2); color: #ffcc80; }
         .fn-ai {
-            background: #f3e5f5; border-color: #ce93d8; color: #6a1b9a;
+            background: rgba(156,39,176,0.12); border-color: rgba(156,39,176,0.4); color: #ce93d8;
         }
-        .fn-ai .flow-node-time { background: #e1bee7; color: #6a1b9a; }
+        .fn-ai .flow-node-time { background: rgba(156,39,176,0.2); color: #e1bee7; }
         .fn-output {
-            background: #e8f5e9; border-color: #a5d6a7; color: #1b5e20;
+            background: rgba(76,175,80,0.12); border-color: rgba(76,175,80,0.4); color: #81c784;
         }
-        .fn-output .flow-node-time { background: #c8e6c9; color: #1b5e20; }
+        .fn-output .flow-node-time { background: rgba(76,175,80,0.2); color: #a5d6a7; }
         .fn-data {
-            background: #eceff1; border-color: #b0bec5; color: #37474f;
+            background: rgba(176,190,197,0.12); border-color: rgba(176,190,197,0.3); color: #b0bec5;
         }
-        .fn-data .flow-node-time { background: #cfd8dc; color: #37474f; }
+        .fn-data .flow-node-time { background: rgba(176,190,197,0.2); color: #cfd8dc; }
 
-        /* Connectors */
+        /* ── Animated Flowing Arrows ── */
         .flow-connector {
-            width: 40px; height: 2px; background: #ccc;
+            width: 56px; height: 3px;
+            background: repeating-linear-gradient(90deg, #ff9900 0, #ff9900 6px, transparent 6px, transparent 12px);
+            background-size: 12px 3px;
             position: relative; flex-shrink: 0;
             opacity: 0; transition: opacity 0.4s ease;
         }
-        .flow-connector.visible { opacity: 1; }
-        .flow-connector::after {
-            content: ''; position: absolute; right: -4px; top: -4px;
-            border: 5px solid transparent;
-            border-left: 6px solid #ccc;
+        .flow-connector.visible {
+            opacity: 1;
+            animation: dashFlow 0.6s linear infinite;
         }
+        .flow-connector::after {
+            content: ''; position: absolute; right: -7px; top: -5px;
+            border: 6px solid transparent;
+            border-left: 9px solid #ff9900;
+            filter: drop-shadow(0 0 4px rgba(255,153,0,0.6));
+        }
+        @keyframes dashFlow {
+            0% { background-position: 0 0; }
+            100% { background-position: 12px 0; }
+        }
+
+        /* Vertical animated arrow */
         .flow-connector-down {
-            width: 2px; height: 32px; background: #ccc;
-            margin: 0 auto; position: relative;
+            width: 3px; height: 36px; margin: 0 auto;
+            background: repeating-linear-gradient(180deg, #ff9900 0, #ff9900 6px, transparent 6px, transparent 12px);
+            background-size: 3px 12px;
+            position: relative;
             opacity: 0; transition: opacity 0.4s ease;
         }
-        .flow-connector-down.visible { opacity: 1; }
-        .flow-connector-down::after {
-            content: ''; position: absolute; bottom: -4px; left: -4px;
-            border: 5px solid transparent;
-            border-top: 6px solid #ccc;
+        .flow-connector-down.visible {
+            opacity: 1;
+            animation: dashFlowDown 0.6s linear infinite;
         }
+        .flow-connector-down::after {
+            content: ''; position: absolute; bottom: -7px; left: -5px;
+            border: 6px solid transparent;
+            border-top: 9px solid #ff9900;
+            filter: drop-shadow(0 0 4px rgba(255,153,0,0.6));
+        }
+        @keyframes dashFlowDown {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 12px; }
+        }
+
+        /* Flow legend */
+        .flow-legend {
+            display: flex; justify-content: center; gap: 20px;
+            margin-top: 32px; flex-wrap: wrap;
+        }
+        .flow-legend-item {
+            display: flex; align-items: center; gap: 6px;
+            font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.5);
+        }
+        .flow-legend-dot {
+            width: 10px; height: 10px; border-radius: 3px;
+        }
+        .fld-input { background: rgba(33,150,243,0.5); }
+        .fld-process { background: rgba(255,153,0,0.5); }
+        .fld-ai { background: rgba(156,39,176,0.5); }
+        .fld-output { background: rgba(76,175,80,0.5); }
+        .fld-data { background: rgba(176,190,197,0.4); }
 
         /* Before/After Comparison */
         .compare-grid {
@@ -277,6 +338,74 @@
             transform: translateY(-3px); box-shadow: 0 8px 24px rgba(255,153,0,0.4);
         }
 
+        /* ══════════ COST CALCULATOR ══════════ */
+        .calc-wrapper {
+            background: #fff; border-radius: 20px; padding: 36px;
+            border: 1px solid #e8ecf0; box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+        }
+        .calc-inputs {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px; margin-bottom: 32px;
+        }
+        .calc-input-group { display: flex; flex-direction: column; gap: 6px; }
+        .calc-input-group label {
+            font-size: 11px; font-weight: 800; text-transform: uppercase;
+            letter-spacing: 1px; color: #888;
+        }
+        .calc-input-group input {
+            padding: 12px 16px; border: 2px solid #e0e4e8; border-radius: 10px;
+            font-size: 16px; font-weight: 700; color: #1a1a1a;
+            font-family: 'Inter', sans-serif;
+            transition: border-color 0.2s ease;
+            width: 100%; box-sizing: border-box;
+        }
+        .calc-input-group input:focus {
+            outline: none; border-color: #ff9900;
+        }
+        .calc-input-group .calc-unit {
+            font-size: 11px; color: #999; font-weight: 600;
+        }
+        .calc-table-wrap { overflow-x: auto; }
+        .calc-table {
+            width: 100%; border-collapse: separate; border-spacing: 0;
+            font-size: 14px;
+        }
+        .calc-table thead th {
+            background: #0f1923; color: #fff; font-weight: 700;
+            padding: 14px 16px; text-align: left; font-size: 12px;
+            text-transform: uppercase; letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+        .calc-table thead th:first-child { border-radius: 10px 0 0 0; }
+        .calc-table thead th:last-child { border-radius: 0 10px 0 0; }
+        .calc-table tbody td {
+            padding: 14px 16px; border-bottom: 1px solid #f0f0f0;
+            color: #444;
+        }
+        .calc-table tbody tr:hover td { background: #fefaf5; }
+        .calc-table .ct-task { font-weight: 700; color: #1a1a1a; }
+        .calc-table .ct-formula {
+            font-family: 'Courier New', monospace; font-size: 12px;
+            color: #6a1b9a; background: #f8f0ff; padding: 4px 8px;
+            border-radius: 6px; white-space: nowrap;
+        }
+        .calc-table .ct-saved {
+            font-weight: 800; color: #2e7d32;
+        }
+        .calc-total-row td {
+            background: #f1f8e9 !important; font-weight: 800;
+            border-bottom: none !important;
+        }
+        .calc-total-row:last-child td:first-child { border-radius: 0 0 0 10px; }
+        .calc-total-row:last-child td:last-child { border-radius: 0 0 10px 0; }
+        .calc-highlight {
+            font-size: 20px; color: #2e7d32;
+        }
+        .calc-note {
+            margin-top: 16px; font-size: 12px; color: #999;
+            text-align: center; font-style: italic;
+        }
+
         @media (max-width: 768px) {
             .uc-hero { padding: 60px 20px 40px; }
             .uc-hero h1 { font-size: 28px; }
@@ -285,8 +414,14 @@
             .uc-section h2 { font-size: 24px; }
             .compare-grid { grid-template-columns: 1fr; }
             .flow-row { justify-content: flex-start; }
-            .flow-node { min-width: 110px; padding: 12px 8px; }
+            .flow-node { min-width: 110px; max-width: 120px; padding: 12px 8px; }
             .flow-connector { width: 24px; }
+            .flow-node-icon { font-size: 22px; }
+            .flow-node-label { font-size: 10px; }
+            .flow-wrapper { padding: 32px 16px; }
+            .calc-wrapper { padding: 20px 16px; }
+            .calc-table { font-size: 12px; }
+            .calc-inputs { grid-template-columns: 1fr 1fr; }
         }
     </style>
 </head>
@@ -376,121 +511,135 @@
         <h2>Automated Pipeline Architecture</h2>
         <p>A visual flow of how every manual task is replaced by an intelligent, connected automation node. Each block is a microservice that runs 24/7.</p>
 
-        <div class="flow-wrapper">
+        <div class="flow-wrapper" id="flowPipeline">
             <div class="flow-title">🔄 Amazon Seller <span>Automation Pipeline</span></div>
+            <div class="flow-subtitle">Watch the data flow through each stage of the automation</div>
 
-            <!-- Row 1: Data Ingestion -->
+            <!-- Stage 1: Data Ingestion → Listing -->
+            <div class="flow-stage-label">Stage 1  Product Listing Pipeline</div>
             <div class="flow-row">
-                <div class="flow-node fn-input" data-delay="0">
+                <div class="flow-node fn-input" data-step="0">
                     <div class="flow-node-icon">📥</div>
                     <div class="flow-node-label">Supplier Feed</div>
                     <div class="flow-node-time">CSV / API</div>
                 </div>
-                <div class="flow-connector"></div>
-                <div class="flow-node fn-process" data-delay="1">
+                <div class="flow-connector" data-step="1"></div>
+                <div class="flow-node fn-process" data-step="2">
                     <div class="flow-node-icon">🧹</div>
                     <div class="flow-node-label">Data Cleaning & Validation</div>
                     <div class="flow-node-time">Auto QA</div>
                 </div>
-                <div class="flow-connector"></div>
-                <div class="flow-node fn-ai" data-delay="2">
+                <div class="flow-connector" data-step="3"></div>
+                <div class="flow-node fn-ai" data-step="4">
                     <div class="flow-node-icon">🤖</div>
-                    <div class="flow-node-label">AI Title & Description Generator</div>
+                    <div class="flow-node-label">AI Title & SEO Generator</div>
                     <div class="flow-node-time">GPT + SEO</div>
                 </div>
-                <div class="flow-connector"></div>
-                <div class="flow-node fn-output" data-delay="3">
+                <div class="flow-connector" data-step="5"></div>
+                <div class="flow-node fn-output" data-step="6">
                     <div class="flow-node-icon">📤</div>
                     <div class="flow-node-label">Amazon Listing API</div>
                     <div class="flow-node-time">SP-API</div>
                 </div>
             </div>
 
-            <div class="flow-connector-down"></div>
+            <div class="flow-connector-down" data-step="7"></div>
 
-            <!-- Row 2: Inventory & Pricing -->
+            <!-- Stage 2: Inventory & Pricing -->
+            <div class="flow-stage-label">Stage 2  Inventory & Pricing Engine</div>
             <div class="flow-row">
-                <div class="flow-node fn-data" data-delay="4">
+                <div class="flow-node fn-data" data-step="8">
                     <div class="flow-node-icon">🏭</div>
                     <div class="flow-node-label">Warehouse Sync</div>
                     <div class="flow-node-time">Real-time</div>
                 </div>
-                <div class="flow-connector"></div>
-                <div class="flow-node fn-ai" data-delay="5">
+                <div class="flow-connector" data-step="9"></div>
+                <div class="flow-node fn-ai" data-step="10">
                     <div class="flow-node-icon">📊</div>
                     <div class="flow-node-label">Demand Forecasting</div>
                     <div class="flow-node-time">ML Model</div>
                 </div>
-                <div class="flow-connector"></div>
-                <div class="flow-node fn-process" data-delay="6">
+                <div class="flow-connector" data-step="11"></div>
+                <div class="flow-node fn-process" data-step="12">
                     <div class="flow-node-icon">🔄</div>
                     <div class="flow-node-label">Auto Reorder Engine</div>
                     <div class="flow-node-time">Rules + AI</div>
                 </div>
-                <div class="flow-connector"></div>
-                <div class="flow-node fn-ai" data-delay="7">
+                <div class="flow-connector" data-step="13"></div>
+                <div class="flow-node fn-ai" data-step="14">
                     <div class="flow-node-icon">💰</div>
                     <div class="flow-node-label">Dynamic Repricing</div>
                     <div class="flow-node-time">Every 15 min</div>
                 </div>
             </div>
 
-            <div class="flow-connector-down"></div>
+            <div class="flow-connector-down" data-step="15"></div>
 
-            <!-- Row 3: Order Processing -->
+            <!-- Stage 3: Order Processing -->
+            <div class="flow-stage-label">Stage 3  Order Orchestration</div>
             <div class="flow-row">
-                <div class="flow-node fn-input" data-delay="8">
+                <div class="flow-node fn-input" data-step="16">
                     <div class="flow-node-icon">🛒</div>
                     <div class="flow-node-label">New Order Event</div>
                     <div class="flow-node-time">Webhook</div>
                 </div>
-                <div class="flow-connector"></div>
-                <div class="flow-node fn-process" data-delay="9">
+                <div class="flow-connector" data-step="17"></div>
+                <div class="flow-node fn-process" data-step="18">
                     <div class="flow-node-icon">✅</div>
                     <div class="flow-node-label">Fraud Check & Validation</div>
                     <div class="flow-node-time">Auto</div>
                 </div>
-                <div class="flow-connector"></div>
-                <div class="flow-node fn-process" data-delay="10">
+                <div class="flow-connector" data-step="19"></div>
+                <div class="flow-node fn-process" data-step="20">
                     <div class="flow-node-icon">🏷️</div>
                     <div class="flow-node-label">Label & Invoice Gen</div>
                     <div class="flow-node-time">Auto Print</div>
                 </div>
-                <div class="flow-connector"></div>
-                <div class="flow-node fn-output" data-delay="11">
+                <div class="flow-connector" data-step="21"></div>
+                <div class="flow-node fn-output" data-step="22">
                     <div class="flow-node-icon">🚚</div>
                     <div class="flow-node-label">Shipping & Tracking</div>
                     <div class="flow-node-time">Auto Update</div>
                 </div>
             </div>
 
-            <div class="flow-connector-down"></div>
+            <div class="flow-connector-down" data-step="23"></div>
 
-            <!-- Row 4: Customer & Analytics -->
+            <!-- Stage 4: Customer & Analytics -->
+            <div class="flow-stage-label">Stage 4  Customer Intelligence</div>
             <div class="flow-row">
-                <div class="flow-node fn-input" data-delay="12">
+                <div class="flow-node fn-input" data-step="24">
                     <div class="flow-node-icon">💬</div>
                     <div class="flow-node-label">Customer Message</div>
                     <div class="flow-node-time">Inbox</div>
                 </div>
-                <div class="flow-connector"></div>
-                <div class="flow-node fn-ai" data-delay="13">
+                <div class="flow-connector" data-step="25"></div>
+                <div class="flow-node fn-ai" data-step="26">
                     <div class="flow-node-icon">🧠</div>
                     <div class="flow-node-label">AI Response Agent</div>
                     <div class="flow-node-time">NLP + RAG</div>
                 </div>
-                <div class="flow-connector"></div>
-                <div class="flow-node fn-process" data-delay="14">
+                <div class="flow-connector" data-step="27"></div>
+                <div class="flow-node fn-process" data-step="28">
                     <div class="flow-node-icon">↩️</div>
                     <div class="flow-node-label">Return & Refund Auto</div>
                     <div class="flow-node-time">Policy Engine</div>
                 </div>
-                <div class="flow-connector"></div>
-                <div class="flow-node fn-output" data-delay="15">
+                <div class="flow-connector" data-step="29"></div>
+                <div class="flow-node fn-output" data-step="30">
                     <div class="flow-node-icon">📈</div>
                     <div class="flow-node-label">Analytics Dashboard</div>
                     <div class="flow-node-time">Real-time</div>
                 </div>
+            </div>
+
+            <!-- Legend -->
+            <div class="flow-legend">
+                <div class="flow-legend-item"><div class="flow-legend-dot fld-input"></div> Data Source</div>
+                <div class="flow-legend-item"><div class="flow-legend-dot fld-process"></div> Processing</div>
+                <div class="flow-legend-item"><div class="flow-legend-dot fld-ai"></div> AI / ML</div>
+                <div class="flow-legend-item"><div class="flow-legend-dot fld-output"></div> Output</div>
+                <div class="flow-legend-item"><div class="flow-legend-dot fld-data"></div> Storage</div>
             </div>
         </div>
     </div>
@@ -576,6 +725,56 @@
         </div>
     </div>
 
+    <!-- Cost Savings Calculator -->
+    <div class="uc-section">
+        <div class="uc-section-label">ROI Calculator</div>
+        <h2>Calculate Your Cost Savings</h2>
+        <p>Enter your business numbers below. The table shows exactly how much you save per task, with formulas visible so you can verify the math yourself.</p>
+
+        <div class="calc-wrapper">
+            <div class="calc-inputs">
+                <div class="calc-input-group">
+                    <label>New Products / Month</label>
+                    <input type="number" id="calcProducts" value="50" min="1" max="10000" oninput="calcSavings()">
+                    <span class="calc-unit">new SKUs listed per month</span>
+                </div>
+                <div class="calc-input-group">
+                    <label>Orders / Day</label>
+                    <input type="number" id="calcOrders" value="100" min="1" max="50000" oninput="calcSavings()">
+                    <span class="calc-unit">average daily orders</span>
+                </div>
+                <div class="calc-input-group">
+                    <label>Employee Hourly Rate</label>
+                    <input type="number" id="calcRate" value="25" min="1" max="500" oninput="calcSavings()">
+                    <span class="calc-unit">$ per hour (cost to you)</span>
+                </div>
+                <div class="calc-input-group">
+                    <label>Working Days / Month</label>
+                    <input type="number" id="calcDays" value="22" min="1" max="31" oninput="calcSavings()">
+                    <span class="calc-unit">business days</span>
+                </div>
+            </div>
+
+            <div class="calc-table-wrap">
+                <table class="calc-table">
+                    <thead>
+                        <tr>
+                            <th>Task</th>
+                            <th>Manual</th>
+                            <th>Automated</th>
+                            <th>Saved</th>
+                            <th>Formula</th>
+                            <th>Monthly $</th>
+                        </tr>
+                    </thead>
+                    <tbody id="calcBody">
+                    </tbody>
+                </table>
+            </div>
+            <p class="calc-note">* All calculations are estimates based on industry benchmarks. Actual savings may vary. Edit the inputs above to see your numbers.</p>
+        </div>
+    </div>
+
     <!-- Tech Stack -->
     <div class="uc-section" style="text-align: center;">
         <div class="uc-section-label">Tech Stack</div>
@@ -612,41 +811,155 @@
 </footer>
 
 <script>
-// Animate flow nodes on scroll
-var flowObserver = new IntersectionObserver(function(entries) {
-    entries.forEach(function(entry) {
-        if (entry.isIntersecting) {
-            var delay = parseInt(entry.target.getAttribute('data-delay') || 0) * 150;
-            setTimeout(function() {
-                entry.target.classList.add('visible');
-            }, delay);
-            // Also show adjacent connectors
-            var next = entry.target.nextElementSibling;
-            if (next && next.classList.contains('flow-connector')) {
-                setTimeout(function() { next.classList.add('visible'); }, delay + 100);
+/* ═══════ SEQUENTIAL PIPELINE ANIMATION ═══════ */
+(function() {
+    var pipeline = document.getElementById('flowPipeline');
+    if (!pipeline) return;
+
+    // Collect all animatable elements in order
+    var steps = [];
+    pipeline.querySelectorAll('[data-step]').forEach(function(el) {
+        steps.push({ el: el, step: parseInt(el.getAttribute('data-step')) });
+    });
+    steps.sort(function(a, b) { return a.step - b.step; });
+
+    // Also collect stage labels
+    var stageLabels = pipeline.querySelectorAll('.flow-stage-label');
+
+    var animated = false;
+    var pipelineObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting && !animated) {
+                animated = true;
+                pipelineObserver.disconnect();
+
+                // Animate stage labels instantly
+                stageLabels.forEach(function(lbl) {
+                    lbl.style.opacity = '0';
+                    lbl.style.transition = 'opacity 0.5s ease';
+                });
+
+                // Sequential animation - each step with delay
+                var baseDelay = 200; // ms between each step
+                steps.forEach(function(s, i) {
+                    setTimeout(function() {
+                        s.el.classList.add('visible');
+
+                        // Add glow to nodes momentarily
+                        if (s.el.classList.contains('flow-node')) {
+                            s.el.classList.add('glow');
+                            setTimeout(function() {
+                                s.el.classList.remove('glow');
+                            }, 800);
+                        }
+
+                        // Show stage labels at the right time
+                        if (s.step === 0) stageLabels[0] && (stageLabels[0].style.opacity = '1');
+                        if (s.step === 8) stageLabels[1] && (stageLabels[1].style.opacity = '1');
+                        if (s.step === 16) stageLabels[2] && (stageLabels[2].style.opacity = '1');
+                        if (s.step === 24) stageLabels[3] && (stageLabels[3].style.opacity = '1');
+
+                    }, i * baseDelay);
+                });
             }
-        }
+        });
+    }, { threshold: 0.15 });
+
+    pipelineObserver.observe(pipeline);
+})();
+
+/* ═══════ COST SAVINGS CALCULATOR ═══════ */
+var calcTasks = [
+    {
+        task: 'Product Listing',
+        manualLabel: '30 min/product',
+        autoLabel: '2 min/product',
+        savedLabel: '28 min/product',
+        formula: 'Products \u00d7 28 \u00f7 60 \u00d7 Rate',
+        calc: function(p, o, r, d) { return p * (28/60) * r; }
+    },
+    {
+        task: 'Inventory Management',
+        manualLabel: '4 hr/day',
+        autoLabel: '10 min/day',
+        savedLabel: '3.83 hr/day',
+        formula: 'Days \u00d7 3.83 \u00d7 Rate',
+        calc: function(p, o, r, d) { return d * 3.83 * r; }
+    },
+    {
+        task: 'Order Processing',
+        manualLabel: '12 min/order',
+        autoLabel: '~0 (auto)',
+        savedLabel: '12 min/order',
+        formula: 'Orders \u00d7 Days \u00d7 12 \u00f7 60 \u00d7 Rate',
+        calc: function(p, o, r, d) { return o * d * (12/60) * r; }
+    },
+    {
+        task: 'Dynamic Repricing',
+        manualLabel: '2 hr/day',
+        autoLabel: '0 (auto)',
+        savedLabel: '2 hr/day',
+        formula: 'Days \u00d7 2 \u00d7 Rate',
+        calc: function(p, o, r, d) { return d * 2 * r; }
+    },
+    {
+        task: 'Customer Support',
+        manualLabel: '3 hr/day',
+        autoLabel: '18 min/day',
+        savedLabel: '2.7 hr/day',
+        formula: 'Days \u00d7 2.7 \u00d7 Rate',
+        calc: function(p, o, r, d) { return d * 2.7 * r; }
+    },
+    {
+        task: 'Analytics & Reporting',
+        manualLabel: '1.5 hr/day',
+        autoLabel: '5 min/day',
+        savedLabel: '1.42 hr/day',
+        formula: 'Days \u00d7 1.42 \u00d7 Rate',
+        calc: function(p, o, r, d) { return d * 1.42 * r; }
+    }
+];
+
+function calcSavings() {
+    var products = Math.max(1, parseInt(document.getElementById('calcProducts').value) || 50);
+    var orders = Math.max(1, parseInt(document.getElementById('calcOrders').value) || 100);
+    var rate = Math.max(1, parseFloat(document.getElementById('calcRate').value) || 25);
+    var days = Math.max(1, parseInt(document.getElementById('calcDays').value) || 22);
+
+    var tbody = document.getElementById('calcBody');
+    var html = '';
+    var totalMonthly = 0;
+
+    calcTasks.forEach(function(t) {
+        var saved = t.calc(products, orders, rate, days);
+        totalMonthly += saved;
+        html += '<tr>';
+        html += '<td class="ct-task">' + t.task + '</td>';
+        html += '<td>' + t.manualLabel + '</td>';
+        html += '<td>' + t.autoLabel + '</td>';
+        html += '<td>' + t.savedLabel + '</td>';
+        html += '<td><span class="ct-formula">' + t.formula + '</span></td>';
+        html += '<td class="ct-saved">$' + Number(saved.toFixed(0)).toLocaleString() + '</td>';
+        html += '</tr>';
     });
-}, { threshold: 0.2 });
 
-document.querySelectorAll('.flow-node').forEach(function(el) {
-    flowObserver.observe(el);
-});
+    // Total rows
+    html += '<tr class="calc-total-row">';
+    html += '<td colspan="5" style="text-align:right;">Total Monthly Savings</td>';
+    html += '<td class="calc-highlight">$' + Number(totalMonthly.toFixed(0)).toLocaleString() + '</td>';
+    html += '</tr>';
+    html += '<tr class="calc-total-row">';
+    html += '<td colspan="5" style="text-align:right;">Total Annual Savings (\u00d712)</td>';
+    html += '<td class="calc-highlight">$' + Number((totalMonthly * 12).toFixed(0)).toLocaleString() + '</td>';
+    html += '</tr>';
 
-// Animate vertical connectors
-var downObserver = new IntersectionObserver(function(entries) {
-    entries.forEach(function(entry) {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-        }
-    });
-}, { threshold: 0.5 });
+    tbody.innerHTML = html;
+}
 
-document.querySelectorAll('.flow-connector-down').forEach(function(el) {
-    downObserver.observe(el);
-});
+// Initialize calculator on load
+calcSavings();
 
-// Animate module cards
+/* ═══════ CARD SCROLL ANIMATIONS ═══════ */
 var cardObserver = new IntersectionObserver(function(entries) {
     entries.forEach(function(entry) {
         if (entry.isIntersecting) {
@@ -656,7 +969,7 @@ var cardObserver = new IntersectionObserver(function(entries) {
     });
 }, { threshold: 0.1 });
 
-document.querySelectorAll('.module-card, .pain-card, .compare-card, .kpi-card').forEach(function(el) {
+document.querySelectorAll('.module-card, .pain-card, .compare-card, .kpi-card, .calc-wrapper').forEach(function(el) {
     el.style.opacity = '0';
     el.style.transform = 'translateY(20px)';
     el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
