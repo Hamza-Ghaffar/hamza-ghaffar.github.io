@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amazon Seller Automation   AI Use Case | Hamza Ghaffar</title>
+    <meta name="description" content="AI-powered automation for Amazon sellers. Automate product listing, inventory, orders, pricing, and customer support. Reduce manual work by 80%.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <style>
+        .uc-hero {
+            background: linear-gradient(135deg, #0f1923 0%, #1a2940 50%, #0d1b2a 100%);
+            color: #fff; padding: 80px 40px 60px; text-align: center;
+            position: relative; overflow: hidden;
+        }
+        .uc-hero::before {
+            content: ''; position: absolute; inset: 0;
+            background: radial-gradient(circle at 30% 40%, rgba(255,153,0,0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 60%, rgba(255,153,0,0.06) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        .uc-hero-content { max-width: 800px; margin: 0 auto; position: relative; z-index: 1; }
+        .uc-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(255,153,0,0.15); border: 1px solid rgba(255,153,0,0.3);
+            color: #ff9900; font-size: 12px; font-weight: 700;
+            padding: 6px 16px; border-radius: 20px; margin-bottom: 20px;
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+        .uc-hero h1 {
+            font-size: 42px; font-weight: 800; margin-bottom: 16px;
+            letter-spacing: -1px; line-height: 1.15;
+        }
+        .uc-hero h1 span { color: #ff9900; }
+        .uc-hero-sub {
+            font-size: 18px; color: rgba(255,255,255,0.7); max-width: 600px;
+            margin: 0 auto 32px; line-height: 1.7;
+        }
+
+        /* KPI Strip */
+        .kpi-strip {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+            max-width: 700px; margin: 0 auto;
+        }
+        .kpi-card {
+            background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px; padding: 20px 12px; text-align: center;
+            backdrop-filter: blur(8px);
+        }
+        .kpi-value {
+            font-size: 32px; font-weight: 800; color: #ff9900;
+            line-height: 1; margin-bottom: 4px;
+        }
+        .kpi-label {
+            font-size: 11px; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 1px; color: rgba(255,255,255,0.6);
+        }
+
+        /* Content */
+        .uc-container { max-width: 1000px; margin: 0 auto; padding: 60px 40px; }
+        .uc-section { margin-bottom: 72px; }
+        .uc-section-label {
+            font-size: 12px; font-weight: 800; text-transform: uppercase;
+            letter-spacing: 2px; color: #ff9900; margin-bottom: 8px;
+        }
+        .uc-section h2 {
+            font-size: 30px; font-weight: 800; color: #1a1a1a;
+            margin-bottom: 16px; letter-spacing: -0.5px;
+        }
+        .uc-section > p {
+            font-size: 16px; color: #555; line-height: 1.8; max-width: 750px;
+            margin-bottom: 32px;
+        }
+
+        /* Problem Cards */
+        .pain-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+        }
+        .pain-card {
+            background: #fff4f0; border-radius: 12px; padding: 24px;
+            border-left: 4px solid #e65100;
+        }
+        .pain-card h4 {
+            font-size: 15px; font-weight: 700; color: #c62828; margin-bottom: 6px;
+        }
+        .pain-card p { font-size: 13px; color: #666; line-height: 1.6; margin: 0; }
+
+        /* ══════════ FLOW DIAGRAM ══════════ */
+        .flow-wrapper {
+            background: #f8fafb; border-radius: 20px; padding: 40px 24px;
+            border: 1px solid #e8ecf0; overflow-x: auto;
+        }
+        .flow-title {
+            text-align: center; font-size: 20px; font-weight: 800;
+            color: #1a1a1a; margin-bottom: 32px;
+        }
+        .flow-title span { color: #ff9900; }
+
+        /* Flow Rows */
+        .flow-row {
+            display: flex; align-items: center; justify-content: center;
+            gap: 0; margin-bottom: 12px; flex-wrap: nowrap;
+            min-width: fit-content;
+        }
+        .flow-row:last-child { margin-bottom: 0; }
+
+        /* Nodes */
+        .flow-node {
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: center; gap: 6px;
+            min-width: 130px; max-width: 150px; padding: 16px 12px;
+            border-radius: 12px; text-align: center;
+            border: 2px solid transparent;
+            opacity: 0; transform: scale(0.8);
+            transition: opacity 0.5s ease, transform 0.5s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+        .flow-node.visible {
+            opacity: 1; transform: scale(1);
+        }
+        .flow-node:hover {
+            transform: scale(1.05); box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            z-index: 2;
+        }
+        .flow-node-icon { font-size: 28px; line-height: 1; }
+        .flow-node-label {
+            font-size: 12px; font-weight: 700; line-height: 1.3;
+        }
+        .flow-node-time {
+            font-size: 10px; font-weight: 600; padding: 2px 8px;
+            border-radius: 10px; margin-top: 2px;
+        }
+
+        /* Node Colors */
+        .fn-input {
+            background: #e3f2fd; border-color: #90caf9; color: #0d47a1;
+        }
+        .fn-input .flow-node-time { background: #bbdefb; color: #0d47a1; }
+        .fn-process {
+            background: #fff3e0; border-color: #ffcc80; color: #e65100;
+        }
+        .fn-process .flow-node-time { background: #ffe0b2; color: #e65100; }
+        .fn-ai {
+            background: #f3e5f5; border-color: #ce93d8; color: #6a1b9a;
+        }
+        .fn-ai .flow-node-time { background: #e1bee7; color: #6a1b9a; }
+        .fn-output {
+            background: #e8f5e9; border-color: #a5d6a7; color: #1b5e20;
+        }
+        .fn-output .flow-node-time { background: #c8e6c9; color: #1b5e20; }
+        .fn-data {
+            background: #eceff1; border-color: #b0bec5; color: #37474f;
+        }
+        .fn-data .flow-node-time { background: #cfd8dc; color: #37474f; }
+
+        /* Connectors */
+        .flow-connector {
+            width: 40px; height: 2px; background: #ccc;
+            position: relative; flex-shrink: 0;
+            opacity: 0; transition: opacity 0.4s ease;
+        }
+        .flow-connector.visible { opacity: 1; }
+        .flow-connector::after {
+            content: ''; position: absolute; right: -4px; top: -4px;
+            border: 5px solid transparent;
+            border-left: 6px solid #ccc;
+        }
+        .flow-connector-down {
+            width: 2px; height: 32px; background: #ccc;
+            margin: 0 auto; position: relative;
+            opacity: 0; transition: opacity 0.4s ease;
+        }
+        .flow-connector-down.visible { opacity: 1; }
+        .flow-connector-down::after {
+            content: ''; position: absolute; bottom: -4px; left: -4px;
+            border: 5px solid transparent;
+            border-top: 6px solid #ccc;
+        }
+
+        /* Before/After Comparison */
+        .compare-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+            margin-top: 32px;
+        }
+        .compare-card {
+            border-radius: 16px; padding: 28px; position: relative;
+        }
+        .compare-card h3 {
+            font-size: 16px; font-weight: 800; margin-bottom: 16px;
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+        .compare-before {
+            background: #fff5f5; border: 2px solid #ffcdd2;
+        }
+        .compare-before h3 { color: #c62828; }
+        .compare-after {
+            background: #f1f8e9; border: 2px solid #c5e1a5;
+        }
+        .compare-after h3 { color: #2e7d32; }
+        .compare-list { list-style: none; padding: 0; }
+        .compare-list li {
+            font-size: 14px; padding: 8px 0; color: #444;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            display: flex; align-items: center; gap: 8px;
+        }
+        .compare-list li:last-child { border-bottom: none; }
+
+        /* Module Cards */
+        .module-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .module-card {
+            background: #fff; border-radius: 14px; padding: 28px;
+            border: 1px solid #eaedf0; box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .module-card:hover {
+            transform: translateY(-4px); box-shadow: 0 8px 28px rgba(0,0,0,0.1);
+        }
+        .module-icon {
+            width: 48px; height: 48px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px; margin-bottom: 16px;
+        }
+        .mi-listing { background: #e3f2fd; }
+        .mi-inventory { background: #fff3e0; }
+        .mi-orders { background: #e8f5e9; }
+        .mi-pricing { background: #f3e5f5; }
+        .mi-support { background: #fce4ec; }
+        .mi-analytics { background: #eceff1; }
+        .module-card h3 {
+            font-size: 17px; font-weight: 800; color: #1a1a1a; margin-bottom: 8px;
+        }
+        .module-card p {
+            font-size: 14px; color: #666; line-height: 1.7; margin-bottom: 12px;
+        }
+        .module-saves {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-size: 13px; font-weight: 700; color: #2e7d32;
+            background: #e8f5e9; padding: 4px 12px; border-radius: 16px;
+        }
+
+        /* Tech Stack */
+        .tech-pills {
+            display: flex; flex-wrap: wrap; gap: 10px;
+            justify-content: center; margin-top: 16px;
+        }
+        .tech-pill {
+            font-size: 13px; font-weight: 600; padding: 8px 18px;
+            border-radius: 24px; background: #fff; border: 1px solid #e0e4e8;
+            color: #333; transition: transform 0.2s ease;
+        }
+        .tech-pill:hover { transform: translateY(-2px); }
+
+        /* CTA */
+        .uc-cta {
+            text-align: center; padding: 48px 24px;
+            background: linear-gradient(135deg, #0f1923, #1a2940);
+            border-radius: 20px; color: #fff;
+        }
+        .uc-cta h2 {
+            font-size: 28px; font-weight: 800; margin-bottom: 12px;
+        }
+        .uc-cta p {
+            font-size: 16px; color: rgba(255,255,255,0.7); margin-bottom: 28px;
+        }
+        .uc-cta-btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 16px 36px; border-radius: 12px; font-size: 16px;
+            font-weight: 800; text-decoration: none;
+            background: #ff9900; color: #0f1923;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .uc-cta-btn:hover {
+            transform: translateY(-3px); box-shadow: 0 8px 24px rgba(255,153,0,0.4);
+        }
+
+        @media (max-width: 768px) {
+            .uc-hero { padding: 60px 20px 40px; }
+            .uc-hero h1 { font-size: 28px; }
+            .kpi-strip { grid-template-columns: repeat(2, 1fr); }
+            .uc-container { padding: 40px 20px; }
+            .uc-section h2 { font-size: 24px; }
+            .compare-grid { grid-template-columns: 1fr; }
+            .flow-row { justify-content: flex-start; }
+            .flow-node { min-width: 110px; padding: 12px 8px; }
+            .flow-connector { width: 24px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="sticky-header">
+    <a href="../index.html" class="header-brand">Hamza Ghaffar <span>| Portfolio</span></a>
+    <nav class="nav-links" id="navLinks">
+        <a href="../index.html#about">About</a>
+        <a href="../index.html#projects">Projects</a>
+        <a href="../index.html#skills">Skills</a>
+        <a href="../index.html#experience">Experience</a>
+        <a href="../index.html#contact">Contact</a>
+    </nav>
+    <button class="menu-toggle" onclick="document.getElementById('navLinks').classList.toggle('active')" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+    </button>
+</header>
+
+<!-- Hero -->
+<section class="uc-hero">
+    <div class="uc-hero-content">
+        <div class="uc-badge">🤖 AI Automation Use Case</div>
+        <h1>Amazon Seller <span>Full Automation</span></h1>
+        <p class="uc-hero-sub">End-to-end AI-powered automation for Amazon sellers. From product listing to customer support, every manual task replaced with intelligent workflows.</p>
+        <div class="kpi-strip">
+            <div class="kpi-card">
+                <div class="kpi-value">80%</div>
+                <div class="kpi-label">Less Manual Work</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value">6x</div>
+                <div class="kpi-label">Faster Listings</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value">24/7</div>
+                <div class="kpi-label">Auto Operations</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value">95%</div>
+                <div class="kpi-label">Order Accuracy</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="uc-container">
+
+    <!-- Problem -->
+    <div class="uc-section">
+        <div class="uc-section-label">The Problem</div>
+        <h2>Manual Amazon Selling is a Full-Time Fire Drill</h2>
+        <p>Amazon sellers spend 60-80% of their time on repetitive tasks: listing products one by one, adjusting prices manually, tracking inventory in spreadsheets, and answering the same customer questions. This doesn't scale.</p>
+
+        <div class="pain-grid">
+            <div class="pain-card">
+                <h4>⏱️ Product Listing</h4>
+                <p>30-60 min per product. Manual title writing, keyword research, image tagging, category mapping. Multiply by 500+ SKUs.</p>
+            </div>
+            <div class="pain-card">
+                <h4>📦 Inventory Chaos</h4>
+                <p>Stock-outs and overselling. No real-time sync between warehouse and Amazon. Manual reorder decisions.</p>
+            </div>
+            <div class="pain-card">
+                <h4>💰 Pricing Guesswork</h4>
+                <p>Competitors change prices hourly. Manual repricing can't keep up. Lost Buy Box, lost revenue.</p>
+            </div>
+            <div class="pain-card">
+                <h4>📋 Order Overload</h4>
+                <p>Manual order processing, label printing, tracking updates. Each order = 5-8 manual steps.</p>
+            </div>
+            <div class="pain-card">
+                <h4>💬 Support Burnout</h4>
+                <p>Same 20 questions repeated daily. Returns, shipping status, product specs. All answered manually.</p>
+            </div>
+            <div class="pain-card">
+                <h4>📊 Blind Decisions</h4>
+                <p>No unified dashboard. Sales, margins, ad performance scattered across 10 different screens.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Automation Flow Diagram -->
+    <div class="uc-section">
+        <div class="uc-section-label">The Solution</div>
+        <h2>Automated Pipeline Architecture</h2>
+        <p>A visual flow of how every manual task is replaced by an intelligent, connected automation node. Each block is a microservice that runs 24/7.</p>
+
+        <div class="flow-wrapper">
+            <div class="flow-title">🔄 Amazon Seller <span>Automation Pipeline</span></div>
+
+            <!-- Row 1: Data Ingestion -->
+            <div class="flow-row">
+                <div class="flow-node fn-input" data-delay="0">
+                    <div class="flow-node-icon">📥</div>
+                    <div class="flow-node-label">Supplier Feed</div>
+                    <div class="flow-node-time">CSV / API</div>
+                </div>
+                <div class="flow-connector"></div>
+                <div class="flow-node fn-process" data-delay="1">
+                    <div class="flow-node-icon">🧹</div>
+                    <div class="flow-node-label">Data Cleaning & Validation</div>
+                    <div class="flow-node-time">Auto QA</div>
+                </div>
+                <div class="flow-connector"></div>
+                <div class="flow-node fn-ai" data-delay="2">
+                    <div class="flow-node-icon">🤖</div>
+                    <div class="flow-node-label">AI Title & Description Generator</div>
+                    <div class="flow-node-time">GPT + SEO</div>
+                </div>
+                <div class="flow-connector"></div>
+                <div class="flow-node fn-output" data-delay="3">
+                    <div class="flow-node-icon">📤</div>
+                    <div class="flow-node-label">Amazon Listing API</div>
+                    <div class="flow-node-time">SP-API</div>
+                </div>
+            </div>
+
+            <div class="flow-connector-down"></div>
+
+            <!-- Row 2: Inventory & Pricing -->
+            <div class="flow-row">
+                <div class="flow-node fn-data" data-delay="4">
+                    <div class="flow-node-icon">🏭</div>
+                    <div class="flow-node-label">Warehouse Sync</div>
+                    <div class="flow-node-time">Real-time</div>
+                </div>
+                <div class="flow-connector"></div>
+                <div class="flow-node fn-ai" data-delay="5">
+                    <div class="flow-node-icon">📊</div>
+                    <div class="flow-node-label">Demand Forecasting</div>
+                    <div class="flow-node-time">ML Model</div>
+                </div>
+                <div class="flow-connector"></div>
+                <div class="flow-node fn-process" data-delay="6">
+                    <div class="flow-node-icon">🔄</div>
+                    <div class="flow-node-label">Auto Reorder Engine</div>
+                    <div class="flow-node-time">Rules + AI</div>
+                </div>
+                <div class="flow-connector"></div>
+                <div class="flow-node fn-ai" data-delay="7">
+                    <div class="flow-node-icon">💰</div>
+                    <div class="flow-node-label">Dynamic Repricing</div>
+                    <div class="flow-node-time">Every 15 min</div>
+                </div>
+            </div>
+
+            <div class="flow-connector-down"></div>
+
+            <!-- Row 3: Order Processing -->
+            <div class="flow-row">
+                <div class="flow-node fn-input" data-delay="8">
+                    <div class="flow-node-icon">🛒</div>
+                    <div class="flow-node-label">New Order Event</div>
+                    <div class="flow-node-time">Webhook</div>
+                </div>
+                <div class="flow-connector"></div>
+                <div class="flow-node fn-process" data-delay="9">
+                    <div class="flow-node-icon">✅</div>
+                    <div class="flow-node-label">Fraud Check & Validation</div>
+                    <div class="flow-node-time">Auto</div>
+                </div>
+                <div class="flow-connector"></div>
+                <div class="flow-node fn-process" data-delay="10">
+                    <div class="flow-node-icon">🏷️</div>
+                    <div class="flow-node-label">Label & Invoice Gen</div>
+                    <div class="flow-node-time">Auto Print</div>
+                </div>
+                <div class="flow-connector"></div>
+                <div class="flow-node fn-output" data-delay="11">
+                    <div class="flow-node-icon">🚚</div>
+                    <div class="flow-node-label">Shipping & Tracking</div>
+                    <div class="flow-node-time">Auto Update</div>
+                </div>
+            </div>
+
+            <div class="flow-connector-down"></div>
+
+            <!-- Row 4: Customer & Analytics -->
+            <div class="flow-row">
+                <div class="flow-node fn-input" data-delay="12">
+                    <div class="flow-node-icon">💬</div>
+                    <div class="flow-node-label">Customer Message</div>
+                    <div class="flow-node-time">Inbox</div>
+                </div>
+                <div class="flow-connector"></div>
+                <div class="flow-node fn-ai" data-delay="13">
+                    <div class="flow-node-icon">🧠</div>
+                    <div class="flow-node-label">AI Response Agent</div>
+                    <div class="flow-node-time">NLP + RAG</div>
+                </div>
+                <div class="flow-connector"></div>
+                <div class="flow-node fn-process" data-delay="14">
+                    <div class="flow-node-icon">↩️</div>
+                    <div class="flow-node-label">Return & Refund Auto</div>
+                    <div class="flow-node-time">Policy Engine</div>
+                </div>
+                <div class="flow-connector"></div>
+                <div class="flow-node fn-output" data-delay="15">
+                    <div class="flow-node-icon">📈</div>
+                    <div class="flow-node-label">Analytics Dashboard</div>
+                    <div class="flow-node-time">Real-time</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modules Detail -->
+    <div class="uc-section">
+        <div class="uc-section-label">Automation Modules</div>
+        <h2>A to Z Seller Operations, Automated</h2>
+        <p>Each module runs independently but feeds data into the central pipeline. Everything connects, everything flows.</p>
+
+        <div class="module-grid">
+            <div class="module-card">
+                <div class="module-icon mi-listing">📝</div>
+                <h3>Smart Product Listing</h3>
+                <p>AI generates optimized titles, bullet points, and descriptions from supplier data. Auto-maps categories, adds backend keywords, and validates against Amazon's style guide.</p>
+                <div class="module-saves">⚡ 30 min → 2 min per product</div>
+            </div>
+            <div class="module-card">
+                <div class="module-icon mi-inventory">📦</div>
+                <h3>Inventory Intelligence</h3>
+                <p>Real-time stock sync across FBA, FBM, and warehouses. ML-based demand forecasting triggers auto-reorders. Zero stock-outs, zero overselling.</p>
+                <div class="module-saves">⚡ 4 hrs/day → 10 min/day</div>
+            </div>
+            <div class="module-card">
+                <div class="module-icon mi-orders">🛒</div>
+                <h3>Order Orchestration</h3>
+                <p>New order → auto-validate → generate label → assign carrier → update tracking → notify customer. End-to-end in seconds, not hours.</p>
+                <div class="module-saves">⚡ 8 steps → 0 manual steps</div>
+            </div>
+            <div class="module-card">
+                <div class="module-icon mi-pricing">💰</div>
+                <h3>Dynamic Repricing</h3>
+                <p>Monitor competitor prices every 15 minutes. AI adjusts your price to win the Buy Box while protecting margins. Rules-based guardrails prevent undercutting.</p>
+                <div class="module-saves">⚡ 85% more Buy Box wins</div>
+            </div>
+            <div class="module-card">
+                <div class="module-icon mi-support">💬</div>
+                <h3>AI Customer Support</h3>
+                <p>NLP agent reads customer messages, understands intent, and auto-replies within Amazon's messaging guidelines. Escalates edge cases to the seller.</p>
+                <div class="module-saves">⚡ 90% auto-resolved</div>
+            </div>
+            <div class="module-card">
+                <div class="module-icon mi-analytics">📊</div>
+                <h3>Unified Dashboard</h3>
+                <p>Sales, margins, ad spend, inventory health, customer satisfaction all in one real-time view. Daily digest reports via email. Anomaly alerts.</p>
+                <div class="module-saves">⚡ 10 screens → 1 dashboard</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Before / After -->
+    <div class="uc-section">
+        <div class="uc-section-label">Impact</div>
+        <h2>Before vs After Automation</h2>
+
+        <div class="compare-grid">
+            <div class="compare-card compare-before">
+                <h3>❌ Before (Manual)</h3>
+                <ul class="compare-list">
+                    <li>⏱️ 30-60 min to list one product</li>
+                    <li>📋 Orders processed manually, 5-8 steps each</li>
+                    <li>💰 Prices updated once a day (if lucky)</li>
+                    <li>📦 Inventory checked in spreadsheets</li>
+                    <li>💬 Customer replies: 2-4 hour response time</li>
+                    <li>📊 Analytics: open 10 tabs, copy-paste data</li>
+                    <li>👤 Needs 3-5 people for 500+ SKUs</li>
+                    <li>😓 60-80% time on repetitive tasks</li>
+                </ul>
+            </div>
+            <div class="compare-card compare-after">
+                <h3>✅ After (Automated)</h3>
+                <ul class="compare-list">
+                    <li>⚡ 2 min per product (AI-generated)</li>
+                    <li>🤖 Orders auto-processed in seconds</li>
+                    <li>💰 Prices updated every 15 minutes</li>
+                    <li>📦 Real-time sync + auto-reorders</li>
+                    <li>💬 AI replies in under 30 seconds</li>
+                    <li>📊 One dashboard, real-time, auto-alerts</li>
+                    <li>👤 1 person manages 2000+ SKUs</li>
+                    <li>🚀 80% time freed for growth strategy</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tech Stack -->
+    <div class="uc-section" style="text-align: center;">
+        <div class="uc-section-label">Tech Stack</div>
+        <h2>Built With</h2>
+        <div class="tech-pills">
+            <span class="tech-pill">🐍 Python</span>
+            <span class="tech-pill">⚡ FastAPI</span>
+            <span class="tech-pill">🤖 OpenAI GPT</span>
+            <span class="tech-pill">📊 Scikit-Learn</span>
+            <span class="tech-pill">🐳 Docker</span>
+            <span class="tech-pill">☁️ AWS Lambda</span>
+            <span class="tech-pill">🗄️ PostgreSQL</span>
+            <span class="tech-pill">📡 Amazon SP-API</span>
+            <span class="tech-pill">📈 Grafana</span>
+            <span class="tech-pill">🔄 Celery + Redis</span>
+            <span class="tech-pill">📦 S3</span>
+            <span class="tech-pill">🔔 SES / SNS</span>
+        </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="uc-cta">
+        <h2>Want This Built for Your Business?</h2>
+        <p>I design and build custom automation systems. Let's talk about your workflow.</p>
+        <a href="../booking.html" class="uc-cta-btn">📅 Book a Free Consultation</a>
+    </div>
+
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="footer-tagline">Hamza Ghaffar &middot; AI-assisted Automation &amp; DevOps Engineer</div>
+    <div class="footer-meta">&copy; 2026 &middot; Villach, Austria</div>
+</footer>
+
+<script>
+// Animate flow nodes on scroll
+var flowObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+            var delay = parseInt(entry.target.getAttribute('data-delay') || 0) * 150;
+            setTimeout(function() {
+                entry.target.classList.add('visible');
+            }, delay);
+            // Also show adjacent connectors
+            var next = entry.target.nextElementSibling;
+            if (next && next.classList.contains('flow-connector')) {
+                setTimeout(function() { next.classList.add('visible'); }, delay + 100);
+            }
+        }
+    });
+}, { threshold: 0.2 });
+
+document.querySelectorAll('.flow-node').forEach(function(el) {
+    flowObserver.observe(el);
+});
+
+// Animate vertical connectors
+var downObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+        }
+    });
+}, { threshold: 0.5 });
+
+document.querySelectorAll('.flow-connector-down').forEach(function(el) {
+    downObserver.observe(el);
+});
+
+// Animate module cards
+var cardObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+        }
+    });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.module-card, .pain-card, .compare-card, .kpi-card').forEach(function(el) {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    cardObserver.observe(el);
+});
+</script>
+
+</body>
+</html>
