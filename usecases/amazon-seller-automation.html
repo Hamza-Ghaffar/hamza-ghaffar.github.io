@@ -582,86 +582,6 @@
 
 <div class="uc-container">
 
-    <!-- Problem -->
-    <div class="uc-section">
-        <div class="uc-section-label">The Problem</div>
-        <h2>Manual Amazon Selling is a Full-Time Fire Drill</h2>
-        <p>Amazon sellers spend 60-80% of their time on repetitive tasks: listing products one by one, adjusting prices manually, tracking inventory in spreadsheets, and answering the same customer questions. This doesn't scale.</p>
-
-        <div class="pain-grid">
-            <div class="pain-card">
-                <h4>⏱️ Product Listing</h4>
-                <p>30-60 min per product. Manual title writing, keyword research, image tagging, category mapping. Multiply by 500+ SKUs.</p>
-            </div>
-            <div class="pain-card">
-                <h4>📦 Inventory Chaos</h4>
-                <p>Stock-outs and overselling. No real-time sync between warehouse and Amazon. Manual reorder decisions.</p>
-            </div>
-            <div class="pain-card">
-                <h4>💰 Pricing Guesswork</h4>
-                <p>Competitors change prices hourly. Manual repricing can't keep up. Lost Buy Box, lost revenue.</p>
-            </div>
-            <div class="pain-card">
-                <h4>📋 Order Overload</h4>
-                <p>Manual order processing, label printing, tracking updates. Each order = 5-8 manual steps.</p>
-            </div>
-            <div class="pain-card">
-                <h4>💬 Support Burnout</h4>
-                <p>Same 20 questions repeated daily. Returns, shipping status, product specs. All answered manually.</p>
-            </div>
-            <div class="pain-card">
-                <h4>📊 Blind Decisions</h4>
-                <p>No unified dashboard. Sales, margins, ad performance scattered across 10 different screens.</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Business Models -->
-    <div class="uc-section">
-        <div class="uc-section-label">Supported Models</div>
-        <h2>Every Amazon Business Model, One Automation</h2>
-        <p>No matter how you sell on Amazon, the automation adapts. Select your model and the pipeline configures itself for your workflow.</p>
-
-        <div class="models-grid">
-            <div class="model-card">
-                <span class="model-card-icon">🏷️</span>
-                <h4>Private Label</h4>
-                <p>Your own brand on Amazon. AI handles listing optimization, A+ content, brand registry automation.</p>
-                <span class="model-tag mt-popular">Most Popular</span>
-            </div>
-            <div class="model-card">
-                <span class="model-card-icon">🏢</span>
-                <h4>B2B / Amazon Business</h4>
-                <p>Bulk pricing, business discounts, tax exemptions. Auto-tiered pricing for volume buyers.</p>
-                <span class="model-tag mt-growing">Growing Fast</span>
-            </div>
-            <div class="model-card">
-                <span class="model-card-icon">🚀</span>
-                <h4>Dropshipping</h4>
-                <p>Zero inventory model. Auto-sync supplier stock, auto-route orders to suppliers, margin protection.</p>
-                <span class="model-tag mt-growing">Low Risk</span>
-            </div>
-            <div class="model-card">
-                <span class="model-card-icon">📦</span>
-                <h4>FBA (Fulfilled by Amazon)</h4>
-                <p>Let Amazon handle shipping. Auto-manage FBA inbound shipments, labels, and restock alerts.</p>
-                <span class="model-tag mt-popular">Best Seller</span>
-            </div>
-            <div class="model-card">
-                <span class="model-card-icon">🏠</span>
-                <h4>FBM (Fulfilled by Merchant)</h4>
-                <p>Ship from your warehouse. Auto-generate labels, pick lists, carrier selection, tracking updates.</p>
-                <span class="model-tag mt-advanced">Full Control</span>
-            </div>
-            <div class="model-card">
-                <span class="model-card-icon">🔄</span>
-                <h4>Wholesale / Arbitrage</h4>
-                <p>Buy low, sell high. AI scans deals, calculates ROI, auto-lists profitable products at scale.</p>
-                <span class="model-tag mt-advanced">Advanced</span>
-            </div>
-        </div>
-    </div>
-
     <!-- Automation Flow Diagram -->
     <div class="uc-section">
         <div class="uc-section-label">The Solution</div>
@@ -801,6 +721,143 @@
         </div>
     </div>
 
+    <!-- Cost Savings Calculator -->
+    <div class="uc-section">
+        <div class="uc-section-label">ROI Calculator</div>
+        <h2>Calculate Your Cost Savings</h2>
+        <p>Enter your business numbers below. The table shows exactly how much you save per task, with formulas visible so you can verify the math yourself.</p>
+
+        <div class="calc-wrapper">
+            <div class="calc-inputs">
+                <div class="calc-input-group">
+                    <label>New Products / Month</label>
+                    <input type="number" id="calcProducts" value="50" min="1" max="10000" oninput="calcSavings()">
+                    <span class="calc-unit">new SKUs listed per month</span>
+                </div>
+                <div class="calc-input-group">
+                    <label>Orders / Day</label>
+                    <input type="number" id="calcOrders" value="100" min="1" max="50000" oninput="calcSavings()">
+                    <span class="calc-unit">average daily orders</span>
+                </div>
+                <div class="calc-input-group">
+                    <label>Employee Hourly Rate</label>
+                    <input type="number" id="calcRate" value="25" min="1" max="500" oninput="calcSavings()">
+                    <span class="calc-unit">$ per hour (cost to you)</span>
+                </div>
+                <div class="calc-input-group">
+                    <label>Working Days / Month</label>
+                    <input type="number" id="calcDays" value="22" min="1" max="31" oninput="calcSavings()">
+                    <span class="calc-unit">business days</span>
+                </div>
+            </div>
+
+            <div class="calc-table-wrap">
+                <table class="calc-table">
+                    <thead>
+                        <tr>
+                            <th>Task</th>
+                            <th>Manual</th>
+                            <th>Automated</th>
+                            <th>Saved</th>
+                            <th>Formula</th>
+                            <th>Monthly $</th>
+                        </tr>
+                    </thead>
+                    <tbody id="calcBody">
+                    </tbody>
+                </table>
+            </div>
+            <p class="calc-note">* All calculations are estimates based on industry benchmarks. Actual savings may vary. Edit the inputs above to see your numbers.</p>
+        </div>
+    </div>
+
+    <!-- CTA - Book Consultation -->
+    <div class="uc-cta">
+        <h2>Want This Built for Your Business?</h2>
+        <p>I design and build custom automation systems. Let's discuss your Amazon workflow and see how much you can save.</p>
+        <a href="../booking.html" class="uc-cta-btn">📅 Book a Free Consultation</a>
+    </div>
+
+    <!-- Business Models -->
+    <div class="uc-section" style="margin-top: 72px;">
+        <div class="uc-section-label">Supported Models</div>
+        <h2>Every Amazon Business Model, One Automation</h2>
+        <p>No matter how you sell on Amazon, the automation adapts. Select your model and the pipeline configures itself for your workflow.</p>
+
+        <div class="models-grid">
+            <div class="model-card">
+                <span class="model-card-icon">🏷️</span>
+                <h4>Private Label</h4>
+                <p>Your own brand on Amazon. AI handles listing optimization, A+ content, brand registry automation.</p>
+                <span class="model-tag mt-popular">Most Popular</span>
+            </div>
+            <div class="model-card">
+                <span class="model-card-icon">🏢</span>
+                <h4>B2B / Amazon Business</h4>
+                <p>Bulk pricing, business discounts, tax exemptions. Auto-tiered pricing for volume buyers.</p>
+                <span class="model-tag mt-growing">Growing Fast</span>
+            </div>
+            <div class="model-card">
+                <span class="model-card-icon">🚀</span>
+                <h4>Dropshipping</h4>
+                <p>Zero inventory model. Auto-sync supplier stock, auto-route orders to suppliers, margin protection.</p>
+                <span class="model-tag mt-growing">Low Risk</span>
+            </div>
+            <div class="model-card">
+                <span class="model-card-icon">📦</span>
+                <h4>FBA (Fulfilled by Amazon)</h4>
+                <p>Let Amazon handle shipping. Auto-manage FBA inbound shipments, labels, and restock alerts.</p>
+                <span class="model-tag mt-popular">Best Seller</span>
+            </div>
+            <div class="model-card">
+                <span class="model-card-icon">🏠</span>
+                <h4>FBM (Fulfilled by Merchant)</h4>
+                <p>Ship from your warehouse. Auto-generate labels, pick lists, carrier selection, tracking updates.</p>
+                <span class="model-tag mt-advanced">Full Control</span>
+            </div>
+            <div class="model-card">
+                <span class="model-card-icon">🔄</span>
+                <h4>Wholesale / Arbitrage</h4>
+                <p>Buy low, sell high. AI scans deals, calculates ROI, auto-lists profitable products at scale.</p>
+                <span class="model-tag mt-advanced">Advanced</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Problem -->
+    <div class="uc-section">
+        <div class="uc-section-label">The Problem</div>
+        <h2>Manual Amazon Selling is a Full-Time Fire Drill</h2>
+        <p>Amazon sellers spend 60-80% of their time on repetitive tasks: listing products one by one, adjusting prices manually, tracking inventory in spreadsheets, and answering the same customer questions. This doesn't scale.</p>
+
+        <div class="pain-grid">
+            <div class="pain-card">
+                <h4>⏱️ Product Listing</h4>
+                <p>30-60 min per product. Manual title writing, keyword research, image tagging, category mapping. Multiply by 500+ SKUs.</p>
+            </div>
+            <div class="pain-card">
+                <h4>📦 Inventory Chaos</h4>
+                <p>Stock-outs and overselling. No real-time sync between warehouse and Amazon. Manual reorder decisions.</p>
+            </div>
+            <div class="pain-card">
+                <h4>💰 Pricing Guesswork</h4>
+                <p>Competitors change prices hourly. Manual repricing can't keep up. Lost Buy Box, lost revenue.</p>
+            </div>
+            <div class="pain-card">
+                <h4>📋 Order Overload</h4>
+                <p>Manual order processing, label printing, tracking updates. Each order = 5-8 manual steps.</p>
+            </div>
+            <div class="pain-card">
+                <h4>💬 Support Burnout</h4>
+                <p>Same 20 questions repeated daily. Returns, shipping status, product specs. All answered manually.</p>
+            </div>
+            <div class="pain-card">
+                <h4>📊 Blind Decisions</h4>
+                <p>No unified dashboard. Sales, margins, ad performance scattered across 10 different screens.</p>
+            </div>
+        </div>
+    </div>
+
     <!-- Modules Detail -->
     <div class="uc-section">
         <div class="uc-section-label">Automation Modules</div>
@@ -882,56 +939,6 @@
         </div>
     </div>
 
-    <!-- Cost Savings Calculator -->
-    <div class="uc-section">
-        <div class="uc-section-label">ROI Calculator</div>
-        <h2>Calculate Your Cost Savings</h2>
-        <p>Enter your business numbers below. The table shows exactly how much you save per task, with formulas visible so you can verify the math yourself.</p>
-
-        <div class="calc-wrapper">
-            <div class="calc-inputs">
-                <div class="calc-input-group">
-                    <label>New Products / Month</label>
-                    <input type="number" id="calcProducts" value="50" min="1" max="10000" oninput="calcSavings()">
-                    <span class="calc-unit">new SKUs listed per month</span>
-                </div>
-                <div class="calc-input-group">
-                    <label>Orders / Day</label>
-                    <input type="number" id="calcOrders" value="100" min="1" max="50000" oninput="calcSavings()">
-                    <span class="calc-unit">average daily orders</span>
-                </div>
-                <div class="calc-input-group">
-                    <label>Employee Hourly Rate</label>
-                    <input type="number" id="calcRate" value="25" min="1" max="500" oninput="calcSavings()">
-                    <span class="calc-unit">$ per hour (cost to you)</span>
-                </div>
-                <div class="calc-input-group">
-                    <label>Working Days / Month</label>
-                    <input type="number" id="calcDays" value="22" min="1" max="31" oninput="calcSavings()">
-                    <span class="calc-unit">business days</span>
-                </div>
-            </div>
-
-            <div class="calc-table-wrap">
-                <table class="calc-table">
-                    <thead>
-                        <tr>
-                            <th>Task</th>
-                            <th>Manual</th>
-                            <th>Automated</th>
-                            <th>Saved</th>
-                            <th>Formula</th>
-                            <th>Monthly $</th>
-                        </tr>
-                    </thead>
-                    <tbody id="calcBody">
-                    </tbody>
-                </table>
-            </div>
-            <p class="calc-note">* All calculations are estimates based on industry benchmarks. Actual savings may vary. Edit the inputs above to see your numbers.</p>
-        </div>
-    </div>
-
     <!-- Tech Stack -->
     <div class="uc-section" style="text-align: center;">
         <div class="uc-section-label">Tech Stack</div>
@@ -950,13 +957,6 @@
             <span class="tech-pill">📦 S3</span>
             <span class="tech-pill">🔔 SES / SNS</span>
         </div>
-    </div>
-
-    <!-- CTA -->
-    <div class="uc-cta">
-        <h2>Want This Built for Your Business?</h2>
-        <p>I design and build custom automation systems. Let's talk about your workflow.</p>
-        <a href="../booking.html" class="uc-cta-btn">📅 Book a Free Consultation</a>
     </div>
 
 </div>
