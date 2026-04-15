@@ -1,12 +1,332 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Hamza Ghaffar</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hamza Ghaffar   AI-assisted Automation &amp; DevOps Engineer</title>
+    <meta name="description" content="Portfolio of Hamza Ghaffar   Software Automation Engineer at Infineon Technologies, MSc Communication Engineering at FH Kärnten. Python, CI/CD, Docker, AWS, Applied ML.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-  <h1>Hamza Ghaffar</h1>
-  <p>Portfolio coming soon.</p>
+
+<!-- ══════════ HEADER ══════════ -->
+<header class="sticky-header">
+    <a href="index.html" class="header-brand">Hamza Ghaffar <span>| Portfolio</span></a>
+    <nav class="nav-links" id="navLinks">
+        <a href="#about">About</a>
+        <a href="#projects">Projects</a>
+        <a href="#skills">Skills</a>
+        <a href="#experience">Experience</a>
+        <a href="#contact">Contact</a>
+    </nav>
+    <div class="header-contact">
+        <a href="mailto:hamza.ghaffar@hotmail.com" title="Email">✉ Email</a>
+        <a href="https://wa.me/436601192777" target="_blank" rel="noopener noreferrer" title="WhatsApp">💬 WhatsApp</a>
+    </div>
+    <button class="menu-toggle" onclick="document.getElementById('navLinks').classList.toggle('active')" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+    </button>
+</header>
+
+<!-- ══════════ HERO ══════════ -->
+<section class="hero">
+    <div class="hero-content">
+        <img src="assets/img/profile.jpg" alt="Hamza Ghaffar" class="profile-image" width="160" height="160">
+        <div class="hero-eyebrow">AI-assisted Automation &amp; DevOps Engineer</div>
+        <h1>Hamza Ghaffar</h1>
+        <div class="hero-tagline">Python | CI/CD | Docker | AWS | Linux | Applied ML   with 2 years of impactful experience</div>
+        <div class="hero-meta">
+            <strong>Infineon Technologies Austria AG</strong> &middot; MSc Communication Engineering &middot; FH Kärnten &middot; Villach, Austria
+        </div>
+        <div class="hero-kpi-strip">
+            <div class="hero-kpi">
+                <div class="hero-kpi-value">2+</div>
+                <div class="hero-kpi-label">Years Experience</div>
+            </div>
+            <div class="hero-kpi">
+                <div class="hero-kpi-value">MSc</div>
+                <div class="hero-kpi-label">Communication Eng.</div>
+            </div>
+            <div class="hero-kpi">
+                <div class="hero-kpi-value">CI/CD</div>
+                <div class="hero-kpi-label">Automation &amp; DevOps</div>
+            </div>
+            <div class="hero-kpi">
+                <div class="hero-kpi-value">ML</div>
+                <div class="hero-kpi-label">Applied AI &amp; Data</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══════════ ABOUT ══════════ -->
+<div class="container">
+    <section id="about" class="section">
+        <div class="section-header">
+            <div class="section-label">About Me</div>
+            <h2>Automation, AI &amp; Data Engineering</h2>
+        </div>
+
+        <div class="about-body">
+            <div style="text-align: center;">
+                <span class="avail-badge"><span class="avail-dot"></span> Available for Projects &amp; Roles</span>
+            </div>
+
+            <p>I’m a <strong>Software Automation Engineer</strong> who turns manual, error-prone workflows into reliable, automated systems. At <strong>Infineon Technologies</strong>, I build CI/CD pipelines, enforce code quality with SonarQube, and design data pipelines that transform fragmented EDA tool output into structured, AI-ready datasets   so engineers can focus on engineering, not firefighting.</p>
+
+            <div class="country-strip">
+                <span class="country-tag"><span class="country-flag">🇪🇺</span> Europe</span>
+                <span class="country-tag"><span class="country-flag">🇬🇧</span> UK</span>
+                <span class="country-tag"><span class="country-flag">🇺🇸</span> USA</span>
+                <span class="country-tag"><span class="country-flag">🇦🇹</span> Austria</span>
+                <span class="country-tag"><span class="country-flag">🇵🇰</span> Pakistan</span>
+            </div>
+
+            <p style="text-align: center; color: #666; font-size: 15px;">Whether you need a <strong>pipeline built</strong>, a <strong>workflow automated</strong>, or an <strong>ML model deployed</strong>   I ship reliable systems that work in production, not just in demos.</p>
+
+            <div class="about-cta">
+                <a href="mailto:hamza.ghaffar@hotmail.com" class="cta-primary">✉ Hire Me / Let’s Talk</a>
+                <a href="assets/docs/Hamza_Ghaffar_SW_AI_Automation.pdf" target="_blank" rel="noopener noreferrer" class="cta-secondary">📄 Download Resume</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════ SKILLS ══════════ -->
+    <section id="skills" class="section">
+        <div class="section-header">
+            <div class="section-label">Expertise</div>
+            <h2>Technical Skills</h2>
+        </div>
+
+        <div class="skills-pills">
+            <span class="skill-pill sp-teal">🐍 Python</span>
+            <span class="skill-pill sp-blue">⚙️ Jenkins</span>
+            <span class="skill-pill sp-teal">🐳 Docker</span>
+            <span class="skill-pill sp-purple">🔀 GitLab CI</span>
+            <span class="skill-pill sp-orange">🔍 SonarQube</span>
+            <span class="skill-pill sp-green">🐧 Linux / Unix</span>
+            <span class="skill-pill sp-blue">🗄️ SQL</span>
+            <span class="skill-pill sp-pink">📊 NoSQL</span>
+            <span class="skill-pill sp-amber">⚡ FastAPI</span>
+            <span class="skill-pill sp-indigo">🔌 REST APIs</span>
+            <span class="skill-pill sp-teal">📦 Parquet</span>
+            <span class="skill-pill sp-red">🧠 PyTorch</span>
+            <span class="skill-pill sp-pink">📈 Scikit-Learn</span>
+            <span class="skill-pill sp-orange">🧪 MLFlow</span>
+            <span class="skill-pill sp-green">📋 Tableau</span>
+            <span class="skill-pill sp-blue">🌐 SDN</span>
+            <span class="skill-pill sp-amber">📡 MPLS / VPN</span>
+            <span class="skill-pill sp-grey">🔧 SNMP</span>
+            <span class="skill-pill sp-indigo">☁️ AWS</span>
+            <span class="skill-pill sp-teal">🔗 Data Pipelines</span>
+            <span class="skill-pill sp-purple">🏗️ Medallion Architecture</span>
+            <span class="skill-pill sp-orange">🔄 ETL / ELT</span>
+            <span class="skill-pill sp-green">📊 Prometheus</span>
+            <span class="skill-pill sp-blue">📈 Grafana</span>
+            <span class="skill-pill sp-red">📚 ELK Stack</span>
+            <span class="skill-pill sp-grey">🧬 Git</span>
+            <span class="skill-pill sp-pink">🤖 CNN / RNN / LSTM</span>
+            <span class="skill-pill sp-indigo">🤖 Transformers</span>
+            <span class="skill-pill sp-amber">🏷️ GANs / GNNs</span>
+            <span class="skill-pill sp-teal">🧪 Test Automation</span>
+            <span class="skill-pill sp-blue">📦 CI/CD Pipelines</span>
+            <span class="skill-pill sp-green">🗣️ English C1</span>
+        </div>
+    </section>
+
+    <!-- ══════════ PROJECTS ══════════ -->
+    <section id="projects" class="section">
+        <div class="section-header">
+            <div class="section-label">Projects</div>
+            <h2>Featured Work</h2>
+            <p>Professional and personal projects   from enterprise data pipelines to containerized ML systems.</p>
+        </div>
+
+        <div class="projects-grid">
+            <!-- Thesis -->
+            <a href="thesis.html" class="project-card">
+                <div class="project-card-body">
+                    <span class="project-status status-thesis">Master's Thesis</span>
+                    <h3>EDA Data Pipeline for Chip-Package-Board Co-Design</h3>
+                    <p>A 17-stage data pipeline transforming raw output from 8 EDA tools into schema-governed, AI-ready data products using a Medallion architecture (Bronze, Silver, Gold, Nectar) with automated quality gates.</p>
+                    <div class="project-tags">
+                        <span class="project-tag">Python</span>
+                        <span class="project-tag">Medallion Architecture</span>
+                        <span class="project-tag">Data Mesh</span>
+                        <span class="project-tag">Parquet</span>
+                    </div>
+                    <span class="project-link">View Full Project &rarr;</span>
+                </div>
+            </a>
+
+            <!-- Professional Journey -->
+            <a href="vision.html" class="project-card" style="border-top-color: #3f51b5;">
+                <div class="project-card-body">
+                    <span class="project-status status-vision">Professional Journey</span>
+                    <h3>From Network Engineering to AI-Assisted Automation</h3>
+                    <p>My transformation from manual network operations at Huawei to building intelligent CI/CD pipelines, data infrastructure, and AI-powered systems at Infineon Technologies.</p>
+                    <div class="project-tags">
+                        <span class="project-tag">CI/CD</span>
+                        <span class="project-tag">Jenkins</span>
+                        <span class="project-tag">SonarQube</span>
+                        <span class="project-tag">Python</span>
+                        <span class="project-tag">Docker</span>
+                    </div>
+                    <span class="project-link">View Full Story &rarr;</span>
+                </div>
+            </a>
+
+            <!-- Edge-to-Cloud Pipeline -->
+            <a href="projects/edge-to-cloud-pipeline.html" class="project-card" style="border-top-color: #ef6c00;">
+                <div class="project-card-body">
+                    <span class="project-status" style="background: linear-gradient(135deg, #fff3e0, #ffe0b2); color: #e65100;">Personal Project</span>
+                    <h3>Edge-to-Cloud Detection Pipeline</h3>
+                    <p>Containerized pipeline ingesting camera detection events via FastAPI, storing in MariaDB, with a real-time web dashboard using Chart.js and AJAX for time-based visualization.</p>
+                    <div class="project-tags">
+                        <span class="project-tag">FastAPI</span>
+                        <span class="project-tag">Docker</span>
+                        <span class="project-tag">MariaDB</span>
+                        <span class="project-tag">Chart.js</span>
+                    </div>
+                    <span class="project-link">View Project &rarr;</span>
+                </div>
+            </a>
+
+            <!-- Applied ML -->
+            <a href="projects/applied-ml.html" class="project-card" style="border-top-color: #880e4f;">
+                <div class="project-card-body">
+                    <span class="project-status" style="background: linear-gradient(135deg, #fce4ec, #f8bbd0); color: #880e4f;">Personal Project</span>
+                    <h3>Applied Machine Learning</h3>
+                    <p>Hands-on ML work including anomaly detection, time-series forecasting, and classification   deployed via FastAPI endpoints and containerized services.</p>
+                    <div class="project-tags">
+                        <span class="project-tag">PyTorch</span>
+                        <span class="project-tag">Scikit-Learn</span>
+                        <span class="project-tag">FastAPI</span>
+                        <span class="project-tag">Docker</span>
+                    </div>
+                    <span class="project-link">View Project &rarr;</span>
+                </div>
+            </a>
+        </div>
+
+        <div style="text-align: center; margin-top: 32px;">
+            <a href="projects/" style="color: var(--teal-100); font-weight: 700; font-size: 15px; text-decoration: none;">View All Projects &rarr;</a>
+        </div>
+    </section>
+
+    <!-- ══════════ EXPERIENCE ══════════ -->
+    <section id="experience" class="section">
+        <div class="section-header">
+            <div class="section-label">Experience</div>
+            <h2>Career Journey</h2>
+        </div>
+
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-dot current"></div>
+                <div class="timeline-date">Feb 2025 &ndash; Present</div>
+                <h4>Software Automation Intern (Full-Time)   Infineon Technologies Austria AG</h4>
+                <p>Pioneered Keysight Eggplant evaluation for GUI test automation. Engineered Jenkins CI/CD enhancements cutting iteration time by ~20%. Built SonarQube code quality governance reducing manual review by 15-25%. Established 17-stage EDA data pipeline with Medallion architecture for 8 tool domains.</p>
+                <div class="tl-skills">
+                    <span class="tl-skill sp-teal">Python</span>
+                    <span class="tl-skill sp-blue">Jenkins</span>
+                    <span class="tl-skill sp-orange">SonarQube</span>
+                    <span class="tl-skill sp-purple">Medallion Pipeline</span>
+                    <span class="tl-skill sp-pink">Eggplant</span>
+                    <span class="tl-skill sp-green">CI/CD</span>
+                    <span class="tl-skill sp-amber">Data Engineering</span>
+                    <span class="tl-skill sp-indigo">EDA Tools</span>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">Sep 2023 &ndash; 2026</div>
+                <h4>MSc Communication Engineering   FH Kärnten, Klagenfurt</h4>
+                <p>Thesis: Automated Network Configuration Using SDN for Cloud and Edge Environments.</p>
+                <div class="tl-skills">
+                    <span class="tl-skill sp-blue">SDN</span>
+                    <span class="tl-skill sp-indigo">Cloud</span>
+                    <span class="tl-skill sp-teal">Edge Computing</span>
+                    <span class="tl-skill sp-amber">Research</span>
+                    <span class="tl-skill sp-green">Network Automation</span>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">Sep 2022 &ndash; Sep 2023</div>
+                <h4>L2 Network &amp; IT Engineer (DevOps Focus)   Huawei Ltd, Pakistan</h4>
+                <p>Implemented CI/CD practices with Jenkins and Docker, reducing release turnaround by ~30%. Automated workflows with Python, cutting manual effort by ~40%. Supported MPLS/VPN operations and reduced critical faults by ~20%.</p>
+                <div class="tl-skills">
+                    <span class="tl-skill sp-blue">Jenkins</span>
+                    <span class="tl-skill sp-teal">Docker</span>
+                    <span class="tl-skill sp-green">Python</span>
+                    <span class="tl-skill sp-amber">MPLS/VPN</span>
+                    <span class="tl-skill sp-purple">CI/CD</span>
+                    <span class="tl-skill sp-orange">Monitoring</span>
+                    <span class="tl-skill sp-pink">Automation</span>
+                    <span class="tl-skill sp-grey">Linux</span>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">Oct 2018 &ndash; Apr 2019</div>
+                <h4>L2 Network Automation Support Intern   KICS, UET Pakistan</h4>
+                <p>Built troubleshooting utilities for device output parsing. Standardized support runbooks. Assisted with network automation workflows including config validation and scripted checks.</p>
+                <div class="tl-skills">
+                    <span class="tl-skill sp-blue">Networking</span>
+                    <span class="tl-skill sp-teal">Scripting</span>
+                    <span class="tl-skill sp-amber">Runbooks</span>
+                    <span class="tl-skill sp-green">Troubleshooting</span>
+                    <span class="tl-skill sp-grey">SNMP</span>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">Aug 2014 &ndash; Aug 2018</div>
+                <h4>B.S. Information Technology (Computer Science)   University of Education, Lahore</h4>
+                <p>Major in Computer Science. Foundation in programming, networking, and systems engineering.</p>
+                <div class="tl-skills">
+                    <span class="tl-skill sp-indigo">Programming</span>
+                    <span class="tl-skill sp-blue">Networking</span>
+                    <span class="tl-skill sp-teal">Databases</span>
+                    <span class="tl-skill sp-amber">Systems Design</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ══════════ CONTACT ══════════ -->
+    <section id="contact" class="section">
+        <div class="section-header">
+            <div class="section-label">Get in Touch</div>
+            <h2>Let's Connect</h2>
+            <p>Open to discussions about automation, DevOps, AI systems, and data engineering. Open to relocation.</p>
+        </div>
+
+        <div class="contact-strip">
+            <a href="mailto:hamza.ghaffar@hotmail.com">✉ Email &rarr;</a>
+            <span class="sep"></span>
+            <a href="https://wa.me/436601192777" target="_blank" rel="noopener noreferrer">💬 WhatsApp &rarr;</a>
+            <span class="sep"></span>
+            <a href="https://github.com/hamza-ghaffar" target="_blank" rel="noopener noreferrer">GitHub &rarr;</a>
+            <span class="sep"></span>
+            <a href="https://linkedin.com/in/hamza-ghaffar" target="_blank" rel="noopener noreferrer">LinkedIn &rarr;</a>
+            <span class="sep"></span>
+            <a href="assets/docs/Hamza_Ghaffar_SW_AI_Automation.pdf" target="_blank" rel="noopener noreferrer">📄 Download Resume &rarr;</a>
+        </div>
+        <p style="text-align: center; font-size: 14px; margin: 0;" class="blink-orange">📍 Villach, Austria &middot; +43 6601192777 &middot; Open to Relocate</p>
+    </section>
+</div>
+
+<!-- ══════════ FOOTER ══════════ -->
+<footer class="footer">
+    <div class="footer-tagline">Hamza Ghaffar &middot; AI-assisted Automation &amp; DevOps Engineer</div>
+    <div class="footer-meta">&copy; 2026 &middot; Villach, Austria</div>
+</footer>
+
+<!-- ══════════ SCROLL ANIMATIONS ══════════ -->
+<script src="assets/js/main.js"></script>
+
 </body>
 </html>
