@@ -677,6 +677,47 @@
             .pc-action-btn { padding: 14px 28px; font-size: 14px; }
             .hero-calc-btn { padding: 14px 28px; font-size: 15px; }
         }
+        /* Personalised summary message */
+        .pc-result-msg {
+            margin-top: 18px; padding: 22px 24px; border-radius: 16px;
+            background: linear-gradient(135deg, #f0f7ff 0%, #e8f5e9 100%);
+            border: 1px solid #c8e6c9; position: relative; overflow: hidden;
+            animation: pcFadeIn 0.4s ease;
+        }
+        @keyframes pcFadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .pc-result-msg::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, #43a047, #1e88e5, #7c4dff);
+        }
+        .pc-result-msg-title {
+            font-size: 15px; font-weight: 900; color: #1a1a1a; margin-bottom: 8px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .pc-result-msg-body { font-size: 13px; color: #333; line-height: 1.7; }
+        .pc-result-msg-body strong { color: var(--accent); font-weight: 800; }
+        .pc-result-msg-promise {
+            display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px;
+        }
+        .pc-promise-pill {
+            font-size: 11px; font-weight: 700; padding: 5px 14px;
+            border-radius: 20px; display: inline-flex; align-items: center; gap: 5px;
+        }
+        .pc-promise-green { background: #e8f5e9; color: #2e7d32; }
+        .pc-promise-blue { background: #e3f2fd; color: #1565c0; }
+        .pc-promise-purple { background: #f3e5f5; color: #7b1fa2; }
+
+        /* Ad spend guidance alert */
+        .pc-ad-guide {
+            display: none; margin-top: 10px; padding: 14px 18px; border-radius: 12px;
+            background: #fff8e1; border: 1px solid #ffe082;
+            font-size: 13px; color: #6d4c00; line-height: 1.6;
+            animation: pcFadeIn 0.3s ease;
+        }
+        .pc-ad-guide.show { display: flex; align-items: flex-start; gap: 10px; }
+        .pc-ad-guide-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+        .pc-ad-guide-text strong { color: #e65100; }
+        .pc-ad-guide-text { flex: 1; }
+
         @media (max-width: 420px) {
             .pc-grand-val { font-size: 30px; }
             .pc-grand-hire-detail { gap: 16px; }
@@ -684,6 +725,8 @@
             .pc-hire-presets { flex-direction: column; align-items: stretch; }
             .pc-cost-table { font-size: 11px; }
             .pc-cost-table th:nth-child(3), .pc-cost-table td:nth-child(3) { display: none; }
+            .pc-result-msg { padding: 16px 14px; }
+            .pc-promise-pill { font-size: 10px; padding: 4px 10px; }
         }
     </style>
 </head>
@@ -1204,11 +1247,17 @@
                 <!-- Extra inputs: Ad spend -->
                 <div class="pc-extra-inputs" id="pcExtraInputs">
                     <div class="pc-section-head">
-                        <span class="pc-sh-num">2</span> Your monthly ad budget (optional)
+                        <span class="pc-sh-num">2</span> Your monthly ad budget
+                    </div>
+                    <div class="pc-ad-guide show" id="pcAdGuide">
+                        <span class="pc-ad-guide-icon">&#9888;&#65039;</span>
+                        <div class="pc-ad-guide-text">
+                            <strong>You've enabled Google &amp; Meta Ads!</strong> To run paid ads, you'll need an ad budget. This is the amount Google/Meta charges directly &mdash; we manage your campaigns so every pound works harder. <strong>Enter your monthly budget below</strong> to see the full picture. Even &pound;300/mo can deliver strong results for a local firm.
+                        </div>
                     </div>
                     <div class="pc-input-row">
                         <label>&#128176; Monthly Ad Spend</label>
-                        <input type="number" id="pcAdSpend" value="0" min="0" max="100000" step="100" oninput="pcRecalc()">
+                        <input type="number" id="pcAdSpend" value="500" min="0" max="100000" step="100" oninput="pcRecalc()">
                         <span class="pc-input-hint">Google + Meta combined (we manage it for you)</span>
                     </div>
                 </div>
@@ -1284,6 +1333,9 @@
                     </table>
                 </div>
             </div>
+
+            <!-- Personalised Summary -->
+            <div class="pc-result-msg" id="pcResultMsg" style="display:none;"></div>
 
             <!-- Grand Total -->
             <div class="pc-grand" id="pcGrand">
@@ -1840,9 +1892,101 @@ function pcRecalc() {
         }
     }
 
+    // ── Build personalised summary ──
+    pcBuildSummary();
+
     // Animate
     grandVal.classList.add('bump');
     setTimeout(function() { grandVal.classList.remove('bump'); }, 300);
+}
+
+// Module benefit descriptions for the personalised message
+var pcModBenefits = {
+    seo: { short: 'SEO & Google Ranking', promise: 'Your firm will appear at the top of Google when potential clients search for accountants in your area. We target 200+ local keywords, fix technical issues weekly, and keep your site ranking higher every month.' },
+    content: { short: 'AI Content & Blog', promise: 'We produce professional tax guides, blog posts, and service pages using AI — written in your firm\'s voice, optimised for search engines. You review and approve; we handle the heavy lifting.' },
+    ppc: { short: 'Google & Meta Ads', promise: 'Your ads will be managed by AI that adjusts bids every 4 hours, pauses wasteful spend, and generates new ad variations automatically. Expect up to 60% lower cost per lead.' },
+    social: { short: 'Social Media', promise: 'LinkedIn, Facebook, and Instagram posts will be auto-generated from your blog content and scheduled at peak engagement times. Your firm stays active online without lifting a finger.' },
+    email: { short: 'Email Campaigns', promise: 'New leads receive a welcome sequence, existing clients get tax deadline reminders, and inactive contacts get re-engagement campaigns — all automatically segmented and personalised.' },
+    analytics: { short: 'Analytics Dashboard', promise: 'All your marketing results in one live dashboard: SEO rankings, ad performance, email open rates, and lead pipeline. A PDF report is auto-emailed to you every Monday morning.' }
+};
+
+function pcBuildSummary() {
+    var msgEl = document.getElementById('pcResultMsg');
+
+    if (pcMode === 'hire') {
+        var rate = parseInt(document.getElementById('pcRateSlider').value) || 15;
+        var hours = parseInt(document.getElementById('pcHoursSlider').value) || 20;
+        var tier = pcGetExpTier(rate);
+        var levelWord = tier.cls === 'exp-junior' ? 'a dedicated junior professional' : tier.cls === 'exp-mid' ? 'an experienced mid-level specialist' : tier.cls === 'exp-senior' ? 'a senior expert with deep domain knowledge' : 'a lead-level architect and strategist';
+
+        var html = '<div class="pc-result-msg-title">\ud83c\udf1f Your Dedicated Team Member</div>';
+        html += '<div class="pc-result-msg-body">';
+        html += 'You\'ve chosen to hire <strong>' + levelWord + '</strong> for <strong>' + hours + ' hours per week</strong>. ';
+        html += 'At \u00a3' + rate + '/hr, you get a committed team member who handles your marketing automation, development, and optimisation with <strong>100% dedication and quality</strong>. ';
+        if (rate <= 12) {
+            html += 'At this rate, your hire will focus on task execution, monitoring, setup, and daily operations — perfect for firms that need reliable hands-on support.';
+        } else if (rate <= 20) {
+            html += 'At this mid-level rate, your hire will independently manage projects, debug complex issues, build integrations, and continuously optimise your marketing systems.';
+        } else if (rate <= 35) {
+            html += 'At this senior rate, you get strategic thinking, architecture decisions, complex automation design, and the ability to lead and mentor other team members.';
+        } else {
+            html += 'At this leadership rate, you get full project ownership, enterprise-grade solutions, CTO-level technical guidance, and the strategic vision to transform your marketing.';
+        }
+        html += '</div>';
+        html += '<div class="pc-result-msg-promise">';
+        html += '<span class="pc-promise-pill pc-promise-green">\u2705 100% Quality Guaranteed</span>';
+        html += '<span class="pc-promise-pill pc-promise-blue">\ud83d\udcaa Dedicated to Your Firm</span>';
+        html += '<span class="pc-promise-pill pc-promise-purple">\ud83d\ude80 Continuous Improvement</span>';
+        html += '</div>';
+        msgEl.innerHTML = html;
+        msgEl.style.display = 'block';
+        return;
+    }
+
+    // Project / Monthly
+    var cbs = document.querySelectorAll('.pc-mod-cb');
+    var selected = [];
+    cbs.forEach(function(cb) {
+        if (cb.checked) selected.push(cb.closest('.pc-mod-card').dataset.mod);
+    });
+
+    if (selected.length === 0) {
+        msgEl.style.display = 'none';
+        return;
+    }
+
+    // Build service names list
+    var names = selected.map(function(k) { return pcModBenefits[k].short; });
+    var nameStr = '';
+    if (names.length === 1) nameStr = '<strong>' + names[0] + '</strong>';
+    else if (names.length === 2) nameStr = '<strong>' + names[0] + '</strong> and <strong>' + names[1] + '</strong>';
+    else nameStr = names.slice(0, -1).map(function(n) { return '<strong>' + n + '</strong>'; }).join(', ') + ', and <strong>' + names[names.length - 1] + '</strong>';
+
+    var modeLabel = pcMode === 'project' ? 'a one-time project' : 'an ongoing monthly retainer';
+
+    var html = '<div class="pc-result-msg-title">\ud83c\udf1f Your Custom ' + selected.length + '-Service Plan</div>';
+    html += '<div class="pc-result-msg-body">';
+    html += 'Excellent choice! You\'ve selected ' + nameStr + ' as ' + modeLabel + '. Here\'s what this means for your firm:<br><br>';
+
+    // Individual promises
+    selected.forEach(function(key) {
+        html += '\u2714\ufe0f <strong>' + pcModBenefits[key].short + ':</strong> ' + pcModBenefits[key].promise + '<br>';
+    });
+
+    html += '<br>Every service is built with <strong>100% quality, full dedication, and ongoing support</strong>. ';
+    html += 'We don\'t use templates — everything is custom-engineered for your accountancy firm\'s specific needs and goals.';
+    html += '</div>';
+
+    // Promise pills
+    html += '<div class="pc-result-msg-promise">';
+    html += '<span class="pc-promise-pill pc-promise-green">\u2705 100% Quality Work</span>';
+    html += '<span class="pc-promise-pill pc-promise-blue">\ud83d\udd12 No Lock-In Contract</span>';
+    html += '<span class="pc-promise-pill pc-promise-purple">\ud83c\udfc6 Proven Results</span>';
+    if (selected.length >= 3) html += '<span class="pc-promise-pill pc-promise-green">\ud83c\udf81 Bundle Discount Applied</span>';
+    html += '</div>';
+
+    msgEl.innerHTML = html;
+    msgEl.style.display = 'block';
 }
 
 // Initialize
