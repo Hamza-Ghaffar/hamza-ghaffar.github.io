@@ -506,6 +506,69 @@ body {
 .footer-tagline { font-size: 16px; font-weight: 600; margin-bottom: 8px; opacity: 0.95; }
 .footer-meta { opacity: 0.6; font-size: 13px; }
 
+/* ── Automation CTA Banner ── */
+.auto-cta-banner {
+    display: flex; align-items: center; gap: 16px;
+    background: linear-gradient(135deg, #e8f5e9, #f1f8e9);
+    border: 1px solid #c8e6c9; border-left: 4px solid #2e7d32;
+    border-radius: 12px; padding: 18px 24px;
+    margin: 28px 0 0; position: relative;
+    animation: slideInBanner 0.6s ease;
+}
+@keyframes slideInBanner {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+.auto-cta-icon { font-size: 32px; flex-shrink: 0; }
+.auto-cta-text { flex: 1; font-size: 14px; color: #333; line-height: 1.6; }
+.auto-cta-text strong { color: #1b5e20; }
+.auto-cta-text span { color: #555; }
+.auto-cta-btn {
+    display: inline-flex; align-items: center;
+    padding: 10px 22px; border-radius: 8px;
+    background: linear-gradient(135deg, var(--teal-dark), var(--teal-100));
+    color: #fff; font-weight: 700; font-size: 13px;
+    text-decoration: none; white-space: nowrap;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    letter-spacing: 0.3px;
+}
+.auto-cta-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
+.auto-cta-close {
+    position: absolute; top: 8px; right: 12px;
+    background: none; border: none; font-size: 20px;
+    color: #999; cursor: pointer; line-height: 1;
+}
+.auto-cta-close:hover { color: #333; }
+
+@media (max-width: 768px) {
+    .auto-cta-banner { flex-direction: column; text-align: center; gap: 12px; padding: 16px; }
+    .auto-cta-btn { width: 100%; justify-content: center; }
+}
+
+/* ── Floating Contact FAB ── */
+.fab-container {
+    position: fixed; bottom: 24px; right: 24px;
+    display: flex; flex-direction: column; gap: 12px;
+    z-index: 90;
+}
+.fab {
+    width: 50px; height: 50px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-decoration: none;
+}
+.fab:hover { transform: scale(1.12); box-shadow: 0 6px 24px rgba(0,0,0,0.3); }
+.fab-wa { background: #25D366; }
+.fab-email { background: #ea4335; }
+.fab-li { background: #0077b5; }
+
+@media (max-width: 768px) {
+    .fab-container { bottom: 16px; right: 16px; gap: 10px; }
+    .fab { width: 44px; height: 44px; }
+    .fab svg { width: 20px; height: 20px; }
+}
+
 /* ── Responsive ── */
 @media (max-width: 900px) {
     .about-grid { grid-template-columns: 1fr; }

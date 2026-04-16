@@ -48,10 +48,10 @@ const popupData = {
     },
     linkedin: {
         icon: '🔗', bg: 'ci-linkedin', title: 'LinkedIn',
-        detail: 'linkedin.com/in/hamza-ghaffar',
+        detail: 'linkedin.com/in/hamzaghaffar',
         actions: [
-            { label: '🔗 Open LinkedIn', href: 'https://linkedin.com/in/hamza-ghaffar', cls: 'popup-btn-primary', external: true },
-            { label: '📋 Copy Link', copy: 'https://linkedin.com/in/hamza-ghaffar', cls: 'popup-btn-copy' }
+            { label: '🔗 Open LinkedIn', href: 'https://www.linkedin.com/in/hamzaghaffar/', cls: 'popup-btn-primary', external: true },
+            { label: '📋 Copy Link', copy: 'https://www.linkedin.com/in/hamzaghaffar/', cls: 'popup-btn-copy' }
         ]
     }
 };
