@@ -14,16 +14,6 @@ document.querySelectorAll('.project-card, .skill-pill, .country-tag, .timeline-i
     observer.observe(el);
 });
 
-/* Vertical timeline scroll animation */
-const vtlObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-        }
-    });
-}, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
-document.querySelectorAll('.vtl-item').forEach(el => vtlObserver.observe(el));
-
 const sections = document.querySelectorAll('.section');
 const navLinks = document.querySelectorAll('.nav-links a');
 const navObserver = new IntersectionObserver((entries) => {
