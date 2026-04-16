@@ -506,6 +506,66 @@ body {
 .footer-tagline { font-size: 16px; font-weight: 600; margin-bottom: 8px; opacity: 0.95; }
 .footer-meta { opacity: 0.6; font-size: 13px; }
 
+/* ── Career Timeline Strip ── */
+.career-strip {
+    margin: 40px 0 0; padding: 28px 24px 20px;
+    background: linear-gradient(135deg, #f8faf9, #f0f4f3);
+    border-radius: 16px; border: 1px solid #e0e4e8;
+}
+.career-strip-title {
+    text-align: center; font-size: 13px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1.5px;
+    color: var(--teal-100); margin-bottom: 24px;
+}
+.career-strip-line {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    position: relative; max-width: 700px; margin: 0 auto;
+}
+.career-strip-line::before {
+    content: ''; position: absolute; top: 8px; left: 8px; right: 8px;
+    height: 3px; background: linear-gradient(to right, #c8e6c9, var(--teal-100), var(--teal-40));
+    border-radius: 2px; z-index: 0;
+}
+.career-node {
+    display: flex; flex-direction: column; align-items: center;
+    position: relative; z-index: 1; flex: 1;
+}
+.career-node-dot {
+    width: 18px; height: 18px; border-radius: 50%;
+    background: #b0bec5; border: 3px solid #fff;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+    margin-bottom: 8px; transition: transform 0.3s ease;
+}
+.career-node.active .career-node-dot,
+.career-node-dot.current {
+    background: var(--teal-100);
+    box-shadow: 0 0 0 4px rgba(10,130,118,0.2);
+    animation: pulse 2s infinite;
+}
+.career-node.future .career-node-dot {
+    background: #ff9800;
+    border-style: dashed;
+}
+.career-node-year {
+    font-size: 12px; font-weight: 800; color: #333;
+    margin-bottom: 2px;
+}
+.career-node-role {
+    font-size: 11px; font-weight: 600; color: #666;
+    text-align: center; line-height: 1.4;
+}
+.career-node-role small {
+    font-weight: 400; color: #999; font-size: 10px;
+}
+.career-node:hover .career-node-dot { transform: scale(1.2); }
+
+@media (max-width: 768px) {
+    .career-strip-line { gap: 4px; }
+    .career-node-year { font-size: 10px; }
+    .career-node-role { font-size: 9px; }
+    .career-node-dot { width: 14px; height: 14px; }
+}
+
 /* ── Automation CTA Banner ── */
 .auto-cta-banner {
     display: flex; align-items: center; gap: 16px;
