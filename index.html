@@ -70,8 +70,27 @@
         </div>
 
         <div class="about-body">
-            <div style="text-align: center;">
-                <span class="avail-badge"><span class="avail-dot"></span> Available for Projects &amp; Roles</span>
+            <!-- ═══ Interactive Role Network ═══ -->
+            <div class="role-network" id="roleNetwork">
+                <svg class="rn-lines" id="rnLines" aria-hidden="true"></svg>
+                <button class="rn-hub" id="rnHub" aria-label="Show available roles">
+                    <span class="avail-dot"></span> Available for Projects &amp; Roles
+                </button>
+                <div class="rn-node" data-role="DevOps Engineer" data-icon="⚙️" data-desc="CI/CD pipelines, Docker, Kubernetes, cloud infrastructure"></div>
+                <div class="rn-node" data-role="Automation Engineer" data-icon="🤖" data-desc="Test automation, RPA, workflow orchestration, Python scripting"></div>
+                <div class="rn-node" data-role="Data Engineer" data-icon="📊" data-desc="ETL/ELT pipelines, Medallion architecture, SQL, Parquet, Spark"></div>
+                <div class="rn-node" data-role="ML Engineer" data-icon="🧠" data-desc="Model training, MLOps, PyTorch, computer vision, NLP"></div>
+                <div class="rn-node" data-role="Backend Developer" data-icon="🔌" data-desc="FastAPI, REST APIs, microservices, database design"></div>
+                <div class="rn-node" data-role="Freelance Consultant" data-icon="💼" data-desc="Architecture review, automation strategy, technical advisory"></div>
+                <!-- Popup bubble -->
+                <div class="rn-popup" id="rnPopup">
+                    <button class="rn-popup-close" id="rnPopupClose" aria-label="Close">&times;</button>
+                    <div class="rn-popup-icon" id="rnPopupIcon"></div>
+                    <div class="rn-popup-role" id="rnPopupRole"></div>
+                    <div class="rn-popup-desc" id="rnPopupDesc"></div>
+                    <div class="rn-popup-msg">Happy to discuss how I can help with your use case!</div>
+                    <a href="booking.html" class="rn-popup-cta">📅 Let's Talk</a>
+                </div>
             </div>
 
             <p>I’m a <strong>Software Automation Engineer</strong> who turns manual, error-prone workflows into reliable, automated systems. At <strong>Infineon Technologies</strong>, I build CI/CD pipelines, enforce code quality with SonarQube, and design data pipelines that transform fragmented EDA tool output into structured, AI-ready datasets   so engineers can focus on engineering, not firefighting.</p>
@@ -392,6 +411,336 @@
 
 <!-- ══════════ SCROLL ANIMATIONS ══════════ -->
 <script src="assets/js/main.js"></script>
+
+<!-- ══════════ ROLE NETWORK ══════════ -->
+<style>
+.role-network {
+    position: relative; width: 100%; max-width: 600px;
+    margin: 0 auto 28px; min-height: 280px;
+    display: flex; align-items: center; justify-content: center;
+}
+.rn-lines {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 0;
+}
+.rn-line {
+    stroke: #0a8276; stroke-width: 1.5; stroke-dasharray: 6 4;
+    opacity: 0; transition: opacity 0.5s ease;
+}
+.rn-line.visible {
+    opacity: 0.35; animation: rnDash 1.2s linear infinite;
+}
+@keyframes rnDash { to { stroke-dashoffset: -10; } }
+
+/* Hub button */
+.rn-hub {
+    position: relative; z-index: 2;
+    display: inline-flex; align-items: center; gap: 8px;
+    background: #e8f5e9; color: #1b5e20;
+    font-size: 13px; font-weight: 700;
+    padding: 10px 22px; border-radius: 24px;
+    border: 2px solid #a5d6a7; cursor: pointer;
+    text-transform: uppercase; letter-spacing: 1px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+    font-family: inherit; white-space: nowrap;
+}
+.rn-hub:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 20px rgba(10,130,118,0.25);
+}
+.rn-hub.active {
+    background: #0a8276; color: #fff; border-color: #0a8276;
+}
+.rn-hub.active .avail-dot { background: #fff; }
+
+/* Floating role nodes */
+.rn-node {
+    position: absolute; z-index: 2;
+    display: flex; align-items: center; gap: 6px;
+    background: #fff; border: 2px solid #e0e0e0;
+    padding: 7px 14px; border-radius: 20px;
+    font-size: 12px; font-weight: 700; color: #333;
+    cursor: pointer; user-select: none;
+    opacity: 0; transform: scale(0.3);
+    transition: opacity 0.45s cubic-bezier(0.16,1,0.3,1),
+                transform 0.45s cubic-bezier(0.16,1,0.3,1),
+                box-shadow 0.3s ease, border-color 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    white-space: nowrap;
+}
+.rn-node.visible {
+    opacity: 1; transform: scale(1);
+}
+.rn-node:hover {
+    border-color: #0a8276; box-shadow: 0 4px 18px rgba(10,130,118,0.18);
+    transform: scale(1.08) !important;
+}
+.rn-node-icon { font-size: 16px; line-height: 1; flex-shrink: 0; }
+
+/* Popup bubble */
+.rn-popup {
+    position: absolute; z-index: 10;
+    background: #fff; border-radius: 16px;
+    padding: 22px 24px 20px; width: 260px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+    border: 2px solid rgba(10,130,118,0.2);
+    opacity: 0; transform: scale(0.6) translateY(10px);
+    pointer-events: none;
+    transition: opacity 0.35s cubic-bezier(0.16,1,0.3,1),
+                transform 0.35s cubic-bezier(0.16,1,0.3,1);
+    text-align: center;
+}
+.rn-popup.show {
+    opacity: 1; transform: scale(1) translateY(0);
+    pointer-events: auto;
+}
+.rn-popup-close {
+    position: absolute; top: 8px; right: 12px;
+    background: none; border: none; font-size: 20px;
+    color: #999; cursor: pointer; line-height: 1;
+    font-family: inherit;
+}
+.rn-popup-close:hover { color: #333; }
+.rn-popup-icon { font-size: 32px; margin-bottom: 6px; }
+.rn-popup-role {
+    font-size: 15px; font-weight: 800; color: #1a1a1a; margin-bottom: 4px;
+}
+.rn-popup-desc {
+    font-size: 12px; color: #666; line-height: 1.5; margin-bottom: 10px;
+}
+.rn-popup-msg {
+    font-size: 13px; font-weight: 600; color: #0a8276;
+    background: #e8f5e9; padding: 8px 12px; border-radius: 10px;
+    margin-bottom: 12px; line-height: 1.4;
+}
+.rn-popup-cta {
+    display: inline-block; background: #0a8276; color: #fff;
+    padding: 8px 20px; border-radius: 10px; font-size: 13px;
+    font-weight: 700; text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.rn-popup-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(10,130,118,0.35);
+}
+
+/* Gentle idle float */
+@keyframes rnFloat0 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(2px,-4px) scale(1); } }
+@keyframes rnFloat1 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-3px,3px) scale(1); } }
+@keyframes rnFloat2 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(3px,4px) scale(1); } }
+@keyframes rnFloat3 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-2px,-3px) scale(1); } }
+@keyframes rnFloat4 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(4px,2px) scale(1); } }
+@keyframes rnFloat5 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-3px,-4px) scale(1); } }
+
+.rn-node.visible.float0 { animation: rnFloat0 4.0s ease-in-out infinite; }
+.rn-node.visible.float1 { animation: rnFloat1 4.5s ease-in-out infinite; }
+.rn-node.visible.float2 { animation: rnFloat2 3.8s ease-in-out infinite; }
+.rn-node.visible.float3 { animation: rnFloat3 5.0s ease-in-out infinite; }
+.rn-node.visible.float4 { animation: rnFloat4 4.2s ease-in-out infinite; }
+.rn-node.visible.float5 { animation: rnFloat5 3.6s ease-in-out infinite; }
+
+/* Responsive */
+@media (max-width: 768px) {
+    .role-network { min-height: 220px; max-width: 380px; }
+    .rn-hub { font-size: 11px; padding: 8px 16px; }
+    .rn-node { font-size: 10px; padding: 5px 10px; }
+    .rn-node-icon { font-size: 13px; }
+    .rn-popup { width: 220px; padding: 18px 16px 16px; }
+    .rn-popup-role { font-size: 14px; }
+}
+@media (max-width: 420px) {
+    .role-network { min-height: 200px; max-width: 320px; }
+    .rn-hub { font-size: 10px; padding: 7px 12px; letter-spacing: 0.5px; }
+    .rn-node { font-size: 9px; padding: 4px 8px; border-radius: 14px; }
+    .rn-popup { width: 200px; padding: 14px 12px 12px; }
+}
+</style>
+
+<script>
+(function() {
+    var net = document.getElementById('roleNetwork');
+    if (!net) return;
+    var hub = document.getElementById('rnHub');
+    var svg = document.getElementById('rnLines');
+    var popup = document.getElementById('rnPopup');
+    var nodes = Array.prototype.slice.call(net.querySelectorAll('.rn-node'));
+    var expanded = false;
+
+    // Build node inner HTML
+    nodes.forEach(function(n) {
+        n.innerHTML = '<span class="rn-node-icon">' + n.dataset.icon + '</span> ' + n.dataset.role;
+    });
+
+    // Desktop positions (relative %, left/top from center offset)
+    var desktopPos = [
+        { left: -48, top: -62 },  // top-left
+        { left: 38,  top: -58 },  // top-right
+        { left: -58, top: -6 },   // mid-left
+        { left: 52,  top: -2 },   // mid-right
+        { left: -44, top: 52 },   // bottom-left
+        { left: 40,  top: 56 }    // bottom-right
+    ];
+
+    function getPositions() {
+        var w = net.offsetWidth;
+        if (w <= 420) {
+            // Smaller offsets for small screens
+            return [
+                { left: -42, top: -56 },
+                { left: 28,  top: -52 },
+                { left: -50, top: -4 },
+                { left: 42,  top: 0 },
+                { left: -38, top: 48 },
+                { left: 32,  top: 52 }
+            ];
+        }
+        if (w <= 768) {
+            return [
+                { left: -46, top: -58 },
+                { left: 34,  top: -54 },
+                { left: -54, top: -4 },
+                { left: 48,  top: 0 },
+                { left: -42, top: 50 },
+                { left: 36,  top: 54 }
+            ];
+        }
+        return desktopPos;
+    }
+
+    function positionNodes() {
+        if (!expanded) return;
+        var pos = getPositions();
+        var cx = net.offsetWidth / 2;
+        var cy = net.offsetHeight / 2;
+        nodes.forEach(function(n, i) {
+            var p = pos[i] || pos[0];
+            var pxL = cx + (p.left / 100) * net.offsetWidth;
+            var pxT = cy + (p.top / 100) * net.offsetHeight;
+            n.style.left = pxL + 'px';
+            n.style.top = pxT + 'px';
+        });
+        drawLines();
+    }
+
+    function drawLines() {
+        if (!expanded) { svg.innerHTML = ''; return; }
+        var hubR = hub.getBoundingClientRect();
+        var netR = net.getBoundingClientRect();
+        var hx = hubR.left + hubR.width / 2 - netR.left;
+        var hy = hubR.top + hubR.height / 2 - netR.top;
+        var html = '';
+        nodes.forEach(function(n, i) {
+            var nr = n.getBoundingClientRect();
+            var nx = nr.left + nr.width / 2 - netR.left;
+            var ny = nr.top + nr.height / 2 - netR.top;
+            html += '<line class="rn-line visible" x1="' + hx + '" y1="' + hy + '" x2="' + nx + '" y2="' + ny + '" style="animation-delay:' + (i * 0.15) + 's"/>';
+        });
+        svg.innerHTML = html;
+    }
+
+    function expand() {
+        expanded = true;
+        hub.classList.add('active');
+        var pos = getPositions();
+        var cx = net.offsetWidth / 2;
+        var cy = net.offsetHeight / 2;
+        nodes.forEach(function(n, i) {
+            var p = pos[i] || pos[0];
+            var pxL = cx + (p.left / 100) * net.offsetWidth;
+            var pxT = cy + (p.top / 100) * net.offsetHeight;
+            n.style.left = pxL + 'px';
+            n.style.top = pxT + 'px';
+            setTimeout(function() {
+                n.classList.add('visible', 'float' + i);
+            }, 80 + i * 70);
+        });
+        setTimeout(drawLines, 120);
+        // Redraw lines after transitions settle
+        setTimeout(drawLines, 600);
+    }
+
+    function collapse() {
+        expanded = false;
+        hub.classList.remove('active');
+        closePopup();
+        nodes.forEach(function(n) {
+            n.classList.remove('visible', 'float0', 'float1', 'float2', 'float3', 'float4', 'float5');
+        });
+        svg.innerHTML = '';
+    }
+
+    function showPopup(node) {
+        var icon = node.dataset.icon;
+        var role = node.dataset.role;
+        var desc = node.dataset.desc;
+        document.getElementById('rnPopupIcon').textContent = icon;
+        document.getElementById('rnPopupRole').textContent = role;
+        document.getElementById('rnPopupDesc').textContent = desc;
+        // Position popup near the node
+        var nr = node.getBoundingClientRect();
+        var netR = net.getBoundingClientRect();
+        var pLeft = nr.left + nr.width / 2 - netR.left - 130;
+        var pTop = nr.top - netR.top + nr.height + 10;
+        // Keep popup within bounds
+        pLeft = Math.max(4, Math.min(pLeft, net.offsetWidth - 264));
+        if (pTop + 200 > net.offsetHeight) {
+            pTop = nr.top - netR.top - 210;
+        }
+        popup.style.left = pLeft + 'px';
+        popup.style.top = pTop + 'px';
+        popup.classList.add('show');
+    }
+
+    function closePopup() {
+        popup.classList.remove('show');
+    }
+
+    // Hub toggle
+    hub.addEventListener('click', function(e) {
+        e.stopPropagation();
+        if (expanded) { collapse(); } else { expand(); }
+    });
+
+    // Node click
+    nodes.forEach(function(n) {
+        n.addEventListener('click', function(e) {
+            e.stopPropagation();
+            showPopup(n);
+        });
+    });
+
+    // Close popup
+    document.getElementById('rnPopupClose').addEventListener('click', function(e) {
+        e.stopPropagation();
+        closePopup();
+    });
+
+    // Close on outside click
+    document.addEventListener('click', function(e) {
+        if (!net.contains(e.target)) { closePopup(); }
+    });
+
+    // Resize handler
+    var resizeTimeout;
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(function() {
+            if (expanded) { positionNodes(); }
+        }, 100);
+    });
+
+    // Auto-expand when scrolled into view
+    var autoObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting && !expanded) {
+                autoObserver.disconnect();
+                setTimeout(expand, 400);
+            }
+        });
+    }, { threshold: 0.5 });
+    autoObserver.observe(net);
+})();
+</script>
 
 </body>
 </html>
