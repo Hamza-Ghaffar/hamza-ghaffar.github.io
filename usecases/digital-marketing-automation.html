@@ -459,6 +459,209 @@
             .rn-node { font-size: 9px; padding: 4px 8px; }
             .rn-popup { width: 200px; padding: 14px 12px 12px; }
         }
+
+        /* ═══════ PRICING CALCULATOR ═══════ */
+        .pc-wrapper {
+            background: #fff; border-radius: 24px; padding: 40px 36px;
+            border: 1px solid #e8ecf0; box-shadow: 0 8px 40px rgba(0,0,0,0.06);
+            position: relative; overflow: hidden;
+        }
+        .pc-wrapper::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+            background: linear-gradient(90deg, var(--accent), #7c4dff, #e91e63, #ff9800, var(--accent));
+            background-size: 200% auto; animation: pcShimmer 3s linear infinite;
+        }
+        @keyframes pcShimmer { 0%{background-position:0 0;} 100%{background-position:200% 0;} }
+
+        .pc-step {
+            display: flex; align-items: center; gap: 12px; margin: 32px 0 16px;
+        }
+        .pc-step:first-child { margin-top: 12px; }
+        .pc-step-num {
+            width: 32px; height: 32px; border-radius: 50%;
+            background: var(--accent); color: #fff; font-size: 14px; font-weight: 800;
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .pc-step-title { font-size: 16px; font-weight: 800; color: #1a1a1a; }
+
+        /* Toggle row */
+        .pc-toggle-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 8px; }
+        .pc-toggle {
+            display: flex; flex-direction: column; align-items: center; gap: 4px;
+            padding: 18px 12px; border-radius: 14px; border: 2px solid #e0e4e8;
+            background: #fff; cursor: pointer; font-family: inherit;
+            transition: all 0.3s ease; text-align: center;
+        }
+        .pc-toggle:hover { border-color: var(--accent); box-shadow: 0 4px 16px rgba(30,136,229,0.1); }
+        .pc-toggle.active { border-color: var(--accent); background: #e3f2fd; box-shadow: 0 4px 20px rgba(30,136,229,0.15); }
+        .pc-toggle-icon { font-size: 28px; }
+        .pc-toggle-label { font-size: 13px; font-weight: 800; color: #1a1a1a; }
+        .pc-toggle-sub { font-size: 10px; color: #888; font-weight: 600; }
+
+        /* Module cards */
+        .pc-modules { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        .pc-mod-card {
+            position: relative; display: flex; flex-direction: column; align-items: center;
+            gap: 6px; padding: 20px 14px; border-radius: 14px;
+            border: 2px solid #e8ecf0; background: #fafbfc; cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16,1,0.3,1); text-align: center;
+            user-select: none;
+        }
+        .pc-mod-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 4px 16px rgba(30,136,229,0.1); }
+        .pc-mod-card:has(input:checked) {
+            border-color: var(--accent); background: #e3f2fd;
+            box-shadow: 0 4px 20px rgba(30,136,229,0.15);
+            transform: translateY(-3px);
+        }
+        .pc-mod-cb { position: absolute; opacity: 0; width: 0; height: 0; }
+        .pc-mod-check {
+            position: absolute; top: 8px; right: 10px;
+            width: 22px; height: 22px; border-radius: 50%;
+            background: #e0e4e8; color: #fff; font-size: 12px; font-weight: 800;
+            display: flex; align-items: center; justify-content: center;
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+        .pc-mod-card:has(input:checked) .pc-mod-check {
+            background: var(--accent); transform: scale(1.15);
+        }
+        .pc-mod-icon { font-size: 32px; }
+        .pc-mod-name { font-size: 13px; font-weight: 800; color: #1a1a1a; }
+        .pc-mod-price { font-size: 12px; font-weight: 700; color: var(--accent); }
+
+        /* Salary slider */
+        .pc-salary-opts { margin-bottom: 8px; }
+        .pc-slider-group { padding: 0 8px; }
+        .pc-slider-label { font-size: 14px; color: #555; font-weight: 600; margin-bottom: 8px; display: block; }
+        .pc-slider-label strong { color: var(--accent); font-size: 18px; }
+        .pc-slider {
+            -webkit-appearance: none; width: 100%; height: 8px;
+            border-radius: 8px; background: #e0e4e8; outline: none;
+            margin: 12px 0 8px;
+        }
+        .pc-slider::-webkit-slider-thumb {
+            -webkit-appearance: none; width: 28px; height: 28px;
+            border-radius: 50%; background: var(--accent); cursor: pointer;
+            box-shadow: 0 2px 8px rgba(30,136,229,0.3);
+            transition: transform 0.2s ease;
+        }
+        .pc-slider::-webkit-slider-thumb:hover { transform: scale(1.2); }
+        .pc-slider::-moz-range-thumb {
+            width: 28px; height: 28px; border-radius: 50%;
+            background: var(--accent); cursor: pointer; border: none;
+        }
+        .pc-slider-marks { display: flex; justify-content: space-between; font-size: 10px; color: #aaa; font-weight: 600; padding: 0 4px; }
+
+        .pc-salary-presets { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+        .pc-preset {
+            padding: 8px 18px; border-radius: 20px; border: 2px solid #e0e4e8;
+            background: #fff; font-size: 12px; font-weight: 700; color: #555;
+            cursor: pointer; font-family: inherit; transition: all 0.2s ease;
+        }
+        .pc-preset:hover { border-color: var(--accent); color: var(--accent); }
+        .pc-preset.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+        /* Breakdown */
+        .pc-breakdown { margin-bottom: 8px; }
+        .pc-bd-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+        .pc-bd-card {
+            border-radius: 14px; padding: 20px 16px; text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .pc-bd-card:hover { transform: translateY(-2px); }
+        .pc-bd-design { background: #e3f2fd; border: 1px solid #bbdefb; }
+        .pc-bd-dev { background: #e8f5e9; border: 1px solid #c8e6c9; }
+        .pc-bd-server { background: #fff3e0; border: 1px solid #ffe0b2; }
+        .pc-bd-label { font-size: 12px; font-weight: 800; color: #555; margin-bottom: 4px; }
+        .pc-bd-value { font-size: 28px; font-weight: 900; color: #1a1a1a; line-height: 1; margin-bottom: 4px; }
+        .pc-per { font-size: 14px; font-weight: 600; color: #888; }
+        .pc-bd-sub { font-size: 10px; color: #999; font-weight: 600; }
+        .pc-bd-divider { height: 1px; background: #eee; margin: 20px 0; }
+
+        /* Module breakdown list */
+        .pc-bd-module-list { display: flex; flex-direction: column; gap: 8px; }
+        .pc-bd-mod-row {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 10px 14px; border-radius: 10px; background: #f8fafb;
+            border: 1px solid #f0f2f4; font-size: 13px;
+            animation: pcSlideIn 0.3s ease-out;
+        }
+        @keyframes pcSlideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+        .pc-bd-mod-name { font-weight: 700; color: #333; display: flex; align-items: center; gap: 6px; }
+        .pc-bd-mod-costs { display: flex; gap: 16px; }
+        .pc-bd-mod-cost { text-align: center; }
+        .pc-bd-mod-cost-val { font-weight: 800; color: #1a1a1a; font-size: 13px; }
+        .pc-bd-mod-cost-label { font-size: 9px; color: #aaa; font-weight: 600; text-transform: uppercase; }
+
+        /* Grand total */
+        .pc-grand-total {
+            text-align: center; padding: 28px 20px; margin-top: 20px;
+            background: linear-gradient(135deg, #0a1628, #11264a);
+            border-radius: 16px; position: relative; overflow: hidden;
+        }
+        .pc-grand-total::before {
+            content: ''; position: absolute; inset: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(30,136,229,0.08) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .pc-gt-label { font-size: 12px; font-weight: 800; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px; position: relative; }
+        .pc-gt-value {
+            font-size: 48px; font-weight: 900; color: #fff; line-height: 1;
+            margin-bottom: 6px; position: relative;
+            transition: transform 0.3s ease;
+        }
+        .pc-gt-value.bump { transform: scale(1.08); }
+        .pc-gt-sub { font-size: 12px; color: rgba(255,255,255,0.4); position: relative; }
+
+        /* Discount */
+        .pc-discount {
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            padding: 12px 20px; margin-top: 14px;
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            border-radius: 12px; animation: pcPulseGreen 2s ease-in-out infinite;
+        }
+        @keyframes pcPulseGreen { 0%,100%{box-shadow:0 0 0 0 rgba(76,175,80,0.2);} 50%{box-shadow:0 0 0 8px rgba(76,175,80,0);} }
+        .pc-discount-badge {
+            font-size: 10px; font-weight: 800; color: #fff;
+            background: #2e7d32; padding: 3px 10px; border-radius: 8px;
+            letter-spacing: 1px;
+        }
+        .pc-discount-text { font-size: 13px; font-weight: 700; color: #1b5e20; }
+
+        /* Action */
+        .pc-action { text-align: center; margin-top: 24px; }
+        .pc-action-btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 16px 36px; border-radius: 12px; font-size: 16px;
+            font-weight: 800; text-decoration: none;
+            background: var(--accent); color: #fff;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .pc-action-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(30,136,229,0.4); }
+        .pc-action-note { font-size: 12px; color: #999; margin-top: 8px; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .pc-wrapper { padding: 24px 16px; }
+            .pc-toggle-row { grid-template-columns: 1fr; gap: 8px; }
+            .pc-toggle { flex-direction: row; gap: 10px; padding: 12px 16px; }
+            .pc-toggle-icon { font-size: 22px; }
+            .pc-modules { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .pc-mod-card { padding: 14px 10px; }
+            .pc-mod-icon { font-size: 24px; }
+            .pc-mod-name { font-size: 11px; }
+            .pc-bd-grid { grid-template-columns: 1fr; gap: 10px; }
+            .pc-bd-value { font-size: 24px; }
+            .pc-gt-value { font-size: 36px; }
+            .pc-bd-mod-row { flex-direction: column; gap: 6px; text-align: center; }
+            .pc-bd-mod-costs { gap: 12px; }
+            .pc-action-btn { padding: 14px 28px; font-size: 14px; }
+        }
+        @media (max-width: 420px) {
+            .pc-modules { grid-template-columns: 1fr; }
+            .pc-toggle-row { gap: 6px; }
+            .pc-gt-value { font-size: 30px; }
+            .pc-salary-presets { flex-direction: column; }
+        }
     </style>
 </head>
 <body>
@@ -885,10 +1088,202 @@
     </div>
 
     <!-- CTA -->
-    <div class="uc-cta">
+    <div class="uc-cta" id="ctaSection">
         <h2>Want This Built for Your Firm?</h2>
         <p>I design and build custom marketing automation systems for accountancy firms. Let's discuss your channels and see how much you can save.</p>
         <a href="../booking.html" class="uc-cta-btn">📅 Book a Free Consultation</a>
+    </div>
+
+    <!-- ═══════ PRICING CALCULATOR ═══════ -->
+    <div class="uc-section" style="margin-top: 72px;" id="pricingCalcSection">
+        <div class="uc-section-label">Pricing Calculator</div>
+        <h2>Calculate My Cost for Your Project</h2>
+        <p>Pick the modules you need, choose your engagement model, and see the total instantly. Everything is transparent and flexible. Minimum &pound;30 per module.</p>
+
+        <div class="pc-wrapper" id="pricingCalc">
+            <!-- Step 1: Engagement Model Toggle -->
+            <div class="pc-step">
+                <div class="pc-step-num">1</div>
+                <div class="pc-step-title">Choose Engagement Model</div>
+            </div>
+            <div class="pc-toggle-row">
+                <button class="pc-toggle active" data-mode="project" onclick="pcSetMode('project',this)">
+                    <span class="pc-toggle-icon">📦</span>
+                    <span class="pc-toggle-label">Project-Based</span>
+                    <span class="pc-toggle-sub">One-time design + development</span>
+                </button>
+                <button class="pc-toggle" data-mode="monthly" onclick="pcSetMode('monthly',this)">
+                    <span class="pc-toggle-icon">📅</span>
+                    <span class="pc-toggle-label">Monthly Retainer</span>
+                    <span class="pc-toggle-sub">Ongoing management + support</span>
+                </button>
+                <button class="pc-toggle" data-mode="salary" onclick="pcSetMode('salary',this)">
+                    <span class="pc-toggle-icon">💼</span>
+                    <span class="pc-toggle-label">Dedicated Hire</span>
+                    <span class="pc-toggle-sub">Part-time or full-time salary</span>
+                </button>
+            </div>
+
+            <!-- Step 2: Select Modules -->
+            <div class="pc-step">
+                <div class="pc-step-num">2</div>
+                <div class="pc-step-title" id="pcStep2Title">Select Modules You Need</div>
+            </div>
+            <div class="pc-modules" id="pcModules">
+                <label class="pc-mod-card" data-mod="seo">
+                    <input type="checkbox" class="pc-mod-cb" data-design="120" data-dev="280" data-server="15" data-monthly="95" onchange="pcRecalc()">
+                    <div class="pc-mod-check">&#10003;</div>
+                    <div class="pc-mod-icon">🔍</div>
+                    <div class="pc-mod-name">SEO Automation</div>
+                    <div class="pc-mod-price" id="modPriceSeo"></div>
+                </label>
+                <label class="pc-mod-card" data-mod="content">
+                    <input type="checkbox" class="pc-mod-cb" data-design="150" data-dev="350" data-server="20" data-monthly="130" onchange="pcRecalc()">
+                    <div class="pc-mod-check">&#10003;</div>
+                    <div class="pc-mod-icon">✍️</div>
+                    <div class="pc-mod-name">AI Content Engine</div>
+                    <div class="pc-mod-price" id="modPriceContent"></div>
+                </label>
+                <label class="pc-mod-card" data-mod="ppc">
+                    <input type="checkbox" class="pc-mod-cb" data-design="100" data-dev="300" data-server="10" data-monthly="110" onchange="pcRecalc()">
+                    <div class="pc-mod-check">&#10003;</div>
+                    <div class="pc-mod-icon">💰</div>
+                    <div class="pc-mod-name">PPC Optimizer</div>
+                    <div class="pc-mod-price" id="modPricePpc"></div>
+                </label>
+                <label class="pc-mod-card" data-mod="social">
+                    <input type="checkbox" class="pc-mod-cb" data-design="80" data-dev="220" data-server="10" data-monthly="75" onchange="pcRecalc()">
+                    <div class="pc-mod-check">&#10003;</div>
+                    <div class="pc-mod-icon">📱</div>
+                    <div class="pc-mod-name">Social Scheduler</div>
+                    <div class="pc-mod-price" id="modPriceSocial"></div>
+                </label>
+                <label class="pc-mod-card" data-mod="email">
+                    <input type="checkbox" class="pc-mod-cb" data-design="90" data-dev="260" data-server="12" data-monthly="85" onchange="pcRecalc()">
+                    <div class="pc-mod-check">&#10003;</div>
+                    <div class="pc-mod-icon">📧</div>
+                    <div class="pc-mod-name">Email Automation</div>
+                    <div class="pc-mod-price" id="modPriceEmail"></div>
+                </label>
+                <label class="pc-mod-card" data-mod="analytics">
+                    <input type="checkbox" class="pc-mod-cb" data-design="110" data-dev="240" data-server="18" data-monthly="90" onchange="pcRecalc()">
+                    <div class="pc-mod-check">&#10003;</div>
+                    <div class="pc-mod-icon">📊</div>
+                    <div class="pc-mod-name">Analytics Dashboard</div>
+                    <div class="pc-mod-price" id="modPriceAnalytics"></div>
+                </label>
+            </div>
+
+            <!-- Salary options (hidden by default) -->
+            <div class="pc-salary-opts" id="pcSalaryOpts" style="display:none;">
+                <div class="pc-step">
+                    <div class="pc-step-num">2b</div>
+                    <div class="pc-step-title">Select Hours Per Week</div>
+                </div>
+                <div class="pc-slider-group">
+                    <label class="pc-slider-label">Hours / Week: <strong id="pcHoursVal">20</strong></label>
+                    <input type="range" id="pcHoursSlider" min="5" max="40" value="20" step="5" class="pc-slider" oninput="pcRecalc()">
+                    <div class="pc-slider-marks">
+                        <span>5h</span><span>10h</span><span>15h</span><span>20h</span><span>25h</span><span>30h</span><span>35h</span><span>40h</span>
+                    </div>
+                </div>
+                <div class="pc-salary-presets">
+                    <button class="pc-preset" onclick="pcSetHours(10)">Part-Time (10h)</button>
+                    <button class="pc-preset active" onclick="pcSetHours(20)">Half-Time (20h)</button>
+                    <button class="pc-preset" onclick="pcSetHours(40)">Full-Time (40h)</button>
+                </div>
+            </div>
+
+            <!-- Step 3: Cost Breakdown -->
+            <div class="pc-step">
+                <div class="pc-step-num">3</div>
+                <div class="pc-step-title">Your Cost Breakdown</div>
+            </div>
+
+            <!-- Project mode breakdown -->
+            <div class="pc-breakdown" id="pcBreakdownProject">
+                <div class="pc-bd-grid">
+                    <div class="pc-bd-card pc-bd-design">
+                        <div class="pc-bd-label">🎨 Design</div>
+                        <div class="pc-bd-value" id="pcDesignTotal">&pound;0</div>
+                        <div class="pc-bd-sub">UI/UX, wireframes, branding</div>
+                    </div>
+                    <div class="pc-bd-card pc-bd-dev">
+                        <div class="pc-bd-label">⚙️ Development</div>
+                        <div class="pc-bd-value" id="pcDevTotal">&pound;0</div>
+                        <div class="pc-bd-sub">Coding, integrations, testing</div>
+                    </div>
+                    <div class="pc-bd-card pc-bd-server">
+                        <div class="pc-bd-label">☁️ Server / Month</div>
+                        <div class="pc-bd-value" id="pcServerTotal">&pound;0<span class="pc-per">/mo</span></div>
+                        <div class="pc-bd-sub">Hosting, APIs, runtime</div>
+                    </div>
+                </div>
+                <div class="pc-bd-divider"></div>
+                <div class="pc-bd-module-list" id="pcModuleBreakdown"></div>
+            </div>
+
+            <!-- Monthly mode breakdown -->
+            <div class="pc-breakdown" id="pcBreakdownMonthly" style="display:none;">
+                <div class="pc-bd-grid">
+                    <div class="pc-bd-card pc-bd-design">
+                        <div class="pc-bd-label">📅 Monthly Retainer</div>
+                        <div class="pc-bd-value" id="pcMonthlyTotal">&pound;0<span class="pc-per">/mo</span></div>
+                        <div class="pc-bd-sub">Management, optimization, support</div>
+                    </div>
+                    <div class="pc-bd-card pc-bd-dev">
+                        <div class="pc-bd-label">📦 One-Time Setup</div>
+                        <div class="pc-bd-value" id="pcSetupTotal">&pound;0</div>
+                        <div class="pc-bd-sub">Initial configuration</div>
+                    </div>
+                    <div class="pc-bd-card pc-bd-server">
+                        <div class="pc-bd-label">☁️ Server / Month</div>
+                        <div class="pc-bd-value" id="pcServerMonthly">&pound;0<span class="pc-per">/mo</span></div>
+                        <div class="pc-bd-sub">Hosting, APIs, runtime</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Salary mode breakdown -->
+            <div class="pc-breakdown" id="pcBreakdownSalary" style="display:none;">
+                <div class="pc-bd-grid">
+                    <div class="pc-bd-card pc-bd-design">
+                        <div class="pc-bd-label">💼 Monthly Salary</div>
+                        <div class="pc-bd-value" id="pcSalaryMonthly">&pound;0<span class="pc-per">/mo</span></div>
+                        <div class="pc-bd-sub" id="pcSalaryHoursSub">20 hrs/week at &pound;30/hr</div>
+                    </div>
+                    <div class="pc-bd-card pc-bd-dev">
+                        <div class="pc-bd-label">📊 Hourly Rate</div>
+                        <div class="pc-bd-value" id="pcHourlyRate">&pound;30<span class="pc-per">/hr</span></div>
+                        <div class="pc-bd-sub">Blended rate</div>
+                    </div>
+                    <div class="pc-bd-card pc-bd-server">
+                        <div class="pc-bd-label">📆 Annual Cost</div>
+                        <div class="pc-bd-value" id="pcAnnualSalary">&pound;0<span class="pc-per">/yr</span></div>
+                        <div class="pc-bd-sub">12 months commitment</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grand Total -->
+            <div class="pc-grand-total" id="pcGrandTotal">
+                <div class="pc-gt-label" id="pcGtLabel">Total Project Cost</div>
+                <div class="pc-gt-value" id="pcGtValue">&pound;0</div>
+                <div class="pc-gt-sub" id="pcGtSub">Select modules above to see pricing</div>
+            </div>
+
+            <!-- Discount banner -->
+            <div class="pc-discount" id="pcDiscount" style="display:none;">
+                <span class="pc-discount-badge">BUNDLE DISCOUNT</span>
+                <span class="pc-discount-text" id="pcDiscountText"></span>
+            </div>
+
+            <!-- CTA -->
+            <div class="pc-action">
+                <a href="../booking.html" class="pc-action-btn">📅 Book a Call to Discuss This Plan</a>
+                <p class="pc-action-note">No commitment. Let's walk through your requirements together.</p>
+            </div>
+        </div>
     </div>
 
     <!-- Tech Stack -->
@@ -1115,12 +1510,179 @@ calcSavings();
             if (entry.isIntersecting) { entry.target.style.opacity = '1'; entry.target.style.transform = 'translateY(0)'; }
         });
     }, { threshold: 0.1 });
-    document.querySelectorAll('.module-card, .pain-card, .compare-card, .kpi-card, .calc-wrapper, .model-card').forEach(function(el) {
+    document.querySelectorAll('.module-card, .pain-card, .compare-card, .kpi-card, .calc-wrapper, .model-card, .pc-wrapper').forEach(function(el) {
         el.style.opacity = '0'; el.style.transform = 'translateY(20px)';
         el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
         obs.observe(el);
     });
 })();
+
+/* ═══ PRICING CALCULATOR ═══ */
+var pcMode = 'project';
+var pcHourlyBase = 30; // GBP minimum
+
+function pcSetMode(mode, btn) {
+    pcMode = mode;
+    document.querySelectorAll('.pc-toggle').forEach(function(b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+
+    var modSection = document.getElementById('pcModules');
+    var salaryOpts = document.getElementById('pcSalaryOpts');
+    var bpProject = document.getElementById('pcBreakdownProject');
+    var bpMonthly = document.getElementById('pcBreakdownMonthly');
+    var bpSalary = document.getElementById('pcBreakdownSalary');
+
+    // Show/hide sections
+    modSection.style.display = (mode === 'salary') ? 'none' : 'grid';
+    salaryOpts.style.display = (mode === 'salary') ? 'block' : 'none';
+    bpProject.style.display = (mode === 'project') ? 'block' : 'none';
+    bpMonthly.style.display = (mode === 'monthly') ? 'block' : 'none';
+    bpSalary.style.display = (mode === 'salary') ? 'block' : 'none';
+
+    document.getElementById('pcStep2Title').textContent =
+        mode === 'salary' ? 'Configure Working Hours' : 'Select Modules You Need';
+
+    pcRecalc();
+}
+
+function pcSetHours(h) {
+    document.getElementById('pcHoursSlider').value = h;
+    document.querySelectorAll('.pc-preset').forEach(function(b) { b.classList.remove('active'); });
+    event.target.classList.add('active');
+    pcRecalc();
+}
+
+function pcRecalc() {
+    var cbs = document.querySelectorAll('.pc-mod-cb');
+    var designTotal = 0, devTotal = 0, serverTotal = 0, monthlyTotal = 0;
+    var selected = [];
+
+    cbs.forEach(function(cb) {
+        var card = cb.closest('.pc-mod-card');
+        var design = parseInt(cb.dataset.design);
+        var dev = parseInt(cb.dataset.dev);
+        var server = parseInt(cb.dataset.server);
+        var monthly = parseInt(cb.dataset.monthly);
+        var name = card.querySelector('.pc-mod-name').textContent;
+        var icon = card.querySelector('.pc-mod-icon').textContent;
+
+        // Show per-module price
+        var priceEl = card.querySelector('.pc-mod-price');
+        if (pcMode === 'project') {
+            priceEl.textContent = '\u00a3' + (design + dev) + ' + \u00a3' + server + '/mo';
+        } else if (pcMode === 'monthly') {
+            priceEl.textContent = '\u00a3' + monthly + '/mo';
+        }
+
+        if (cb.checked) {
+            designTotal += design;
+            devTotal += dev;
+            serverTotal += server;
+            monthlyTotal += monthly;
+            selected.push({ name: name, icon: icon, design: design, dev: dev, server: server, monthly: monthly });
+        }
+    });
+
+    var modCount = selected.length;
+    var discount = 0;
+    var discountText = '';
+
+    if (pcMode === 'project') {
+        // Bundle discounts
+        if (modCount >= 5) { discount = 0.15; discountText = '15% off: 5+ modules selected! You save \u00a3' + Math.round((designTotal + devTotal) * 0.15); }
+        else if (modCount >= 3) { discount = 0.10; discountText = '10% off: 3+ modules selected! You save \u00a3' + Math.round((designTotal + devTotal) * 0.10); }
+
+        var discountedDesign = Math.round(designTotal * (1 - discount));
+        var discountedDev = Math.round(devTotal * (1 - discount));
+
+        document.getElementById('pcDesignTotal').innerHTML = '\u00a3' + discountedDesign;
+        document.getElementById('pcDevTotal').innerHTML = '\u00a3' + discountedDev;
+        document.getElementById('pcServerTotal').innerHTML = '\u00a3' + serverTotal + '<span class="pc-per">/mo</span>';
+
+        // Module breakdown
+        var mbHtml = '';
+        selected.forEach(function(m) {
+            mbHtml += '<div class="pc-bd-mod-row">';
+            mbHtml += '<div class="pc-bd-mod-name">' + m.icon + ' ' + m.name + '</div>';
+            mbHtml += '<div class="pc-bd-mod-costs">';
+            mbHtml += '<div class="pc-bd-mod-cost"><div class="pc-bd-mod-cost-val">\u00a3' + m.design + '</div><div class="pc-bd-mod-cost-label">Design</div></div>';
+            mbHtml += '<div class="pc-bd-mod-cost"><div class="pc-bd-mod-cost-val">\u00a3' + m.dev + '</div><div class="pc-bd-mod-cost-label">Dev</div></div>';
+            mbHtml += '<div class="pc-bd-mod-cost"><div class="pc-bd-mod-cost-val">\u00a3' + m.server + '/mo</div><div class="pc-bd-mod-cost-label">Server</div></div>';
+            mbHtml += '</div></div>';
+        });
+        document.getElementById('pcModuleBreakdown').innerHTML = mbHtml;
+        document.getElementById('pcBreakdownProject').querySelector('.pc-bd-divider').style.display = modCount > 0 ? 'block' : 'none';
+
+        // Grand total
+        var gtotal = discountedDesign + discountedDev;
+        document.getElementById('pcGtLabel').textContent = 'Total Project Cost';
+        document.getElementById('pcGtValue').innerHTML = '\u00a3' + Number(gtotal).toLocaleString();
+        document.getElementById('pcGtSub').textContent = modCount > 0
+            ? 'One-time: \u00a3' + Number(gtotal).toLocaleString() + ' + Server: \u00a3' + serverTotal + '/mo'
+            : 'Select modules above to see pricing';
+
+    } else if (pcMode === 'monthly') {
+        // Monthly retainer
+        if (modCount >= 5) { discount = 0.15; discountText = '15% off retainer: 5+ modules! You save \u00a3' + Math.round(monthlyTotal * 0.15) + '/mo'; }
+        else if (modCount >= 3) { discount = 0.10; discountText = '10% off retainer: 3+ modules! You save \u00a3' + Math.round(monthlyTotal * 0.10) + '/mo'; }
+
+        var discountedMonthly = Math.round(monthlyTotal * (1 - discount));
+        var setupFee = Math.round((designTotal + devTotal) * 0.3); // 30% of project as setup
+
+        document.getElementById('pcMonthlyTotal').innerHTML = '\u00a3' + discountedMonthly + '<span class="pc-per">/mo</span>';
+        document.getElementById('pcSetupTotal').innerHTML = '\u00a3' + setupFee;
+        document.getElementById('pcServerMonthly').innerHTML = '\u00a3' + serverTotal + '<span class="pc-per">/mo</span>';
+
+        document.getElementById('pcGtLabel').textContent = 'Total Monthly Cost';
+        document.getElementById('pcGtValue').innerHTML = '\u00a3' + (discountedMonthly + serverTotal) + '<span class="pc-per" style="color:rgba(255,255,255,0.5);">/mo</span>';
+        document.getElementById('pcGtSub').textContent = modCount > 0
+            ? 'Monthly: \u00a3' + (discountedMonthly + serverTotal) + '/mo + One-time setup: \u00a3' + setupFee
+            : 'Select modules above to see pricing';
+
+    } else if (pcMode === 'salary') {
+        // Salary/dedicated hire
+        var hours = parseInt(document.getElementById('pcHoursSlider').value) || 20;
+        document.getElementById('pcHoursVal').textContent = hours;
+
+        // Hourly rate decreases with more hours (volume discount)
+        var rate = pcHourlyBase;
+        if (hours >= 40) rate = 25;
+        else if (hours >= 30) rate = 27;
+        else if (hours >= 20) rate = 28;
+        else if (hours >= 15) rate = 29;
+
+        var monthlySalary = Math.round(hours * 4.33 * rate);
+        var annualSalary = monthlySalary * 12;
+
+        document.getElementById('pcSalaryMonthly').innerHTML = '\u00a3' + Number(monthlySalary).toLocaleString() + '<span class="pc-per">/mo</span>';
+        document.getElementById('pcSalaryHoursSub').textContent = hours + ' hrs/week at \u00a3' + rate + '/hr';
+        document.getElementById('pcHourlyRate').innerHTML = '\u00a3' + rate + '<span class="pc-per">/hr</span>';
+        document.getElementById('pcAnnualSalary').innerHTML = '\u00a3' + Number(annualSalary).toLocaleString() + '<span class="pc-per">/yr</span>';
+
+        document.getElementById('pcGtLabel').textContent = 'Monthly Dedicated Cost';
+        document.getElementById('pcGtValue').innerHTML = '\u00a3' + Number(monthlySalary).toLocaleString() + '<span class="pc-per" style="color:rgba(255,255,255,0.5);">/mo</span>';
+        document.getElementById('pcGtSub').textContent = hours + ' hrs/week \u00b7 \u00a3' + rate + '/hr \u00b7 \u00a3' + Number(annualSalary).toLocaleString() + '/year';
+
+        if (hours >= 30) { discountText = 'Volume rate: \u00a3' + rate + '/hr (save \u00a3' + (pcHourlyBase - rate) + '/hr vs base rate)'; discount = 1; }
+    }
+
+    // Discount banner
+    var discEl = document.getElementById('pcDiscount');
+    if (discount > 0 && discountText) {
+        discEl.style.display = 'flex';
+        document.getElementById('pcDiscountText').textContent = discountText;
+    } else {
+        discEl.style.display = 'none';
+    }
+
+    // Animate total
+    var gtv = document.getElementById('pcGtValue');
+    gtv.classList.add('bump');
+    setTimeout(function() { gtv.classList.remove('bump'); }, 300);
+}
+
+// Initialize
+pcRecalc();
 </script>
 
 </body>
