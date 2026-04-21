@@ -460,7 +460,7 @@
             .rn-popup { width: 200px; padding: 14px 12px 12px; }
         }
 
-        /* ═══════ PRICING CALCULATOR v3 — Custom Calculator ═══════ */
+        /* ═══════ PRICING CALCULATOR v3 Custom Calculator ═══════ */
         .hero-calc-btn {
             display: inline-flex; align-items: center; gap: 10px; margin-top: 28px;
             padding: 16px 36px; border-radius: 14px; font-size: 17px; font-weight: 800;
@@ -1252,7 +1252,7 @@
                     <div class="pc-ad-guide show" id="pcAdGuide">
                         <span class="pc-ad-guide-icon">&#9888;&#65039;</span>
                         <div class="pc-ad-guide-text">
-                            <strong>You've enabled Google &amp; Meta Ads!</strong> To run paid ads, you'll need an ad budget. This is the amount Google/Meta charges directly &mdash; we manage your campaigns so every pound works harder. <strong>Enter your monthly budget below</strong> to see the full picture. Even &pound;300/mo can deliver strong results for a local firm.
+                            <strong>You've enabled Google &amp; Meta Ads!</strong> To run paid ads, you'll need an ad budget. This is the amount Google/Meta charges directly we manage your campaigns so every pound works harder. <strong>Enter your monthly budget below</strong> to see the full picture. Even &pound;300/mo can deliver strong results for a local firm.
                         </div>
                     </div>
                     <div class="pc-input-row">
@@ -1886,7 +1886,7 @@ function pcRecalc() {
         if (discount > 0 && modCount > 0) {
             savingsBar.style.display = 'flex';
             var savedAmt = pcMode === 'project' ? Math.round(totalOnce * discount) : Math.round(totalMonthly * discount);
-            savingsText.textContent = 'Bundle discount: ' + (discount * 100) + '% off \u2014 you save \u00a3' + savedAmt + (pcMode === 'monthly' ? '/mo' : '') + '!';
+            savingsText.textContent = 'Bundle discount: ' + (discount * 100) + '% off you save \u00a3' + savedAmt + (pcMode === 'monthly' ? '/mo' : '') + '!';
         } else {
             savingsBar.style.display = 'none';
         }
@@ -1903,10 +1903,10 @@ function pcRecalc() {
 // Module benefit descriptions for the personalised message
 var pcModBenefits = {
     seo: { short: 'SEO & Google Ranking', promise: 'Your firm will appear at the top of Google when potential clients search for accountants in your area. We target 200+ local keywords, fix technical issues weekly, and keep your site ranking higher every month.' },
-    content: { short: 'AI Content & Blog', promise: 'We produce professional tax guides, blog posts, and service pages using AI — written in your firm\'s voice, optimised for search engines. You review and approve; we handle the heavy lifting.' },
+    content: { short: 'AI Content & Blog', promise: 'We produce professional tax guides, blog posts, and service pages using AI written in your firm\'s voice, optimised for search engines. You review and approve; we handle the heavy lifting.' },
     ppc: { short: 'Google & Meta Ads', promise: 'Your ads will be managed by AI that adjusts bids every 4 hours, pauses wasteful spend, and generates new ad variations automatically. Expect up to 60% lower cost per lead.' },
     social: { short: 'Social Media', promise: 'LinkedIn, Facebook, and Instagram posts will be auto-generated from your blog content and scheduled at peak engagement times. Your firm stays active online without lifting a finger.' },
-    email: { short: 'Email Campaigns', promise: 'New leads receive a welcome sequence, existing clients get tax deadline reminders, and inactive contacts get re-engagement campaigns — all automatically segmented and personalised.' },
+    email: { short: 'Email Campaigns', promise: 'New leads receive a welcome sequence, existing clients get tax deadline reminders, and inactive contacts get re-engagement campaigns all automatically segmented and personalised.' },
     analytics: { short: 'Analytics Dashboard', promise: 'All your marketing results in one live dashboard: SEO rankings, ad performance, email open rates, and lead pipeline. A PDF report is auto-emailed to you every Monday morning.' }
 };
 
@@ -1924,7 +1924,7 @@ function pcBuildSummary() {
         html += 'You\'ve chosen to hire <strong>' + levelWord + '</strong> for <strong>' + hours + ' hours per week</strong>. ';
         html += 'At \u00a3' + rate + '/hr, you get a committed team member who handles your marketing automation, development, and optimisation with <strong>100% dedication and quality</strong>. ';
         if (rate <= 12) {
-            html += 'At this rate, your hire will focus on task execution, monitoring, setup, and daily operations — perfect for firms that need reliable hands-on support.';
+            html += 'At this rate, your hire will focus on task execution, monitoring, setup, and daily operations perfect for firms that need reliable hands-on support.';
         } else if (rate <= 20) {
             html += 'At this mid-level rate, your hire will independently manage projects, debug complex issues, build integrations, and continuously optimise your marketing systems.';
         } else if (rate <= 35) {
@@ -1974,7 +1974,7 @@ function pcBuildSummary() {
     });
 
     html += '<br>Every service is built with <strong>100% quality, full dedication, and ongoing support</strong>. ';
-    html += 'We don\'t use templates — everything is custom-engineered for your accountancy firm\'s specific needs and goals.';
+    html += 'We don\'t use templates everything is custom-engineered for your accountancy firm\'s specific needs and goals.';
     html += '</div>';
 
     // Promise pills
